@@ -1,0 +1,13 @@
+/* You can add global styles to this file, and also import other style files */
+@import './assets/css/custom-material.css';
+@import './assets/css/main.css';
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    background-color: transparent;
+    margin: 0px;
+}

@@ -1,0 +1,253 @@
+.middle {
+    width: 90%;
+    Position:relative;
+    margin: 0 auto;
+}
+
+.mat-card {
+    font-size: 14px;
+    border-collapse:collapse;
+    padding: 18px !important;
+}
+
+.mat-paginator-range-actions {
+    margin: 0 auto;
+}
+
+.datos-numericos{
+    text-align: right;
+}
+
+.nuevo-edicion{
+    text-align: left;
+    font-weight: normal;
+    line-height: 1;
+    color: #777;
+    font-size: 15px;
+}
+
+.demo-tab-group {
+    border: 1px solid #e8e8e8;
+}
+  
+.demo-tab-content {
+    text-align: left;
+    width: 95%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.mat-form-field.mat-form-field {
+    width: 100%;
+}
+
+div.mat-tab-label-content {
+    font-size: 13px;
+}
+
+div.mat-tab-label{
+    min-width: 120px;
+    height: 40px;
+}
+
+.label-id{
+    font-size: 10px;
+    color: rgba(0,0,0,0.38);
+    font-weight: bold;
+}
+
+.search-info{
+    cursor: pointer;
+    font-size: 20px !important;
+}
+
+.panel {
+    margin-bottom: 10px;
+    background-color: #fff;
+    border: 1px solid transparent;
+}
+
+.panel-default {
+    border-color: #ddd;
+}
+
+.label-form {
+    font-size: 13px;
+    opacity: 1;
+    color: rgba(0,0,0,0.38) !important;
+    font-weight: bold;
+}
+
+.panel-heading {
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+}
+
+.panel-body {
+    padding: 15px;
+    height: 175px;
+}
+
+.search{
+    width: 100%;
+}
+
+.table-bordered th,.table-bordered td{
+    border:1px solid #ddd !important
+}
+
+.progress-spinner{ 
+    margin: auto;
+}
+
+.primary-btn{
+    background-color: #337ab7; 
+    color: #fff;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.container {
+    min-height: 100%;
+}
+
+.input-money{
+	text-align: right;
+}
+
+[hidden] {
+    display: none !important;
+  }
+
+.align-left{
+    text-align: left;
+}
+
+.subtitulo{
+	margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: #777;
+    padding-left: 10px;
+}
+
+.flex-main{
+    overflow: auto;
+}
+
+.mat-form-field-label-wrapper {
+    font-weight: bold;
+}
+
+.mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button, .mat-fab, .mat-mini-fab {
+    font-size: 12px;
+ }
+ 
+.material-icons{
+    font-size: 16px;
+}
+
+.grid{
+    font-size: 12px;
+}
+
+.mat-raised-button {
+    line-height: 24px !important;
+    padding: 2px 0 0 0 !important;
+}
+
+.mat-input-element{
+    font-size: 12px !important;
+}
+
+.mat-form-field-label {
+    font-size: 11px !important;
+}
+
+.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-can-float .mat-input-server:focus + .mat-form-field-label-wrapper .mat-form-field-label {
+    transform: translateY(-1.28125em) scale(0.9) perspective(100px) translateZ(0.001px)
+}
+
+.primary-btn{
+    background-color: #337ab7;   
+    border-color: #337ab7;
+    color: #fff !important;
+}
+
+.danger-btn{
+    background-color: #d9534f;  
+    border-color: #d9534f;    
+    color: #fff !important;
+}
+
+.applying-btn{
+    background-color: #4cae4c;
+    border-color: #4cae4c;  
+    color: #fff !important;
+}
+
+.titulo{
+    margin-top: 10px; 
+    background-color: #f5f5f5; 
+    border-color: #ddd;
+    font-weight: bold;
+}
+
+.estilo-letra{
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+#applying-disabled.mat-raised-button[disabled][disabled]{
+    background-color: #4cae4c !important;
+    border-color: #4cae4c; 
+    opacity: 0.7;
+    color: #fff;
+}
+
+#primary-disabled.mat-raised-button[disabled][disabled]{
+    background-color: #337ab7 !important;
+    border-color: #337ab7; 
+    opacity: 0.7;
+    color: #fff;
+}
+
+.grid-principal{
+    padding-top: 20px;
+}
+
+.middle-screen{
+    position: relative; 
+    margin: 0 auto; 
+    width: 100%; 
+    height: 100%;
+}
+
+.align-center{
+    text-align: center;
+}
+
+.upload-file-button{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    height: 34px;
+    width: 42px;
+}
+
+.upload-file-text{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+
+}
