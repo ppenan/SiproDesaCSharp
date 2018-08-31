@@ -55,7 +55,22 @@
             <br>
             <div fxLayout="row">
               <div [hidden]="esNuevo" fxFlex="50%" fxLayoutAlign="start" fxLayoutGap="1px">
-
+                <button mat-raised-button style="min-width: 35px; border-color: #ccc; color:#333" (click)="irASubProductos(producto.id)" matTooltip="Subproductos"
+                    matTooltipPosition="above">
+                    <mat-icon>link</mat-icon>
+                </button>
+                <button mat-raised-button style="min-width: 35px; border-color: #ccc; color:#333" (click)="irAActividades(producto.id)"
+                    matTooltip="Actividades" matTooltipPosition="above">
+                    <mat-icon>watch_later</mat-icon>
+                </button>
+                <button mat-raised-button style="min-width: 35px; border-color: #ccc; color:#333" (click)="verHistoria()" matTooltip="Ver Historia"
+                    matTooltipPosition="above">
+                    <mat-icon>history</mat-icon>
+                </button>
+                <button mat-raised-button style="min-width: 35px; border-color: #ccc; color:#333" (click)="producto.acumulacionCostoid == 2 ? agregarPagos() : ''"
+                    matTooltip="Pagos planificados" matTooltipPosition="above" [disabled]="producto.acumulacionCostoid != 2">
+                    <mat-icon>payment</mat-icon>
+                </button>
               </div>
               <div fxFlex fxLayoutAlign="end" fxLayoutGap="2px">
                 <button mat-raised-button id="applying-disabled" class="applying-btn" [disabled]="!myForm.valid" (click)="guardar()" matTooltip="Guardar"
@@ -172,7 +187,7 @@
                           </div>
                           <div fxLayout="column">
                             <mat-form-field>
-                              <input name="acumulacionCosto" [formControl]="myControl" [(ngModel)]="producto.acumulacionCostoId" matInput placeholder="Tipo de Acumulación Monto Planificado"
+                              <input name="acumulacionCosto" [formControl]="myControl" [(ngModel)]="producto.acumulacionCostoNombre" matInput placeholder="Tipo de Acumulación Monto Planificado"
                                 [required]="producto.costo>0" [matAutocomplete]="auto">
                               <mat-autocomplete #auto="matAutocomplete">
                                 <mat-option *ngFor="let value of filteredAcumulacionCosto | async" [value]="value.nombre" (onSelectionChange)="acumulacionCostoSeleccionado(value)">
@@ -214,7 +229,7 @@
                             </mat-form-field>
                           </div>
                           <div fxLayout="column">
-                            <mat-checkbox color="primary" name="inversionNueva" [(ngModel)]="producto.inversionNueva">
+                            <mat-checkbox color="primary" name="inversionNueva" [(ngModel)]="inversionNueva">
                               Es Inversion Nueva
                             </mat-checkbox>
                           </div>

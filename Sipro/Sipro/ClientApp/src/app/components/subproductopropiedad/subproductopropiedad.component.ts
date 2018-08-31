@@ -5,15 +5,15 @@ import { HttpClient } from '@angular/common/http';
 import { LocalDataSource } from 'ng2-smart-table';
 import * as moment from 'moment';
 import { MatDialog } from '@angular/material';
-import { ProductoPropiedad } from './model/ProductoPropiedad';
+import { SubproductoPropiedad } from './model/SubproductoPropiedad';
 import { DialogDelete, DialogOverviewDelete } from '../../../assets/modals/deleteconfirmation/confirmation-delete';
 
 @Component({
-  selector: 'app-productopropiedad',
-  templateUrl: './productopropiedad.component.html',
-  styleUrls: ['./productopropiedad.component.css']
+  selector: 'app-subproductopropiedad',
+  templateUrl: './subproductopropiedad.component.html',
+  styleUrls: ['./subproductopropiedad.component.css']
 })
-export class ProductopropiedadComponent implements OnInit {
+export class SubproductopropiedadComponent implements OnInit {
   mostrarcargando : boolean;
   color = 'primary';
   mode = 'indeterminate';
@@ -26,8 +26,8 @@ export class ProductopropiedadComponent implements OnInit {
   esColapsado : boolean;
   elementosPorPagina : number;
   numeroMaximoPaginas : number;
-  totalProductoPropiedades: number;
-  productopropiedad : ProductoPropiedad;
+  totalSubProductoPropiedades: number;
+  subproductopropiedad : SubproductoPropiedad;
   busquedaGlobal: string;
   paginaActual : number;
   source: LocalDataSource;
@@ -38,35 +38,34 @@ export class ProductopropiedadComponent implements OnInit {
 
   @ViewChild('search') divSearch: ElementRef;
 
-
   constructor(private auth: AuthService, private utils: UtilsService, private http: HttpClient, private dialog: MatDialog) { 
     this.isMasterPage = this.auth.isLoggedIn();
     this.utils.setIsMasterPage(this.isMasterPage);
     this.elementosPorPagina = utils._elementosPorPagina;
     this.numeroMaximoPaginas = utils._numeroMaximoPaginas;
-    this.totalProductoPropiedades = 0;
-    this.productopropiedad = new ProductoPropiedad();
+    this.totalSubProductoPropiedades = 0;
+    this.subproductopropiedad = new SubproductoPropiedad();
     this.source = new LocalDataSource();
     this.modalDelete = new DialogOverviewDelete(dialog);
   }
 
   ngOnInit() {
     this.mostrarcargando = true;
-    this.obtenerTotalProductoPropiedades();
+    this.obtenerTotalSubProductoPropiedades();
     this.obtenerDatosTipo();
   }
 
-  obtenerTotalProductoPropiedades(){
+  obtenerTotalSubProductoPropiedades(){
     var data = {  
       filtro_busqueda: this.busquedaGlobal,
       t:moment().unix()
     };
 
-    this.http.post('http://localhost:60059/api/ProductoPropiedad/TotalElementos', data, { withCredentials : true }).subscribe(response =>{
+    this.http.post('http://localhost:60084/api/SubproductoPropiedad/TotalElementos', data, { withCredentials : true }).subscribe(response =>{
       if(response['success'] == true){
-        this.totalProductoPropiedades = response['total'];
+        this.totalSubProductoPropiedades = response['total'];
         this.paginaActual = 1;
-        if(this.totalProductoPropiedades > 0)
+        if(this.totalSubProductoPropiedades > 0)
           this.cargarTabla(this.paginaActual);
         else{
           this.source = new LocalDataSource();
@@ -89,9 +88,9 @@ export class ProductopropiedadComponent implements OnInit {
       t:moment().unix()
     };
 
-    this.http.post('http://localhost:60059/api/ProductoPropiedad/ProductoPropiedadPagina', filtro, { withCredentials : true }).subscribe(response =>{
+    this.http.post('http://localhost:60084/api/SubproductoPropiedad/SubproductoPropiedadPagina', filtro, { withCredentials : true }).subscribe(response =>{
       if(response['success'] == true){
-        var data = response['productoPropiedades'];
+        var data = response['subproductoPropiedades'];
         this.source = new LocalDataSource(data);
         this.source.setSort([
           { field: 'id', direction: 'asc' }  // primary sort
@@ -112,7 +111,7 @@ export class ProductopropiedadComponent implements OnInit {
   }
 
   cambioOpcionDatoTipo(opcion){
-    this.productopropiedad.datoTipoid = opcion;
+    this.subproductopropiedad.datoTipoid = opcion;
   }
 
   handlePage(event){
@@ -122,83 +121,83 @@ export class ProductopropiedadComponent implements OnInit {
   nuevo(){
     this.esColapsado = true;
     this.esNuevo = true;
-    this.productopropiedad = new ProductoPropiedad();
+    this.subproductopropiedad = new SubproductoPropiedad();
     this.datoTipoSelected = 0;
   }
 
   editar(){
-    if(this.productopropiedad.id > 0){
+    if(this.subproductopropiedad.id > 0){
       this.esColapsado = true;
       this.esNuevo = false;
-      this.datoTipoSelected = this.productopropiedad.datoTipoid;
+      this.datoTipoSelected = this.subproductopropiedad.datoTipoid;
     }
     else{
-      this.utils.mensaje('warning', 'Debe seleccionar la Propiedad de producto que desea editar');
+      this.utils.mensaje('warning', 'Debe seleccionar la Propiedad de subproducto que desea editar');
     }
   }
 
   borrar(){
-    if(this.productopropiedad.id > 0){
+    if(this.subproductopropiedad.id > 0){
       this.modalDelete.dialog.open(DialogDelete, {
         width: '600px',
         height: '200px',
         data: { 
-          id: this.productopropiedad.id,
+          id: this.subproductopropiedad.id,
           titulo: 'Confirmación de Borrado', 
-          textoCuerpo: '¿Desea borrar la propiedad de producto?',
+          textoCuerpo: '¿Desea borrar la propiedad de subproducto?',
           textoBotonOk: 'Borrar',
           textoBotonCancelar: 'Cancelar'
         }
       }).afterClosed().subscribe(result => {
         if(result != null && result){
-          this.http.delete('http://localhost:60059/api/ProductoPropiedad/ProductoPropiedad/'+ this.productopropiedad.id, { withCredentials : true }).subscribe(response =>{
+          this.http.delete('http://localhost:60084/api/SubproductoPropiedad/SubproductoPropiedad/'+ this.subproductopropiedad.id, { withCredentials : true }).subscribe(response =>{
             if(response['success'] == true){
-              this.obtenerTotalProductoPropiedades();
+              this.obtenerTotalSubProductoPropiedades();
             }
           })  
         }
       })
     }
     else{
-      this.utils.mensaje('warning', 'Seleccione una propiedad de producto');
+      this.utils.mensaje('warning', 'Seleccione una propiedad de subproducto');
     }
   }
 
   filtrar(campo){
     this.busquedaGlobal = campo;
-    this.obtenerTotalProductoPropiedades();
+    this.obtenerTotalSubProductoPropiedades();
   }
 
   onDblClickRow(event){
-    this.productopropiedad = event.data;
+    this.subproductopropiedad = event.data;
     this.editar();
   }
 
   onSelectRow(event){
-    this.productopropiedad = event.data;
+    this.subproductopropiedad = event.data;
   }
 
   guardar(){
-    if(this.productopropiedad != null && Number(this.datoTipoSelected) != 0){
+    if(this.subproductopropiedad != null && Number(this.datoTipoSelected) != 0){
       var objetoHttp;
 
-      if(this.productopropiedad.id > 0){
-        objetoHttp = this.http.put("http://localhost:60059/api/ProductoPropiedad/ProductoPropiedad/" + this.productopropiedad.id, this.productopropiedad, { withCredentials: true });
+      if(this.subproductopropiedad.id > 0){
+        objetoHttp = this.http.put("http://localhost:60084/api/SubproductoPropiedad/SubproductoPropiedad/" + this.subproductopropiedad.id, this.subproductopropiedad, { withCredentials: true });
       }
       else{
-        objetoHttp = this.http.post("http://localhost:60059/api/ProductoPropiedad/ProductoPropiedad", this.productopropiedad, { withCredentials: true });
+        objetoHttp = this.http.post("http://localhost:60084/api/SubproductoPropiedad/SubproductoPropiedad", this.subproductopropiedad, { withCredentials: true });
       }
 
       objetoHttp.subscribe(response =>{
         if(response['success'] == true){
-          this.productopropiedad.usuarioCreo = response['usuarioCreo'];
-          this.productopropiedad.fechaCreacion = response['fechaCreacion'];
-          this.productopropiedad.fechaActualizacion = response['fechaActualizacion'];
-          this.productopropiedad.usuarioActualizo = response['usuarioActualizo'];
-          this.productopropiedad.id = response['id'];
+          this.subproductopropiedad.usuarioCreo = response['usuarioCreo'];
+          this.subproductopropiedad.fechaCreacion = response['fechaCreacion'];
+          this.subproductopropiedad.fechaActualizacion = response['fechaActualizacion'];
+          this.subproductopropiedad.usuarioActualizo = response['usuarioActualizo'];
+          this.subproductopropiedad.id = response['id'];
 
           this.esNuevo = false;
-          this.obtenerTotalProductoPropiedades();
+          this.obtenerTotalSubProductoPropiedades();
           this.utils.mensaje('success', 'Propiedad guardada exitosamente');
         }
       })
@@ -210,7 +209,7 @@ export class ProductopropiedadComponent implements OnInit {
 
   IrATabla(){
     this.esColapsado = false;
-    this.productopropiedad = new ProductoPropiedad();
+    this.subproductopropiedad = new SubproductoPropiedad();
   }
 
   settings = {

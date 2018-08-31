@@ -6,15 +6,15 @@ import { LocalDataSource } from 'ng2-smart-table';
 @Component({
   templateUrl: './modal-dialog.html'
 })
-export class DialogOverviewProductoPropiedad {
+export class DialogOverviewSubproductoPropiedad {
   constructor(public dialog: MatDialog) {}
 }
 
 @Component({
-  selector: 'modal-producto-propiedad.ts',
+  selector: 'modal-subproducto-propiedad.ts',
   templateUrl: './modal-dialog.html'
 })
-export class DialogProductoPropiedad {
+export class DialogSubproductoPropiedad {
   totalElementos : number;
   source: LocalDataSource;
   paginaActual : number;
@@ -31,7 +31,7 @@ export class DialogProductoPropiedad {
   busquedaGlobal: string;
 
   constructor(public dialog: MatDialog,
-    public dialogRef: MatDialogRef<DialogProductoPropiedad>,
+    public dialogRef: MatDialogRef<DialogSubproductoPropiedad>,
     @Inject(MAT_DIALOG_DATA) public data: any, private http: HttpClient) {
       this.elementosPorPagina = 10;
       this.busquedaGlobal = null;
@@ -52,7 +52,7 @@ export class DialogProductoPropiedad {
     var filtro = {
       filtro_busqueda: this.busquedaGlobal
     };
-    this.http.post('http://localhost:60059/api/ProductoPropiedad/totalElementos',filtro, {withCredentials: true}).subscribe(response => {
+    this.http.post('http://localhost:60084/api/SubproductoPropiedad/TotalElementos',filtro, {withCredentials: true}).subscribe(response => {
       if (response['success'] == true) {   
         this.totalElementos = response["total"];
         this.paginaActual = 1;
@@ -69,9 +69,9 @@ export class DialogProductoPropiedad {
       numeroSubComponentePropiedad: this.elementosPorPagina,
       filtro_busqueda: this.busquedaGlobal
     }
-    this.http.post('http://localhost:60059/api/ProductoPropiedad/ProductoPropiedadPagina', filtro, { withCredentials: true }).subscribe(response => {
+    this.http.post('http://localhost:60084/api/SubproductoPropiedad/SubproductoPropiedadPagina', filtro, { withCredentials: true }).subscribe(response => {
       if (response['success'] == true) {
-        var data = response["productoPropiedades"];        
+        var data = response["subproductoPropiedades"];        
         this.source = new LocalDataSource(data);
         this.esColapsado = true;
 
