@@ -64,16 +64,29 @@ import { SubcomponentetipoComponent } from './components/subcomponentetipo/subco
 import { ProductoComponent } from './components/producto/producto.component';
 import { ProductopropiedadComponent } from './components/productopropiedad/productopropiedad.component';
 import { ProductotipoComponent } from './components/productotipo/productotipo.component';
+import { ActividadComponent } from './components/actividad/actividad.component';
+import { ActividadtipoComponent } from './components/actividadtipo/actividadtipo.component';
+import { ActividadpropiedadComponent } from './components/actividadpropiedad/actividadpropiedad.component';
 
 const routes: Routes = [{
           path: '',    // Va a Main
           component: MainComponent,
           canActivate: [RouteguardService] 
-        },{
+        }, {
           path: 'main',
           component: MainComponent,
           canActivate: [RouteguardService]
         },{
+          path: 'main/actividad',
+          component: ActividadComponent,
+        },{
+          path: 'main/actividadpropiedad',
+          component: ActividadpropiedadComponent
+        },{
+          path: 'main/actividadtipo',
+          component: ActividadtipoComponent
+        },
+        {
           path: 'main/prestamo',
           component: PrestamoComponent
         },{
@@ -137,7 +150,7 @@ const routes: Routes = [{
       DialogImpacto, DialogEntidad, ComponenteComponent, DialogCargarProject, DialogMapa, ComponentepropiedadComponent, ComponentetipoComponent,
       DialogComponentePropiedad, DialogComponenteTipo, SubcomponenteComponent, SubcomponentepropiedadComponent, SubcomponentetipoComponent,
       DialogSubComponentePropiedad, DialogSubComponenteTipo, ProductoComponent, ProductopropiedadComponent, ProductotipoComponent,
-      DialogProductoPropiedad, DialogProductoTipo
+      DialogProductoPropiedad, DialogProductoTipo, ActividadComponent, ActividadtipoComponent, ActividadpropiedadComponent
   ],
   imports: [
       BrowserModule,
