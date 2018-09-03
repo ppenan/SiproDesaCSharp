@@ -42,6 +42,6 @@ namespace SiproDAO.Dao
                 CLogger.write("2", "AcumulacionCosto.class", e);
             }
             return ret;
-        }
+        }        
     }
 }
