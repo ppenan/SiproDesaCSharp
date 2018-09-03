@@ -133,4 +133,4 @@ export class DialogProductoPropiedad {
     this.busquedaGlobal = campo;
     this.obtenerTotalProductosPropiedades();
   }
-}
+} 

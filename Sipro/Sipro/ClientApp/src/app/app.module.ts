@@ -42,6 +42,7 @@ import { DialogSubComponentePropiedad } from '../assets/modals/subcomponenteprop
 import { DialogSubComponenteTipo } from '../assets/modals/subcomponentetipo/modal-subcomponente-tipo';
 import { DialogProductoPropiedad } from '../assets/modals/productopropiedad/modal-producto-propiedad';
 import { DialogProductoTipo } from '../assets/modals/productotipo/modal-producto-tipo';
+import { DialogSubproductoPropiedad } from '../assets/modals/subproductopropiedad/modal-subproducto-propiedad';
 
 import { AppComponent } from './app.component';
 import { MainComponent } from './components/main/main.component';
@@ -64,9 +65,12 @@ import { SubcomponentetipoComponent } from './components/subcomponentetipo/subco
 import { ProductoComponent } from './components/producto/producto.component';
 import { ProductopropiedadComponent } from './components/productopropiedad/productopropiedad.component';
 import { ProductotipoComponent } from './components/productotipo/productotipo.component';
+import { SubproductoComponent } from './components/subproducto/subproducto.component';
+import { SubproductopropiedadComponent } from './components/subproductopropiedad/subproductopropiedad.component';
+import { SubproductotipoComponent } from './components/subproductotipo/subproductotipo.component';
 import { ActividadComponent } from './components/actividad/actividad.component';
-import { ActividadtipoComponent } from './components/actividadtipo/actividadtipo.component';
 import { ActividadpropiedadComponent } from './components/actividadpropiedad/actividadpropiedad.component';
+import { ActividadtipoComponent } from './components/actividadtipo/actividadtipo.component';
 
 const routes: Routes = [{
           path: '',    // Va a Main
@@ -129,6 +133,15 @@ const routes: Routes = [{
           path: 'main/subcomponentetipo',
           component: SubcomponentetipoComponent
         },{
+          path: 'main/subproducto/:id',
+          component: SubproductoComponent
+        },{
+          path: 'main/subproductopropiedad',
+          component: SubproductopropiedadComponent
+        },{
+          path: 'main/subproductotipo',
+          component: SubproductotipoComponent
+        },{
           path: 'accesodenegado',
           component: AccesodenegadoComponent
         },{
@@ -150,7 +163,8 @@ const routes: Routes = [{
       DialogImpacto, DialogEntidad, ComponenteComponent, DialogCargarProject, DialogMapa, ComponentepropiedadComponent, ComponentetipoComponent,
       DialogComponentePropiedad, DialogComponenteTipo, SubcomponenteComponent, SubcomponentepropiedadComponent, SubcomponentetipoComponent,
       DialogSubComponentePropiedad, DialogSubComponenteTipo, ProductoComponent, ProductopropiedadComponent, ProductotipoComponent,
-      DialogProductoPropiedad, DialogProductoTipo, ActividadComponent, ActividadtipoComponent, ActividadpropiedadComponent
+      DialogProductoPropiedad, DialogProductoTipo, SubproductoComponent, SubproductopropiedadComponent, SubproductotipoComponent,
+      DialogSubproductoPropiedad, ActividadComponent, ActividadpropiedadComponent, ActividadtipoComponent
   ],
   imports: [
       BrowserModule,
@@ -175,7 +189,7 @@ const routes: Routes = [{
   entryComponents: [DialogCodigoPresupuestario, DialogMoneda, DialogTipoPrestamo, ButtonDeleteComponent, ButtonDownloadComponent, 
     DialogDownloadDocument, DialogProyectoTipo, DialogProyectoPropiedad, DialogDelete, DialogUnidadEjecutora, DialogColaborador,
     DialogImpacto, DialogEntidad, DialogCargarProject, DialogMapa, DialogComponentePropiedad, DialogComponenteTipo, DialogSubComponentePropiedad,
-    DialogSubComponenteTipo, DialogProductoPropiedad, DialogProductoTipo]
+    DialogSubComponenteTipo, DialogProductoPropiedad, DialogProductoTipo, DialogSubproductoPropiedad]
 })
 export class AppModule { 
 

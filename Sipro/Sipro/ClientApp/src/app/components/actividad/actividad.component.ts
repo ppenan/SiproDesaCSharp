@@ -17,7 +17,6 @@ import { DialogComponenteTipo, DialogOverviewComponenteTipo } from '../../../ass
 import { DialogOverviewUnidadEjecutora, DialogUnidadEjecutora } from '../../../assets/modals/unidadejecutora/unidad-ejecutora';
 import { DialogDelete, DialogOverviewDelete } from '../../../assets/modals/deleteconfirmation/confirmation-delete';
 
-
 @Component({
   selector: 'app-actividad',
   templateUrl: './actividad.component.html',

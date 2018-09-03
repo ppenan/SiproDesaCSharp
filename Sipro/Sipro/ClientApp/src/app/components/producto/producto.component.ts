@@ -80,6 +80,7 @@ export class ProductoComponent implements OnInit {
   objetoNombre: string;
   objetoTipoNombre: string;
   modalDelete: DialogOverviewDelete;
+  inversionNueva : boolean;
 
   dimensiones = [
     {value:1,nombre:'Dias',sigla:'d'}
@@ -239,7 +240,7 @@ export class ProductoComponent implements OnInit {
       this.esNuevo = false;
       this.tabActive = 0;
       this.dimensionSelected = 0;
-
+      this.inversionNueva = this.producto.inversionNueva == 1 ? true : false;
       this.unidadejecutoraid= this.producto.ueunidadEjecutora;
       this.unidadejecutoranombre= this.producto.nombreUnidadEjecutora;
       this.ejercicio = this.producto.ejercicio;
@@ -363,7 +364,7 @@ export class ProductoComponent implements OnInit {
         }
       }
 
-      this.producto.inversionNueva = this.producto.inversionNueva == 1 ? 1 : this.producto.inversionNueva.toString() == "true" ? 1 : 0;
+      this.producto.inversionNueva = this.inversionNueva != null ? this.inversionNueva == true ? 1 : 0: 0;      
       this.producto.camposDinamicos = JSON.stringify(this.camposdinamicos);
       this.producto.componenteid = this.objetoTipo == 1 ? this.objetoId : null;
       this.producto.subcomponenteid = this.objetoTipo == 2 ? this.objetoId : null;
