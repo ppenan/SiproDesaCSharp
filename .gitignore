@@ -351,3 +351,4 @@ storage.ide-wal
 /Sipro/.vs/Sipro/v15
 /Sipro/obj/
 /SiproModel/obj/Debug
+/Sipro/Sipro/ClientApp/package-lock.json

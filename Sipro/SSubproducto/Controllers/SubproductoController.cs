@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using SiproDAO.Dao;
 using SiproModelCore.Models;
@@ -113,42 +114,45 @@ namespace SSubproducto.Controllers
                     subproducto.acumulacionCostos = AcumulacionCostoDAO.getAcumulacionCostoById(Convert.ToInt32(subproducto.acumulacionCostoid));
 
                     temp.acumulacionCostoid = Convert.ToInt32(subproducto.acumulacionCostoid);
-                    temp.acumulacionCostoNombre = subproducto.acumulacionCostos.nombre;                    
+                    temp.acumulacionCostoNombre = subproducto.acumulacionCostos.nombre;
 
-                    subproducto.subproductoTipos = SubproductoTipoDAO.
+                    subproducto.subproductoTipos = SubproductoTipoDAO.getSubproductoTipo(subproducto.subproductoTipoid);
 
                     if (subproducto.subproductoTipos != null)
                     {
-                        temp.idSubproductoTipo = subproducto.getSubproductoTipo().getId();
-                        temp.subProductoTipo = subproducto.getSubproductoTipo().getNombre();
+                        temp.subproductoTipoid = subproducto.subproductoTipos.id;
+                        temp.subProductoTipo = subproducto.subproductoTipos.nombre;
                     }
 
-                    if (subproucto.getUnidadEjecutora() != null)
+                    subproducto.unidadEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutora(subproducto.ejercicio, subproducto.entidad ?? default(int), subproducto.ueunidadEjecutora);
+                    subproducto.productos = ProductoDAO.getProductoPorId(subproducto.productoid);
+                    subproducto.productos.unidadEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutora(subproducto.productos.ejercicio, subproducto.productos.entidad ?? default(int), subproducto.productos.ueunidadEjecutora);
+
+                    if (subproducto.unidadEjecutoras != null)
                     {
-                        temp.unidadEjecutora = subproducto.getUnidadEjecutora().getId().getUnidadEjecutora();
-                        temp.nombreUnidadEjecutora = subproducto.getUnidadEjecutora().getNombre();
-                        temp.entidadentidad = subproducto.getUnidadEjecutora().getId().getEntidadentidad();
-                        temp.ejercicio = subproducto.getUnidadEjecutora().getId().getEjercicio();
-                        temp.entidadnombre = subproducto.getUnidadEjecutora().getEntidad().getNombre();
+                        temp.ueunidadEjecutora = subproducto.ueunidadEjecutora;
+                        temp.nombreUnidadEjecutora = subproducto.unidadEjecutoras.nombre;
+                        temp.entidadentidad = subproducto.entidad ?? default(int);
+                        temp.ejercicio = subproducto.ejercicio;
+
+                        subproducto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subproducto.entidad ?? default(int), subproducto.ejercicio);
+                        temp.entidadnombre = subproducto.unidadEjecutoras.entidads.nombre;
                     }
-                    else if (subproducto.getProducto().getUnidadEjecutora() != null)
+                    else if (subproducto.productos.unidadEjecutoras != null)
                     {
-                        temp.unidadEjecutora = subproducto.getProducto().getUnidadEjecutora().getId().getUnidadEjecutora();
-                        temp.nombreUnidadEjecutora = subproducto.getProducto().getUnidadEjecutora().getNombre();
-                        temp.entidadentidad = subproducto.getProducto().getUnidadEjecutora().getId().getEntidadentidad();
-                        temp.ejercicio = subproducto.getProducto().getUnidadEjecutora().getId().getEjercicio();
-                        temp.entidadnombre = subproducto.getProducto().getUnidadEjecutora().getEntidad().getNombre();
+                        temp.ueunidadEjecutora = subproducto.productos.ueunidadEjecutora;
+                        temp.nombreUnidadEjecutora = subproducto.productos.unidadEjecutoras.nombre;
+                        temp.entidadentidad = subproducto.productos.entidad ?? default(int);
+                        temp.ejercicio = subproducto.productos.ejercicio;
+                        subproducto.productos.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subproducto.productos.entidad ?? default(int), subproducto.productos.ejercicio);
+                        temp.entidadnombre = subproducto.productos.unidadEjecutoras.entidads.nombre;
                     }
 
                     temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 4);
 
-                    temp.fechaInicioReal = Utils.formatDate(subproucto.getFechaInicioReal());
-                    temp.fechaFinReal = Utils.formatDate(subproucto.getFechaFinReal());
-
-                    temp.congelado = congelado;
-                    temp.fechaElegibilidad = fechaElegibilidad;
-                    temp.fechaCierre = fechaCierre;
-                    temp.inversionNueva = subproucto.getInversionNueva();
+                    temp.fechaInicioReal = subproducto.fechaInicioReal != null ? subproducto.fechaInicioReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.fechaFinReal = subproducto.fechaFinReal != null ? subproducto.fechaFinReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.inversionNueva = subproducto.inversionNueva;
                 }
                 return Ok();
             }
@@ -164,7 +168,17 @@ namespace SSubproducto.Controllers
         {
             try
             {
-                return Ok();
+                SubproductoValidator validator = new SubproductoValidator();
+                ValidationResult results = validator.Validate(value);
+
+                if (results.IsValid)
+                {
+                    Subproducto subproducto = new Subproducto();
+
+                    return Ok();
+                }
+                else
+                    return Ok(new { success = false });
             }
             catch (Exception e)
             {

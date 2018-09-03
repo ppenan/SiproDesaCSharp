@@ -62,7 +62,7 @@ export class ProductopropiedadComponent implements OnInit {
       t:moment().unix()
     };
 
-    this.http.post('http://localhost:60059/api/ProductoPropiedad/totalElementos', data, { withCredentials : true }).subscribe(response =>{
+    this.http.post('http://localhost:60059/api/ProductoPropiedad/TotalElementos', data, { withCredentials : true }).subscribe(response =>{
       if(response['success'] == true){
         this.totalProductoPropiedades = response['total'];
         this.paginaActual = 1;
