@@ -134,8 +134,8 @@ namespace SActividad.Controllers
 
 
                     // TODO actividad tipo
-                    temp.actividadtipoid = actividad.ActividadTipo().Id();
-                    temp.actividadtiponombre = actividad.ActividadTipo().Nombre();
+                    //temp.actividadtipoid = actividad.ActividadTipo().Id();
+                    //temp.actividadtiponombre = actividad.ActividadTipo().Nombre();
 
                     temp.porcentajeavance = actividad.porcentajeAvance;
                     temp.programa = actividad.programa ?? 0;
@@ -149,12 +149,12 @@ namespace SActividad.Controllers
                     temp.latitud = actividad.latitud;
                     temp.costo = actividad.costo;
 
-                    temp.acumulacionCostoId = actividad.AcumulacionCosto().Id();
-                    temp.acumulacionCostoNombre = actividad.AcumulacionCosto().Nombre();
+                    //temp.acumulacionCostoId = actividad.AcumulacionCosto().Id();
+                    //temp.acumulacionCostoNombre = actividad.AcumulacionCosto().Nombre();
 
                     temp.proyectoBase = actividad.proyectoBase ?? 0;
 
-                    temp.fechaInicioReal = actividad.fechaInicioReal?.ToString("dd/MM/yyyy H:mm:ss")
+                    temp.fechaInicioReal = actividad.fechaInicioReal?.ToString("dd/MM/yyyy H:mm:ss");
                     temp.fechaFinReal = actividad.fechaFinReal?.ToString("dd/MM/yyyy H:mm:ss");
 
                     temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
