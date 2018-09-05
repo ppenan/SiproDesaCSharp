@@ -43,8 +43,8 @@ namespace SActividadTipo.Controllers
 
                     temp.descripcion = actividadtipo.descripcion;
                     temp.estado = actividadtipo.estado;
-                    temp.fechaActualizacion = actividadtipo.fechaActualizacion != null ? actividadtipo.fechaActualizacion.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
-                    temp.fechaCreacion = actividadtipo.fechaCreacion.ToString("dd/MM/yyyy H:mm:ss");
+                    temp.fechaActualizacion = Utils.ConvierteAFormatoFecha(actividadtipo.fechaActualizacion);
+                    temp.fechaCreacion = Utils.ConvierteAFormatoFecha(actividadtipo.fechaCreacion);
                     temp.id = actividadtipo.id;
                     temp.nombre = actividadtipo.nombre;
                     temp.usuarioActualizo = actividadtipo.usuarioActualizo;
@@ -84,8 +84,8 @@ namespace SActividadTipo.Controllers
 
                     temp.descripcion = actividadtipo.descripcion;
                     temp.estado = actividadtipo.estado;
-                    temp.fechaActualizacion = actividadtipo.fechaActualizacion != null ? actividadtipo.fechaActualizacion.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
-                    temp.fechaCreacion = actividadtipo.fechaCreacion.ToString("dd/MM/yyyy H:mm:ss");
+                    temp.fechaActualizacion = Utils.ConvierteAFormatoFecha(actividadtipo.fechaActualizacion);
+                    temp.fechaCreacion = Utils.ConvierteAFormatoFecha(actividadtipo.fechaCreacion);
                     temp.id = actividadtipo.id;
                     temp.nombre = actividadtipo.nombre;
                     temp.usuarioActualizo = actividadtipo.usuarioActualizo;
@@ -149,9 +149,9 @@ namespace SActividadTipo.Controllers
                             success = guardado,
                             id = actividadTipo.id,
                             usuarioCreo = actividadTipo.usuarioCreo,
-                            fechaCreacion = actividadTipo.fechaCreacion.ToString("dd/MM/yyyy H:mm:ss"),
+                            fechaCreacion = Utils.ConvierteAFormatoFecha(actividadTipo.fechaCreacion),
                             usuarioActualizo = actividadTipo.usuarioActualizo,
-                            fechaActualizacion = actividadTipo.fechaActualizacion != null ? actividadTipo.fechaActualizacion.Value.ToString("dd/MM/yyyy H:mm:ss") : null
+                            fechaActualizacion = Utils.ConvierteAFormatoFecha(actividadTipo.fechaActualizacion)
                         });
                     }
                     else
