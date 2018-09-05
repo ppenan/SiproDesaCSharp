@@ -22,23 +22,9 @@
     <Compile Remove="Dao\RolDAO.cs" />
     <Compile Remove="Dao\UsuarioDAO.cs" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="app.config" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SiproDAO\SiproDAO\SiproDAO.csproj" />
     <ProjectReference Include="..\SiproModelCore\SiproModelCore\SiproModelCore.csproj" />
     <ProjectReference Include="..\Identity\Identity.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Remove="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
   </ItemGroup>
 </Project>
