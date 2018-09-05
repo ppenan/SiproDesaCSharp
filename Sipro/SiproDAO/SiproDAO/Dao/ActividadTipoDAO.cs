@@ -80,7 +80,7 @@ namespace SiproDAO.Dao
 
                     if (existe > 0)
                     {
-                        int guardado = db.Execute("UPDATE actividad_tipo SET nombre = :nombre, descripcion = :descripcion, usuario_creo = :usuario_creo, usuario_actualizo = :usuario_actualizo, fecha_creacion = :fecha_creacion, fecha_actualizacion = :fecha_actualizacion, estado = :estado WHERE id = :id", actividadTipo);
+                        int guardado = db.Execute("UPDATE actividad_tipo SET nombre = :nombre, descripcion = :descripcion, usuario_creo = :usuario_creo, usuario_actualizo = :usuario_actualizo, fecha_creacion = :fecha_creacion, fecha_actualizacion = :fecha_actualizacion, estado = :estado WHERE id = :id", actividadTipo.);
 
                         resultado = (guardado > 0) ? true : false;
                     }
