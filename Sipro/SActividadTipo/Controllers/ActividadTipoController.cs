@@ -34,7 +34,7 @@ namespace SActividadTipo.Controllers
         {
             try
             {
-                List<ActividadTipo> actividadtipos = ActividadTipoDAO.GetActividadTipos();
+                List<ActividadTipo> actividadtipos = ActividadTipoDAO.ActividadTipos();
                 List<Stactividadtipo> stactividadtipos = new List<Stactividadtipo>();
 
                 foreach (ActividadTipo actividadtipo in actividadtipos)
@@ -74,7 +74,7 @@ namespace SActividadTipo.Controllers
                 String columna_ordenada = value.columna_ordenada != null ? (string)value.columna_ordenada : null;
                 String orden_direccion = value.orden_direccion != null ? (string)value.orden_direccion : null;
 
-                List<ActividadTipo> actividadtipos = ActividadTipoDAO.GetActividadTiposPagina(pagina, numeroCooperantesTipo, filtro_busqueda, columna_ordenada, orden_direccion);
+                List<ActividadTipo> actividadtipos = ActividadTipoDAO.ActividadTiposPagina(pagina, numeroCooperantesTipo, filtro_busqueda, columna_ordenada, orden_direccion);
 
                 List<Stactividadtipo> stactividadtipos = new List<Stactividadtipo>();
 

@@ -13,7 +13,7 @@ namespace SiproDAO.Dao
         /// Obtiene los tipos de actividad que tengan estado = 1
         /// </summary>
         /// <returns>Lista de Actividad Tipo</returns>
-        public static List<ActividadTipo> GetActividadTipos()
+        public static List<ActividadTipo> ActividadTipos()
         {
             List<ActividadTipo> result = new List<ActividadTipo>();
 
@@ -166,7 +166,7 @@ namespace SiproDAO.Dao
         /// <param name="columna_ordenada">Nombre de la columna a ordenar</param>
         /// <param name="orden_direccion">Tipo de ordenamiento ASC o DESC</param>
         /// <returns>Listado de Actividad Tipo, ya paginada y en el orden solicitado</returns>
-        public static List<ActividadTipo> GetActividadTiposPagina(
+        public static List<ActividadTipo> ActividadTiposPagina(
             int pagina,
             int numeroactividadstipo,
             String filtro_busqueda,

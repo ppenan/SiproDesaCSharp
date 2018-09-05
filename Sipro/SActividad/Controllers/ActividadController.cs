@@ -1,29 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using SiproDAO.Dao;
 using SiproModelCore.Models;
+using Utilities;
 using System;
 using System.Collections.Generic;
-using Utilities;
-
 
 namespace SActividad.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]/[action]")]
     public class ActividadController : Controller
     {
         private class StActividad
         {
             public int id;
-            public String nombre;
-            public String descripcion;
-            public String usuarioCreo;
-            public String usuarioActualizo;
-            public String fechaCreacion;
-            public String fechaActualizacion;
-            public String fechaInicio;
-            public String fechaFin;
+            public string nombre;
+            public string descripcion;
+            public string usuarioCreo;
+            public string usuarioActualizo;
+            public string fechaCreacion;
+            public string fechaActualizacion;
+            public string fechaInicio;
+            public string fechaFin;
             public int actividadtipoid;
-            public String actividadtiponombre;
+            public string actividadtiponombre;
             public int porcentajeavance;
             public int programa;
             public int subprograma;
@@ -32,76 +35,68 @@ namespace SActividad.Controllers
             public int obra;
             public int renglon;
             public int ubicacionGeografica;
-            public String longitud;
-            public String latitud;
+            public string longitud;
+            public string latitud;
             public int prececesorId;
             public int predecesorTipo;
             public int duracion;
-            public String duracionDimension;
+            public string duracionDimension;
             public decimal? costo;
             public int acumulacionCostoId;
-            public String acumulacionCostoNombre;
+            public string acumulacionCostoNombre;
             public decimal presupuestoModificado;
             public decimal presupuestoPagado;
             public decimal presupuestoVigente;
             public decimal presupuestoDevengado;
             public int avanceFinanciero;
             public int estado;
-            public Int64 proyectoBase;
-            public Boolean tieneHijos;
-            public String fechaInicioReal;
-            public String fechaFinReal;
+            public int proyectoBase;
+            public bool tieneHijos;
+            public string fechaInicioReal;
+            public string fechaFinReal;
             public int congelado;
-            public String fechaElegibilidad;
-            public String fechaCierre;
+            public string fechaElegibilidad;
+            public string fechaCierre;
             public int inversionNueva;
         }
 
         private class Stdatadinamico
         {
-            public String id;
-            public String tipo;
-            public String label;
-            public String valor;
-            public String valor_f;
+            public string id;
+            public string tipo;
+            public string label;
+            public string valor;
+            public string valor_f;
         }
 
         private class Stasignacionroles
         {
             public int id;
-            public String nombre;
-            public String rol;
-            public String nombrerol;
+            public string nombre;
+            public string rol;
+            public string nombrerol;
         }
 
 
         [HttpPost]
-        public IActionResult ActividadsPagina([FromBody]dynamic value)
+        [Authorize("Actividades - Visualizar")]
+        public IActionResult ActividadesPagina([FromBody]dynamic value)
         {
             try
             {
-                int pagina = value.pagina != null ? (int)value.pagina : 0;
-                int numeroActividades = value.numeroactividades != null ? (int)value.numeroactividades : 0;
+                int pagina = value.pagina != null ? (int)value.pagina : 1;
+                int numeroActividades = value.numeroactividades != null ? (int)value.numeroactividades : 20;
 
-                string filtro_nombre = value.filtro_nombre;
-                string filtro_usuario_creo = value.filtro_usuario_creo;
-                string filtro_fecha_creacion = value.filtro_fecha_creacion;
-                string columna_ordenada = value.columna_ordenada;
-                string orden_direccion = value.orden_direccion;
+                String filtro_busqueda = value.filtro_busqueda != null ? (string)value.filtro_busqueda : null;
+                String columna_ordenada = value.columna_ordenada != null ? (string)value.columna_ordenada : null;
+                String orden_direccion = value.orden_direccion != null ? (string)value.orden_direccion : null; ;
 
-
-                List<Actividad> actividades = ActividadDAO.GetActividadesPagina(
-                    pagina,
-                    numeroActividades,
-                    User.Identity.Name
-                    );
-
-                List<StActividad> stActividades = new List<StActividad>();                
+                List<Actividad> actividades = ActividadDAO.GetActividadesPagina(pagina, numeroActividades, filtro_busqueda, columna_ordenada, orden_direccion, User.Identity.Name);
+                List<StActividad> stactividades = new List<StActividad>();
 
                 int congelado = 0;
                 String fechaElegibilidad = null;
                 String fechaCierre = null;
-
 
                 if (actividades != null && actividades.Count > 0)
                 {
@@ -111,31 +106,29 @@ namespace SActividad.Controllers
                     {
                         congelado = proyecto.congelado ?? 0;
 
-                        fechaElegibilidad = proyecto.fechaElegibilidad?.ToString("dd/MM/yyyy H:mm:ss");
-                        fechaCierre = proyecto.fechaCierre?.ToString("dd/MM/yyyy H:mm:ss");
+                        fechaElegibilidad = proyecto.fechaElegibilidad != null ? proyecto.fechaElegibilidad.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
 
+                        fechaCierre = proyecto.fechaCierre != null ? proyecto.fechaCierre.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     }
                 }
+
 
                 foreach (Actividad actividad in actividades)
                 {
                     StActividad temp = new StActividad();
-
                     temp.descripcion = actividad.descripcion;
                     temp.estado = actividad.estado;
 
-                    temp.fechaActualizacion = actividad.fechaActualizacion?.ToString("dd/MM/yyyy H:mm:ss");
-                    temp.fechaCreacion = actividad.fechaCreacion.ToString("dd/MM/yyyy H:mm:ss");
+                    temp.fechaActualizacion = actividad.fechaActualizacion != null ? actividad.fechaActualizacion.Value.ToString("dd/MM/yyyy H:mm:ss") : null;                    
+                    temp.fechaCreacion = actividad.fechaActualizacion != null ? actividad.fechaActualizacion.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
 
                     temp.id = actividad.id;
                     temp.nombre = actividad.nombre;
                     temp.usuarioActualizo = actividad.usuarioActualizo;
                     temp.usuarioCreo = actividad.usuarioCreo;
 
-
-                    // TODO actividad tipo
-                    //temp.actividadtipoid = actividad.ActividadTipo().Id();
-                    //temp.actividadtiponombre = actividad.ActividadTipo().Nombre();
+                    temp.actividadtipoid = actividad.ActividadTipo.Id;
+                    temp.actividadtiponombre = actividad.ActividadTipo.Nombre;
 
                     temp.porcentajeavance = actividad.porcentajeAvance;
                     temp.programa = actividad.programa ?? 0;
@@ -149,13 +142,15 @@ namespace SActividad.Controllers
                     temp.latitud = actividad.latitud;
                     temp.costo = actividad.costo;
 
-                    //temp.acumulacionCostoId = actividad.AcumulacionCosto().Id();
-                    //temp.acumulacionCostoNombre = actividad.AcumulacionCosto().Nombre();
+                    temp.acumulacionCostoId = actividad.AcumulacionCosto.Id;
+                    temp.acumulacionCostoNombre = actividad.AcumulacionCosto.Nombre;
 
-                    temp.proyectoBase = actividad.proyectoBase ?? 0;
+                    // todo verificar si hizo el casteo correcto de long a int ?
+                    temp.proyectoBase = actividad.proyectoBase != null ?  Convert.ToInt32(actividad.proyectoBase) : 0;
 
-                    temp.fechaInicioReal = actividad.fechaInicioReal?.ToString("dd/MM/yyyy H:mm:ss");
-                    temp.fechaFinReal = actividad.fechaFinReal?.ToString("dd/MM/yyyy H:mm:ss");
+                    temp.fechaInicioReal = actividad.fechaInicioReal != null ? actividad.fechaInicioReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+
+                    temp.fechaFinReal = actividad.fechaFinReal != null ? actividad.fechaFinReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
 
                     temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 5);
                     temp.inversionNueva = actividad.inversionNueva;
@@ -164,16 +159,16 @@ namespace SActividad.Controllers
                     temp.fechaElegibilidad = fechaElegibilidad;
                     temp.fechaCierre = fechaCierre;
 
-                    stActividades.Add(temp);
+                    stactividades.Add(temp);
                 }
 
-                /*                response_text=new GsonBuilder().serializeNulls().create().toJson(stactividads);
-                                response_text = String.join("", "\"actividads\":",response_text);
-                                response_text = String.join("", "{\"success\":true,", response_text,"}");
-                                     */
+                /*
+                response_text = new GsonBuilder().serializeNulls().create().toJson(stactividades);
+                response_text = String.join("", "\"actividades\":", response_text);
+                response_text = String.join("", "{\"success\":true,", response_text, "}");
+                */
 
-
-                return Ok();
+                return Ok(new { success = true, actividad = temp });
             }
             catch (Exception e)
             {
@@ -183,7 +178,7 @@ namespace SActividad.Controllers
         }
 
         [HttpGet]
-        public IActionResult Actividads()
+        public IActionResult Actividades()
         {
             try
             {

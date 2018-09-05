@@ -93,9 +93,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSubproductoPropiedad", "SS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSubproductoTipo", "SSubproductoTipo\SSubproductoTipo.csproj", "{F0EE62C8-B9A1-4DB8-896A-F4E52B8DA673}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SActividadTipo", "SActividadTipo\SActividadTipo.csproj", "{98D26621-3BA9-43FC-B1C9-EE797203DFFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SActividadTipo", "SActividadTipo\SActividadTipo.csproj", "{98D26621-3BA9-43FC-B1C9-EE797203DFFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SActividad", "SActividad\SActividad.csproj", "{EB45C365-87C3-42F3-8A02-14E80E62BF30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SActividad", "SActividad\SActividad.csproj", "{EB45C365-87C3-42F3-8A02-14E80E62BF30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
