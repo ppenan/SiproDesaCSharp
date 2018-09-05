@@ -10,16 +10,9 @@ namespace Utilities
 
         }
 
-        public static String? ConvertirAFormatoFechaEspanol(string cadena)
+        public static string ConvierteAFormatoFecha(DateTime? fecha)
         {
-            // todo: a convertir una funcion con el formato de la fecha
-            //actividad.fechaInicioReal != null ? actividad.fechaInicioReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
-            if (cadena == null)
-                return null;
-
-            DateTime fechaACambiar = Convert.ToDateTime(cadena);
-            
-            return Convert.ToString(fechaACambiar.ToString("dd/MM/yyyy H:mm:ss"));
+            return fecha.HasValue ? fecha.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
         }
 
         public static DateTime? getFechaHoraNull(string fechaHora)
