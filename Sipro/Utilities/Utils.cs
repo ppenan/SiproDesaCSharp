@@ -10,6 +10,11 @@ namespace Utilities
 
         }
 
+        public static string ConvierteAFormatoFecha(DateTime? fecha)
+        {
+            return fecha.HasValue ? fecha.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+        }
+
         public static DateTime? getFechaHoraNull(string fechaHora)
         {
             if (fechaHora != null)

@@ -280,7 +280,7 @@ namespace SiproDAO.Dao
                     }
 
                     query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
-                    query = String.Join("", query, " AND  c.id in (SELECT u.componenteid FROM componente_usuario u WHERE u.usuario=:usuario )");
+                    query = String.Join("", query, " AND  c.id in (SELECT u.actividadid FROM actividad_usuario u WHERE u.usuario=:usuario )");
 
                     ret = db.ExecuteScalar<long>(query, new { proyectoId = proyectoId, usuario = usuario });
                 }

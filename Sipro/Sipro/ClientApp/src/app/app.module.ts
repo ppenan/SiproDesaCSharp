@@ -76,17 +76,21 @@ const routes: Routes = [{
           path: '',    // Va a Main
           component: MainComponent,
           canActivate: [RouteguardService] 
-        },{
+        }, {
           path: 'main',
           component: MainComponent,
           canActivate: [RouteguardService]
+        },{
+          path: 'main/actividad',
+          component: ActividadComponent,
         },{
           path: 'main/actividadpropiedad',
           component: ActividadpropiedadComponent
         },{
           path: 'main/actividadtipo',
           component: ActividadtipoComponent
-        },{
+        },
+        {
           path: 'main/prestamo',
           component: PrestamoComponent
         },{
