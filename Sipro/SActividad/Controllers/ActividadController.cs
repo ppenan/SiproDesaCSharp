@@ -327,15 +327,8 @@ namespace SActividad.Controllers
                         acumulacionCosto = new AcumulacionCosto();
                         acumulacionCosto.id = actividad.acumulacionCosto;
                     }
-
-                    //TODO como convertir typetoken, se usa ?
-                    //type = new TypeToken<List<stdatadinamico>>()
-                    //{
-                    //}.getType();
-                    //List<Stdatadinamico> datos = (values.datadinamica != null && values.datadinamica.compareTo("{}") != 0) ? gson.fromJson(values.datadinamica, type) : new List<Stdatadinamico>();
-
+                    
                     Actividad actividadTemp = new Actividad();
-
                     Double fechaFinTimestamp = (fechaFinal.Ticks * 1.0 - fechaFinal.Ticks) / 86400000;
                     Double fechaInicioTimestamp = (fechaInicio.Ticks * 1.0 - fechaInicio.Ticks) / 86400000;
 
@@ -353,25 +346,11 @@ namespace SActividad.Controllers
                         actividad.fechaInicioReal = new DateTime();
                     }
 
-                    //actividad = new Actividad(actividadTipo, acumulacionCosto, nombre, descripcion, fechaInicio, fechaFin,
-                    //        porcentajeAvance, usuario, null, new Date(), null, 1, snip, programa, subprograma, proyecto, iactividad, obra,
-                    //        objetoId, objetoTipo, duracion, duracionDimension, null, null, latitud, longitud, costo, renglon, ubicacionGeografica, null, null, null
-                    //        , proyectoBase, componenteBase, productoBase, fechaInicioReal, fechaFinReal, inversionNueva, null, null);
-
                     resultado = ActividadDAO.guardarActividad(actividad, true);
 
                     if (resultado)
                     {
                         List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.GetAsignacionPorTarea(actividad.id, 5, null);
-
-                        if (asignaciones_temp != null)
-                        {
-                            foreach (AsignacionRaci asign in asignaciones_temp)
-                            {
-                                AsignacionRaciDAO.EliminarTotalAsignacion(asign);
-                            }
-                        }
-
                         String asignaciones_param = values.asignacionroles;
 
                         if (!asignaciones_param.Equals(""))
@@ -403,19 +382,11 @@ namespace SActividad.Controllers
 
 
                     if (resultado)
-                    {
-                        String pagosPlanificados = values.pagosPlanificados;
-                        if (!actividad.acumulacionCosto.Equals(2) || pagosPlanificados != null && pagosPlanificados.Replace("[", "").Replace("]", "").Length > 0)
-                        {
-                            List<PagoPlanificado> pagosActuales = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(actividad.getId(), 5);
-                            foreach (PagoPlanificado pagoTemp in pagosActuales)
-                            {
-                                PagoPlanificadoDAO.eliminarTotalPagoPlanificado(pagoTemp);
-                            }
-                        }
+                    {                        
+                        String pagosPlanificados = values.pagosPlanificados;                     
 
                         if (actividad.acumulacionCosto.Equals(2) && pagosPlanificados != null && pagosPlanificados.Replace("[", "").Replace("]", "").Length > 0)
-                        {                            
+                        {
                             JArray pagosArreglo = JArray.Parse((string)values.pagosPlanificados);
 
                             for (int i = 0; i < pagosArreglo.Count; i++)
@@ -434,83 +405,72 @@ namespace SActividad.Controllers
                                 pagoPlanificado.usuarioCreo = User.Identity.Name;
                                 pagoPlanificado.fechaCreacion = DateTime.Now;
                                 pagoPlanificado.estado = 1;
-                                
+
                                 resultado = resultado && PagoPlanificadoDAO.Guardar(pagoPlanificado);
                             }
                         }
                     }
 
-                    // como se soluciona, debo crear el llamado a ActividadPropiedadValor y revisar el método
+                    JArray datosDinamicos = JArray.Parse((string)values.camposDinamicos);                    
 
-                    List<ActividadPropiedadValor> valores_temp = ActividadPropiedadValorDAO.GetActividadTipoValorUsandoActividadId(actividad.id);
-
-                    actividad.setActividadPropiedadValors(null);
-                    if (valores_temp != null)
+                    for (int i = 0; i < datosDinamicos.Count; i++)
                     {
-                        for (ActividadPropiedadValor valor : valores_temp)
+                        JObject data = (JObject)datosDinamicos[i];
+
+
+                        if (data["valor"] != null && data["valor"].ToString().Length > 0 && data["valor"].ToString().CompareTo("null") != 0)
                         {
-                            ActividadPropiedadValorDAO.eliminarTotalActividadPropiedadValor(valor);
+                            ActividadPropiedad actividadPropiedad = ActividadPropiedadDAO.getActividadPropiedadPorId((int)(data["id"]));
+                            ActividadPropiedadValor valor = new ActividadPropiedadValor();
+
+                            valor.actividads = actividad;
+                            valor.actividadid = actividad.id;
+                            valor.actividadPropiedads = actividadPropiedad;
+                            valor.actividadPropiedadid = actividadPropiedad.id;
+                            valor.estado = 1;
+                            valor.usuarioCreo = User.Identity.Name;
+                            valor.fechaCreacion = DateTime.Now;
+
+                            switch (actividadPropiedad.datoTipoid)
+                            {
+                                case 1:
+                                    valor.valorString = data["valor"].ToString();
+                                    break;
+                                case 2:
+                                    valor.valorEntero = Convert.ToInt32(data["valor"].ToString());
+                                    break;
+                                case 3:
+                                    valor.valorDecimal = Convert.ToDecimal(data["valor"].ToString());
+                                    break;
+                                case 4:
+                                    valor.valorEntero = data["valor"].ToString() == "true" ? 1 : 0;
+                                    break;
+                                case 5:
+                                    valor.valorTiempo = Convert.ToDateTime(data["valor_f"].ToString()); break;
+                            }
+
+                            resultado = resultado && ActividadPropiedadValorDAO.GuardarActividadPropiedadValor(valor);
                         }
                     }
-                    
 
-                    //foreach (Stdatadinamico data in datos)
-                    //{
-                    //    if (data.valor != null && data.valor.Length > 0 && data.valor.CompareTo("null") != 0)
-                    //    {
-                    //        ActividadPropiedad actividadPropiedad = ActividadPropiedadDAO.getActividadPropiedadPorId((int)(data.id));
-                    //        ActividadPropiedadValorId idValor = new ActividadPropiedadValorId(actividad.getId(), (int)(data.id));
-                    //        ActividadPropiedadValor valor = new ActividadPropiedadValor(idValor, actividad, actividadPropiedad, null, null, null, null,
-                    //                usuario, null, new DateTime().toDate(), null, 1);
-
-                    //        switch (actividadPropiedad.getDatoTipo().getId())
-                    //        {
-                    //            case 1:
-                    //                valor.setValorString(data.valor);
-                    //                break;
-                    //            case 2:
-                    //                valor.setValorEntero(Utils.String2Int(data.valor, null));
-                    //                break;
-                    //            case 3:
-                    //                valor.setValorDecimal(Utils.String2BigDecimal(data.valor, null));
-                    //                break;
-                    //            case 4:
-                    //                valor.setValorEntero(Utils.String2Boolean(data.valor, null));
-                    //                break;
-                    //            case 5:
-                    //                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                    //                valor.setValorTiempo(data.valor_f.compareTo("") != 0 ? sdf.parse(data.valor_f) : null);
-                    //                break;
-                    //        }
-                    //        result = (result && ActividadPropiedadValorDAO.guardarActividadPropiedadValor(valor));
-                    //    }
-                    //}
-
-                    response_text = String.join("", "{ \"success\": ", (result ? "true" : "false"), ", "
-                            + "\"id\": " + actividad.getId(), ","
-                            , "\"usuarioCreo\": \"", actividad.getUsuarioCreo(), "\","
-                            , "\"fechaCreacion\":\" ", Utils.formatDateHour(actividad.getFechaCreacion()), "\","
-                            , "\"usuarioactualizo\": \"", actividad.getUsuarioActualizo() != null ? actividad.getUsuarioActualizo() : "", "\","
-                            , "\"fechaactualizacion\": \"", Utils.formatDateHour(actividad.getFechaActualizacion()), "\","
-                            , "\"fechaInicioReal\": ", actividad.getFechaInicioReal() != null ? "\"" + Utils.formatDate(actividad.getFechaInicioReal()) + "\"" : null, ","
-                            , "\"fechaFinReal\": ", actividad.getFechaFinReal() != null ? "\"" + Utils.formatDate(actividad.getFechaFinReal()) + "\"" : null
-                            , " }");
+                    return Ok(
+                        new
+                        {
+                            success = resultado,
+                            actividad.id,
+                            actividad.usuarioCreo,
+                            actividad.usuarioActualizo,
+                            fechaCreacion = actividad.fechaCreacion.ToString("dd/MM/yyyy H:mm:ss"),
+                            fechaActualizacion = actividad.fechaActualizacion?.ToString("dd/MM/yyyy H:mm:ss"),
+                            fechaInicioReal = actividad.fechaInicioReal?.ToString("dd/MM/yyyy H:mm:ss"),
+                            fechaFinReal = actividad.fechaFinReal?.ToString("dd/MM/yyyy H:mm:ss")
+                        }
+                        );
                 }
                 else
-                    response_text = "{ \"success\": false }";
-
-
-
-
-
-
-
-
-
-
-
-
-                return Ok();
+                {
+                    return Ok(new { success = false });
+                }
             }
             catch (Exception e)
             {

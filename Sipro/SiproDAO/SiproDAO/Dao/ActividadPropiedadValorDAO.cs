@@ -7,7 +7,7 @@ using Utilities;
 
 namespace SiproDAO.Dao
 {
-    class ActividadPropiedadValorDAO
+    public class ActividadPropiedadValorDAO
     {
         /// <summary>
         /// Obtiene el listado de actividades propiedad valor que pertenecen a la actividad
@@ -36,6 +36,11 @@ namespace SiproDAO.Dao
             }
 
             return resultado;
+        }
+        
+        public static bool GuardarActividadPropiedadValor(ActividadPropiedadValor valor)
+        {
+            return true;
         }
     }
 }
