@@ -441,8 +441,9 @@ namespace SActividad.Controllers
                     }
 
                     // como se soluciona, debo crear el llamado a ActividadPropiedadValor y revisar el método
-                    /*
-                    List<ActividadPropiedadValor> valores_temp = actividad.getActividadPropiedadValors();
+
+                    List<ActividadPropiedadValor> valores_temp = ActividadPropiedadValorDAO.GetActividadTipoValorUsandoActividadId(actividad.id);
+
                     actividad.setActividadPropiedadValors(null);
                     if (valores_temp != null)
                     {
@@ -451,7 +452,7 @@ namespace SActividad.Controllers
                             ActividadPropiedadValorDAO.eliminarTotalActividadPropiedadValor(valor);
                         }
                     }
-                    */
+                    
 
                     //foreach (Stdatadinamico data in datos)
                     //{

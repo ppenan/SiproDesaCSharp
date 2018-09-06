@@ -40,5 +40,6 @@ namespace SiproModelCore.Models
 		public virtual Actividad actividads { get; set; }
 		public virtual ActividadPropiedad actividadPropiedads { get; set; }
 		public virtual IEnumerable<ActividadPropiedadValor> actividadpropiedadvalors { get; set; }
+        public virtual ActividadPropiedadValor actividadPropiedadValores { get; set; }
 	}
 }
