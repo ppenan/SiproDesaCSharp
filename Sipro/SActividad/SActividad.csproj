@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Identity\Identity.csproj" />
     <ProjectReference Include="..\SiproDAO\SiproDAO\SiproDAO.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>

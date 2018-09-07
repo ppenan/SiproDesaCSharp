@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Dapper;
 using SiproModelCore.Models;
+using System;
+using System.Collections.Generic;
 using System.Data.Common;
-using Dapper;
 using Utilities;
 
 namespace SiproDAO.Dao
@@ -260,160 +260,160 @@ namespace SiproDAO.Dao
             return ret;
         }
 
-	/*public static Long getTotalSubproductos(Integer productoid, String filtro_nombre, String filtro_usuario_creo, 
-			String filtro_fecha_creacion, String usuario) {
-		Long ret = 0L;
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try {
-			
-			String query = "SELECT count(p.id) FROM Subproducto p WHERE p.estado = 1 "
-					+ (productoid!=null && productoid > 0 ? "AND p.producto.id = :idProducto " : "");
-			String query_a="";
-			if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
-				query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
-			if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " p.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
-			if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
-				query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
-			query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
-			if(usuario!=null)
-				query = String.join("", query, " AND p.id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )");
-			
-			
-			Query<Long> conteo = session.createQuery(query,Long.class);
-			conteo.setParameter("usuario", usuario);
-			if (productoid!=null && productoid > 0){
-				conteo.setParameter("idProducto", productoid);
-			}
-			ret = conteo.getSingleResult();
-		} catch (Throwable e) {
-			CLogger.write("7", SubproductoDAO.class, e);
-		} finally {
-			session.close();
-		}
-		return ret;
-	}
+        /*public static Long getTotalSubproductos(Integer productoid, String filtro_nombre, String filtro_usuario_creo, 
+                String filtro_fecha_creacion, String usuario) {
+            Long ret = 0L;
+            Session session = CHibernateSession.getSessionFactory().openSession();
+            try {
 
-	public static String getJson(int pagina, int registros,Integer componenteid, String usuario
-			,String filtro_nombre, String filtro_usuario_creo,
-			String filtro_fecha_creacion, String columna_ordenada, String orden_direccion) {
-		String jsonEntidades = "";
+                String query = "SELECT count(p.id) FROM Subproducto p WHERE p.estado = 1 "
+                        + (productoid!=null && productoid > 0 ? "AND p.producto.id = :idProducto " : "");
+                String query_a="";
+                if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
+                    query_a = String.join("",query_a, " p.nombre LIKE '%",filtro_nombre,"%' ");
+                if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
+                    query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " p.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
+                if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
+                    query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
+                query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
+                if(usuario!=null)
+                    query = String.join("", query, " AND p.id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )");
 
-		List<Subproducto> pojos = getSubproductosPagina(pagina, registros,componenteid
-				,filtro_nombre, filtro_usuario_creo,filtro_fecha_creacion
-				,columna_ordenada,orden_direccion,usuario);
 
-		List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
-		
-		int congelado = 0;
-		String fechaElegibilidad = null;
-		String fechaCierre = null;
-		
-		if(pojos!=null && pojos.size()>0){
-			Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(pojos.get(0).getTreePath());
-			if(proyecto!=null){
-				congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
-				fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
-				fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
-			}
-		}
+                Query<Long> conteo = session.createQuery(query,Long.class);
+                conteo.setParameter("usuario", usuario);
+                if (productoid!=null && productoid > 0){
+                    conteo.setParameter("idProducto", productoid);
+                }
+                ret = conteo.getSingleResult();
+            } catch (Throwable e) {
+                CLogger.write("7", SubproductoDAO.class, e);
+            } finally {
+                session.close();
+            }
+            return ret;
+        }
 
-		for (Subproducto pojo : pojos) {
-			EstructuraPojo estructuraPojo = new EstructuraPojo();
-			estructuraPojo.id = pojo.getId();
-			estructuraPojo.nombre = pojo.getNombre();
-			estructuraPojo.descripcion = pojo.getDescripcion();
-			estructuraPojo.programa = pojo.getPrograma();
-			estructuraPojo.subprograma = pojo.getSubprograma();
-			estructuraPojo.proyecto_ = pojo.getProyecto();
-			estructuraPojo.obra = pojo.getObra();
-			estructuraPojo.actividad = pojo.getActividad();
-			estructuraPojo.renglon = pojo.getRenglon();
-			estructuraPojo.ubicacionGeografica = pojo.getUbicacionGeografica();
-			estructuraPojo.duracion = pojo.getDuracion();
-			estructuraPojo.duracionDimension = pojo.getDuracionDimension();
-			estructuraPojo.fechaInicio = Utils.formatDate(pojo.getFechaInicio());
-			estructuraPojo.fechaFin = Utils.formatDate(pojo.getFechaFin());
-			estructuraPojo.snip = pojo.getSnip();
-			estructuraPojo.estado = pojo.getEstado();
-			estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
-			estructuraPojo.usuarioActualizo = pojo.getUsuarioActualizo();
-			estructuraPojo.fechaCreacion = Utils.formatDateHour(pojo.getFechaCreacion());
-			estructuraPojo.fechaActualizacion = Utils.formatDateHour(pojo.getFechaActualizacion());
-			estructuraPojo.latitud = pojo.getLatitud();
-			estructuraPojo.longitud = pojo.getLongitud();
-			estructuraPojo.costo = pojo.getCosto();
-			estructuraPojo.acumulacionCosto = pojo.getAcumulacionCosto() != null ? pojo.getAcumulacionCosto().getId() : null;
-			estructuraPojo.acumulacionCostoNombre = pojo.getAcumulacionCosto() != null ? pojo.getAcumulacionCosto().getNombre() : null;
-			
-			if (pojo.getProducto() != null) {
-				estructuraPojo.idProducto = pojo.getProducto().getId();
-				estructuraPojo.producto = pojo.getProducto().getNombre();
-			}
+        public static String getJson(int pagina, int registros,Integer componenteid, String usuario
+                ,String filtro_nombre, String filtro_usuario_creo,
+                String filtro_fecha_creacion, String columna_ordenada, String orden_direccion) {
+            String jsonEntidades = "";
 
-			if (pojo.getSubproductoTipo() != null) {
-				estructuraPojo.idSubproductoTipo = pojo.getSubproductoTipo().getId();
-				estructuraPojo.subProductoTipo = pojo.getSubproductoTipo().getNombre();
-			}
-			
-			if (pojo.getUnidadEjecutora() != null){
-				estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getId().getUnidadEjecutora();
-				estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
-				estructuraPojo.entidadentidad = pojo.getUnidadEjecutora().getId().getEntidadentidad();
-				estructuraPojo.ejercicio = pojo.getUnidadEjecutora().getId().getEjercicio();
-				estructuraPojo.entidadnombre = pojo.getUnidadEjecutora().getEntidad().getNombre();
-			}
-			else if(pojo.getProducto().getUnidadEjecutora()!=null){
-				estructuraPojo.unidadEjecutora = pojo.getProducto().getUnidadEjecutora().getId().getUnidadEjecutora();
-				estructuraPojo.nombreUnidadEjecutora = pojo.getProducto().getUnidadEjecutora().getNombre();
-				estructuraPojo.entidadentidad = pojo.getProducto().getUnidadEjecutora().getId().getEntidadentidad();
-				estructuraPojo.ejercicio = pojo.getProducto().getUnidadEjecutora().getId().getEjercicio();
-				estructuraPojo.entidadnombre = pojo.getProducto().getUnidadEjecutora().getEntidad().getNombre();
-			}
-			
-			estructuraPojo.tieneHijos = ObjetoDAO.tieneHijos(estructuraPojo.id, 4);
-			
-			estructuraPojo.fechaInicioReal = Utils.formatDate(pojo.getFechaInicioReal());
-			estructuraPojo.fechaFinReal = Utils.formatDate(pojo.getFechaFinReal());
-			
-			estructuraPojo.congelado = congelado;
-			estructuraPojo.fechaElegibilidad = fechaElegibilidad;
-			estructuraPojo.fechaCierre = fechaCierre;
-			estructuraPojo.inversionNueva = pojo.getInversionNueva();
-			
-			listaEstructuraPojos.add(estructuraPojo);
-		}
+            List<Subproducto> pojos = getSubproductosPagina(pagina, registros,componenteid
+                    ,filtro_nombre, filtro_usuario_creo,filtro_fecha_creacion
+                    ,columna_ordenada,orden_direccion,usuario);
 
-		jsonEntidades = Utils.getJSonString("subproductos", listaEstructuraPojos);
+            List<EstructuraPojo> listaEstructuraPojos = new ArrayList<EstructuraPojo>();
 
-		return jsonEntidades;
-	}
+            int congelado = 0;
+            String fechaElegibilidad = null;
+            String fechaCierre = null;
 
-		public static boolean eliminar(Integer productoId, String usuario) {
-		boolean ret = false;
+            if(pojos!=null && pojos.size()>0){
+                Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(pojos.get(0).getTreePath());
+                if(proyecto!=null){
+                    congelado = proyecto.getCongelado()!=null?proyecto.getCongelado():0;
+                    fechaElegibilidad = Utils.formatDate(proyecto.getFechaElegibilidad());
+                    fechaCierre = Utils.formatDate(proyecto.getFechaCierre());
+                }
+            }
 
-		Subproducto pojo = getSubproductoPorId(productoId,usuario);
+            for (Subproducto pojo : pojos) {
+                EstructuraPojo estructuraPojo = new EstructuraPojo();
+                estructuraPojo.id = pojo.getId();
+                estructuraPojo.nombre = pojo.getNombre();
+                estructuraPojo.descripcion = pojo.getDescripcion();
+                estructuraPojo.programa = pojo.getPrograma();
+                estructuraPojo.subprograma = pojo.getSubprograma();
+                estructuraPojo.proyecto_ = pojo.getProyecto();
+                estructuraPojo.obra = pojo.getObra();
+                estructuraPojo.actividad = pojo.getActividad();
+                estructuraPojo.renglon = pojo.getRenglon();
+                estructuraPojo.ubicacionGeografica = pojo.getUbicacionGeografica();
+                estructuraPojo.duracion = pojo.getDuracion();
+                estructuraPojo.duracionDimension = pojo.getDuracionDimension();
+                estructuraPojo.fechaInicio = Utils.formatDate(pojo.getFechaInicio());
+                estructuraPojo.fechaFin = Utils.formatDate(pojo.getFechaFin());
+                estructuraPojo.snip = pojo.getSnip();
+                estructuraPojo.estado = pojo.getEstado();
+                estructuraPojo.usuarioCreo = pojo.getUsuarioCreo();
+                estructuraPojo.usuarioActualizo = pojo.getUsuarioActualizo();
+                estructuraPojo.fechaCreacion = Utils.formatDateHour(pojo.getFechaCreacion());
+                estructuraPojo.fechaActualizacion = Utils.formatDateHour(pojo.getFechaActualizacion());
+                estructuraPojo.latitud = pojo.getLatitud();
+                estructuraPojo.longitud = pojo.getLongitud();
+                estructuraPojo.costo = pojo.getCosto();
+                estructuraPojo.acumulacionCosto = pojo.getAcumulacionCosto() != null ? pojo.getAcumulacionCosto().getId() : null;
+                estructuraPojo.acumulacionCostoNombre = pojo.getAcumulacionCosto() != null ? pojo.getAcumulacionCosto().getNombre() : null;
 
-		if (pojo != null) {
-			pojo.setEstado(0);
-			pojo.setOrden(null);
-			Session session = CHibernateSession.getSessionFactory().openSession();
+                if (pojo.getProducto() != null) {
+                    estructuraPojo.idProducto = pojo.getProducto().getId();
+                    estructuraPojo.producto = pojo.getProducto().getNombre();
+                }
 
-			try {
-				session.beginTransaction();
-				session.update(pojo);
-				session.getTransaction().commit();
+                if (pojo.getSubproductoTipo() != null) {
+                    estructuraPojo.idSubproductoTipo = pojo.getSubproductoTipo().getId();
+                    estructuraPojo.subProductoTipo = pojo.getSubproductoTipo().getNombre();
+                }
 
-				ret = true;
+                if (pojo.getUnidadEjecutora() != null){
+                    estructuraPojo.unidadEjecutora = pojo.getUnidadEjecutora().getId().getUnidadEjecutora();
+                    estructuraPojo.nombreUnidadEjecutora = pojo.getUnidadEjecutora().getNombre();
+                    estructuraPojo.entidadentidad = pojo.getUnidadEjecutora().getId().getEntidadentidad();
+                    estructuraPojo.ejercicio = pojo.getUnidadEjecutora().getId().getEjercicio();
+                    estructuraPojo.entidadnombre = pojo.getUnidadEjecutora().getEntidad().getNombre();
+                }
+                else if(pojo.getProducto().getUnidadEjecutora()!=null){
+                    estructuraPojo.unidadEjecutora = pojo.getProducto().getUnidadEjecutora().getId().getUnidadEjecutora();
+                    estructuraPojo.nombreUnidadEjecutora = pojo.getProducto().getUnidadEjecutora().getNombre();
+                    estructuraPojo.entidadentidad = pojo.getProducto().getUnidadEjecutora().getId().getEntidadentidad();
+                    estructuraPojo.ejercicio = pojo.getProducto().getUnidadEjecutora().getId().getEjercicio();
+                    estructuraPojo.entidadnombre = pojo.getProducto().getUnidadEjecutora().getEntidad().getNombre();
+                }
 
-			} catch (Throwable e) {
-				CLogger.write("10", SubproductoDAO.class, e);
-			} finally {
-				session.close();
-			}
-		}
-		return ret;
-	}*/
+                estructuraPojo.tieneHijos = ObjetoDAO.tieneHijos(estructuraPojo.id, 4);
+
+                estructuraPojo.fechaInicioReal = Utils.formatDate(pojo.getFechaInicioReal());
+                estructuraPojo.fechaFinReal = Utils.formatDate(pojo.getFechaFinReal());
+
+                estructuraPojo.congelado = congelado;
+                estructuraPojo.fechaElegibilidad = fechaElegibilidad;
+                estructuraPojo.fechaCierre = fechaCierre;
+                estructuraPojo.inversionNueva = pojo.getInversionNueva();
+
+                listaEstructuraPojos.add(estructuraPojo);
+            }
+
+            jsonEntidades = Utils.getJSonString("subproductos", listaEstructuraPojos);
+
+            return jsonEntidades;
+        }
+
+            public static boolean eliminar(Integer productoId, String usuario) {
+            boolean ret = false;
+
+            Subproducto pojo = getSubproductoPorId(productoId,usuario);
+
+            if (pojo != null) {
+                pojo.setEstado(0);
+                pojo.setOrden(null);
+                Session session = CHibernateSession.getSessionFactory().openSession();
+
+                try {
+                    session.beginTransaction();
+                    session.update(pojo);
+                    session.getTransaction().commit();
+
+                    ret = true;
+
+                } catch (Throwable e) {
+                    CLogger.write("10", SubproductoDAO.class, e);
+                } finally {
+                    session.close();
+                }
+            }
+            return ret;
+        }*/
 
         public static Subproducto getSubproductoPorId(int id)
         {
@@ -430,6 +430,43 @@ namespace SiproDAO.Dao
                 CLogger.write("2", "SubproductoDAO.class", e);
             }
             return ret;
+        }
+
+        public static long GetTotalSubProductos(int? subProductoId, string filtroBusqueda, string usuario)
+        {
+
+            long resultado = 0L;
+
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+
+                    String query = "SELECT count(p.id) FROM Subproducto p WHERE p.estado = 1 "
+                        + (subProductoId != null && subProductoId > 0 ? "AND p.producto.id = :subProductoId " : "");
+                    String query_a = "";
+
+                    if (filtroBusqueda != null && filtroBusqueda.Trim().Length > 0)
+                    {
+                        query_a = String.Join("", query_a, " p.nombre LIKE '%", filtroBusqueda, "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " p.usuarioCreo LIKE '%", filtroBusqueda, "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtroBusqueda, "%' ");
+                    }
+
+
+                    query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
+                    if (usuario != null)
+                        query = String.Join("", query, " AND p.id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )");
+
+                    resultado = db.ExecuteScalar<long>(query, new { subProductoId, usuario });
+                }
+            }
+            catch (Exception e)
+            {
+                CLogger.write("7", "SubproductoDAO.class", e);
+            }
+            return resultado;
+
         }
 
         /*public String getSubproductoJson(int id){
@@ -705,7 +742,7 @@ namespace SiproDAO.Dao
             {
                 using (DbConnection db = new OracleContext().getConnection())
                 {
-                    ret = db.Query<Subproducto>("SELECT * FROM SUBPRODUCTO WHERE productoid=:productoId", new { productoId = productoId }).AsList<Subproducto>();   
+                    ret = db.Query<Subproducto>("SELECT * FROM SUBPRODUCTO WHERE productoid=:productoId", new { productoId = productoId }).AsList<Subproducto>();
                 }
             }
             catch (Exception e)

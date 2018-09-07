@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace SActividad
+namespace STipoAdquisicion
 {
     public class Program
     {
@@ -20,7 +20,6 @@ namespace SActividad
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://0.0.0.0:60001")
                 .Build();
     }
 }

@@ -370,6 +370,11 @@ namespace SiproDAO.Dao
             return resultado;
         }
 
+        /// <summary>
+        /// Obtiene un historico de las actividades
+        /// </summary>
+        /// <param name="id">Id de la actividad a buscar</param>
+        /// <returns>Cadena con el historico de la actividad</returns>
         public static string GetVersiones(int id)
         {
             String resultado = "";
@@ -403,6 +408,12 @@ namespace SiproDAO.Dao
             return resultado;
         }
 
+        /// <summary>
+        /// Crea el query de la consulta para obtener la historia de la actividad
+        /// </summary>
+        /// <param name="id">Identificador de la actividad</param>
+        /// <param name="version">Version de la actividad</param>
+        /// <returns>Historia de la actividad</returns>
         public static string GetHistoria(int id, int version)
         {
             String resultado = "";
