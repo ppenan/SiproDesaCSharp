@@ -14,6 +14,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity", "Identity\Identity.csproj", "{DF81DBD5-33EA-42EE-9D39-ABF02C846C00}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{5ED333D8-A0C7-48E7-90F6-889732124588}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9351832F-765B-424B-B55E-FBFE431A7882} = {9351832F-765B-424B-B55E-FBFE431A7882}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SUnidadEjecutora", "SUnidadEjecutora\SUnidadEjecutora.csproj", "{2384F117-4E14-47A7-A8F5-2579A0A30351}"
 EndProject

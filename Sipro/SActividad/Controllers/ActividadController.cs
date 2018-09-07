@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using SiproDAO.Dao;
@@ -10,7 +11,10 @@ using Utilities;
 
 namespace SActividad.Controllers
 {
-    //[Route("api/[controller]/[action]")]
+    [Authorize]
+    [Produces("application/json")]
+    [Route("/api/[controller]/[action]")]
+    [EnableCors("AllowAllHeaders")]
     public class ActividadController : Controller
     {
         private class StActividad
@@ -479,7 +483,6 @@ namespace SActividad.Controllers
             }
         }
 
-
         [HttpPut("{id}")]
         [Authorize("Actividades - Editar")]
         public IActionResult Actividad(int id, [FromBody]dynamic values)
@@ -586,7 +589,7 @@ namespace SActividad.Controllers
                     if (resultado)
                     {
                         List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.GetAsignacionPorTarea(actividad.id, 5, null);
-                        
+
                         if (asignaciones_temp != null)
                         {
                             foreach (AsignacionRaci asign in asignaciones_temp)
@@ -985,65 +988,198 @@ namespace SActividad.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult GuardarModal([FromBody]dynamic value)
         {
             try
             {
                 // todo aca voy
-                return Ok();
+                bool result = false;
+                int id = value.id != null ? (int)value.id : 0;
+                bool esnuevo = value.esnuevo.equals("true");
+                int objetoId = value.objetoId != null ? (int)value.objetoId : 0;
+                int objetoTipo = value.objetoTipo != null ? (int)value.objetoTipo : 0;
+                Actividad actividad = null;
+
+
+                // inicio guardar modal
+                if (id > 0 || (esnuevo && objetoId > 0 && objetoTipo > 0))
+                {
+                    String nombre = value.nombre;
+                    String descripcion = value.descripcion;
+                    Date fechaInicio = Utils.dateFromString(value.fechainicio);
+                    Date fechaFin = Utils.dateFromString(value.fechafin);
+                    Integer porcentajeAvance = Utils.getParameterInteger(map, "porcentajeavance");
+                    Integer duracion = Utils.String2Int(value.duracion, null);
+                    String duracionDimension = value.duracionDimension;
+                    int actividadtipoid = Utils.getParameterInteger(map, "actividadtipoid");
+                    Integer inversionNueva = Utils.String2Int(value.inversionNueva, 0);
+
+                    ActividadTipo actividadTipo = new ActividadTipo();
+                    actividadTipo.setId(actividadtipoid);
+                    Integer proyectoBase = null;
+
+                    if (esnuevo)
+                    {
+                        actividad = new Actividad(actividadTipo, nombre, fechaInicio, fechaFin, porcentajeAvance
+                                , usuario, new Date(), 1, objetoId, objetoTipo, duracion, duracionDimension, inversionNueva);
+                        actividad.setProyectoBase(proyectoBase);
+                    }
+                    else
+                    {
+                        actividad = ActividadDAO.getActividadPorId(id);
+                        actividad.setNombre(nombre);
+                        actividad.setDescripcion(descripcion);
+                        actividad.setUsuarioActualizo(usuario);
+                        actividad.setFechaActualizacion(new Date());
+                        actividad.setFechaInicio(fechaInicio);
+                        actividad.setFechaFin(fechaFin);
+                        actividad.setPorcentajeAvance(porcentajeAvance);
+                        actividad.setActividadTipo(actividadTipo);
+                        actividad.setDuracion(duracion);
+                        actividad.setDuracionDimension(duracionDimension);
+                        objetoTipo = actividad.getObjetoTipo();
+                        objetoId = actividad.getObjetoId();
+                        actividad.setInversionNueva(inversionNueva);
+
+                    }
+                    result = ActividadDAO.guardarActividad(actividad, true);
+                }
+                // termino el guardar modal
+
+                if (result)
+                {
+                    stactividad temp = new stactividad();
+                    temp.id = actividad.getId();
+                    temp.nombre = actividad.getNombre();
+                    temp.duracion = actividad.getDuracion();
+                    temp.duracionDimension = actividad.getDuracionDimension();
+                    temp.fechaInicio = (actividad.getPredObjetoId() == null ? Utils.formatDate(actividad.getFechaInicio()) : "");
+                    response_text = new GsonBuilder().serializeNulls().create().toJson(temp);
+                    response_text = String.join("", "\"actividad\":", response_text);
+                    response_text = String.join("", "{\"success\":true,", response_text, "}");
+
+                }
+                else
+                {
+                    return Ok(new { success = false });
+                }
             }
             catch (Exception e)
             {
-                CLogger.write("11", "Borrar ActividadController.class", e);
+                CLogger.write("11", "ActividadController.class", e);
                 return BadRequest(500);
             }
         }
 
-        [HttpGet]
-        public IActionResult GetCantidadHistoria([FromBody]dynamic value)
+        [HttpGet("{id}")]
+        public IActionResult GetCantidadHistoria(int id)
         {
             try
             {
-                return Ok();
+                String versiones = ActividadDAO.GetVersiones(id);
+                return Ok(new { success = true, versiones });
             }
             catch (Exception e)
             {
-                CLogger.write("12", "Borrar ActividadController.class", e);
+                CLogger.write("12", "ActividadController.class", e);
                 return BadRequest(500);
             }
         }
 
-        [HttpGet]
-        public IActionResult GetHistoria([FromBody]dynamic value)
+        [HttpGet("{id}/{version}")]
+        public IActionResult GetHistoria(int id, int version)
         {
             try
             {
-                return Ok();
+                String historia = ActividadDAO.GetHistoria(id, version);
+
+                return Ok(new { success = true, historia });
             }
             catch (Exception e)
             {
-                CLogger.write("13", "Borrar ActividadController.class", e);
+                CLogger.write("13", "ActividadController.class", e);
                 return BadRequest(500);
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult GetValidacionAsignado([FromBody]dynamic value)
         {
             try
             {
-                return Ok();
+                DateTime cal = new DateTime();
+                int ejercicio = cal.Year;
+                Actividad objActividad = ActividadDAO.GetActividadPorId((int)value.id);
+                Proyecto objProyecto = ProyectoDAO.getProyectobyTreePath(objActividad.treepath);
+
+                int entidad = objProyecto.entidad ?? default(int);
+                int programa = value.programa != null ? (int)value.programa : default(int);
+                int subprograma = value.subprograma != null ? (int)value.subprograma : default(int);
+                int proyecto = value.proyecto != null ? (int)value.proyecto : default(int);
+                int actividad = value.actividad != null ? (int)value.actividad : default(int);
+                int obra = value.obra != null ? (int)value.obra : default(int);
+                int renglon = value.renglon != null ? (int)value.renglon : default(int);
+                int geografico = value.geografico != null ? (int)value.geografico : default(int);
+
+                decimal asignado = ObjetoDAO.getAsignadoPorLineaPresupuestaria(ejercicio, entidad, programa, subprograma, proyecto, actividad, obra, renglon, geografico);
+                decimal planificado = decimal.Zero;
+
+                switch (objActividad.acumulacionCosto)
+                {
+                    case 1:
+
+                        cal = objActividad.fechaInicio;
+                        int ejercicioInicial = cal.Year;
+
+                        if (ejercicio.Equals(ejercicioInicial))
+                        {
+                            planificado = objActividad.costo ?? default(decimal);
+                        }
+                        break;
+
+                    case 2:
+
+                        List<PagoPlanificado> lstPagos = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(objActividad.id, 5);
+
+                        foreach (PagoPlanificado pago in lstPagos)
+                        {
+                            cal = pago.fechaPago;
+
+                            int ejercicioPago = cal.Year;
+                            if (ejercicio.Equals(ejercicioPago))
+                            {
+                                planificado += pago.pago;
+                            }
+                        }
+                        break;
+
+                    case 3:
+
+                        cal = objActividad.fechaFin;
+                        int ejercicioFinal = cal.Year;
+
+                        if (ejercicio.Equals(ejercicioFinal))
+                        {
+                            planificado += objActividad.costo ?? default(decimal);
+                        }
+                        break;
+                }
+
+                bool sobrepaso = false;
+
+                if ((asignado = (asignado - planificado)).CompareTo(decimal.Zero) == -1)
+                {
+                    sobrepaso = true;
+                }
+
+                return Ok(new { success = true, asignado, sobrepaso });
             }
             catch (Exception e)
             {
-                CLogger.write("14", "Borrar ActividadController.class", e);
+                CLogger.write("14", "ActividadController.class", e);
                 return BadRequest(500);
             }
         }
-
-
-
-
     }
 }
