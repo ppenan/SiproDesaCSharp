@@ -70,7 +70,7 @@ namespace SiproDAO.Dao
             return ret;
         }*/
 
-        public static ActividadPropiedad getActividadPropiedadPorId(int id)
+        public static ActividadPropiedad GetActividadPropiedadPorId(int id)
         {
             ActividadPropiedad ret = null;
             try

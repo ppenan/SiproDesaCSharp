@@ -715,7 +715,7 @@ namespace SiproDAO.Dao
                 case 2: Subcomponente subcomponente = SubComponenteDAO.getSubComponente(objetoId); treePath_inicio = (subcomponente != null) ? subcomponente.treepath : null; break;
                 case 3: Producto producto = ProductoDAO.getProductoPorId(objetoId); treePath_inicio = (producto != null) ? producto.treepath : null; break;
                 case 4: Subproducto subproducto = SubproductoDAO.getSubproductoPorId(objetoId); treePath_inicio = (subproducto != null) ? subproducto.treepath : null; break;
-                case 5: Actividad actividad = ActividadDAO.getActividadPorId(objetoId); treePath_inicio = (actividad != null) ? actividad.treepath : null; break;
+                case 5: Actividad actividad = ActividadDAO.GetActividadPorId(objetoId); treePath_inicio = (actividad != null) ? actividad.treepath : null; break;
             }
             try
             {

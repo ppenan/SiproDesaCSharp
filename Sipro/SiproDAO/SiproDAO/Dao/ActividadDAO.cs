@@ -1,10 +1,9 @@
-﻿using System;
-using Dapper;
+﻿using Dapper;
+using SiproModelCore.Models;
+using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using Utilities;
-using SiproModelCore.Models;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SiproDAO.Dao
 {
@@ -31,8 +30,12 @@ namespace SiproDAO.Dao
             return resultado;
         }
 
-
-        public static Actividad getActividadPorId(int id)
+        /// <summary>
+        /// Obtiene la actividad usando su Identificador
+        /// </summary>
+        /// <param name="id">Identificador de la actividad a buscar</param>
+        /// <returns>Información de la actividad</returns>
+        public static Actividad GetActividadPorId(int id)
         {
             Actividad ret = null;
             try
@@ -92,7 +95,7 @@ namespace SiproDAO.Dao
                                     Actividad.treepath = subproducto.treepath + "" + (10000000 + Actividad.id);
                                     break;
                                 case 5:
-                                    Actividad actividad = ActividadDAO.getActividadPorId(Convert.ToInt32(Actividad.objetoId));
+                                    Actividad actividad = ActividadDAO.GetActividadPorId(Convert.ToInt32(Actividad.objetoId));
                                     Actividad.treepath = actividad.treepath + "" + (10000000 + Actividad.id);
                                     break;
                             }
@@ -203,14 +206,19 @@ namespace SiproDAO.Dao
             }
             catch (Exception e)
             {
-                CLogger.write("6", "ActividadDAO.class", e);
+                CLogger.write("4", "ActividadDAO.class", e);
             }
 
             return resultado;
         }
 
-
-        public static List<Actividad> getActividadesPorObjeto(int objetoId, int objetoTipo)
+        /// <summary>
+        /// Obtiene las actividades por objeto, por tipo y con estado = 1
+        /// </summary>
+        /// <param name="objetoId">Identificador del objeto</param>
+        /// <param name="objetoTipo">Tipo del objeto</param>
+        /// <returns>Lista de actividades</returns>
+        public static List<Actividad> GetActividadesPorObjeto(int objetoId, int objetoTipo)
         {
             List<Actividad> ret = new List<Actividad>();
             try
@@ -223,10 +231,143 @@ namespace SiproDAO.Dao
             }
             catch (Exception e)
             {
-                CLogger.write("19", "ActividadDAO.class", e);
+                CLogger.write("5", "ActividadDAO.class", e);
             }
             return ret;
         }
 
+
+        /// <summary>
+        /// Obtiene el total de las actividades con estado 1, usando el filtro
+        /// indicado y que pertenecen al usuario logueado
+        /// </summary>
+        /// <param name="filtro_busqueda">Filtro a usar en la búsqueda</param>
+        /// <param name="usuario">Nombre del usuario</param>
+        /// <returns>Número total de actividades</returns>
+        public static long GetTotalActividades(String filtro_busqueda, string usuario)
+        {
+            long resultado = 0L;
+
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    String query_a = "";
+                    String query = "SELECT COUNT(a.id) FROM actividad a WHERE a.estado = 1 ";
+
+                    if (filtro_busqueda != null && filtro_busqueda.Length > 0)
+                    {
+                        query_a = String.Join(" ", query_a, "a.nombre LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " a.usuario_creo LIKE '%" + filtro_busqueda + "%' ");
+
+                        if (DateTime.TryParse(filtro_busqueda, out DateTime fecha_creacion))
+                        {
+                            query_a = String.Join(" ", query_a, (query_a.Length > 0 ? " OR " : ""), " TO_DATE(TO_CHAR(a.fecha_creacion,'DD/MM/YY'),'DD/MM/YY') LIKE TO_DATE('" + fecha_creacion.ToString("dd/MM/yyyy") + "','DD/MM/YY') ");
+                        }
+                    }
+
+                    query = String.Join(" ", query, "AND a.id in (SELECT u.actividadid FROM actividad_usuario u WHERE u.usuario= :usuario)");
+                    resultado = db.ExecuteScalar<long>(query, new { usuario });
+                }
+            }
+            catch (Exception ex)
+            {
+                CLogger.write("6", "ActividadDAO.class", ex);
+            }
+
+            return resultado;
+        }
+
+        /// <summary>
+        /// Obtiene el total de actividades que pertenecen a un objeto dado
+        /// </summary>
+        /// <param name="objetoId">Identificador del objeto</param>
+        /// <param name="objetoTipo">Nivel en el que se encuentra la actividad</param>
+        /// <param name="filtro_busqueda">Condición de búsqueda</param>
+        /// <param name="usuario">Nombre del usuario que tiene asignada esas actividades</param>
+        /// <returns>Total de actividades</returns>
+        public static long GetTotalActividadesPorObjeto(int objetoId, int objetoTipo, string filtro_busqueda, string usuario)
+        {
+            long resultado = 0L;
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    String query_a = "";
+                    String query = "SELECT COUNT(a.id) FROM actividad a WHERE a.estado = 1 AND a.objeto_id = :objetoId AND a.objeto_tipo = :objetoTipo ";
+
+
+                    if (filtro_busqueda != null && filtro_busqueda.Length > 0)
+                    {
+                        query_a = String.Join(" ", query_a, "a.nombre LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " a.usuario_creo LIKE '%" + filtro_busqueda + "%' ");
+
+                        if (DateTime.TryParse(filtro_busqueda, out DateTime fecha_creacion))
+                        {
+                            query_a = String.Join(" ", query_a, (query_a.Length > 0 ? " OR " : ""), " TO_DATE(TO_CHAR(a.fecha_creacion,'DD/MM/YY'),'DD/MM/YY') LIKE TO_DATE('" + fecha_creacion.ToString("dd/MM/yyyy") + "','DD/MM/YY') ");
+                        }
+                    }
+
+                    query = String.Join(" ", query, "AND a.id in (SELECT u.actividadid FROM actividad_usuario u WHERE u.usuario= :usuario)");
+                    resultado = db.ExecuteScalar<long>(query, new { objetoId, objetoTipo, usuario });
+                }
+            }
+            catch (Exception ex)
+            {
+                CLogger.write("7", "ActividadDAO.class", ex);
+            }
+
+            return resultado;
+        }
+
+        /// <summary>
+        /// Obtiene actividades por objeto y realiza la paginación
+        /// </summary>
+        /// <param name="pagina">Número de página</param>
+        /// <param name="numeroActividades">Número de actividad actual</param>
+        /// <param name="objetoId">Id del objeto</param>
+        /// <param name="objetoTipo">Tipo del objeto</param>
+        /// <param name="filtroBusqueda">Criterio de búsqueda</param>
+        /// <param name="columnaOrdenada">Nombre de la columna a ordenar</param>
+        /// <param name="ordenDireccion">Tipo de orden a usar (ASC, DESC)</param>
+        /// <param name="usuario">Usuario dueño de las actividades</param>
+        /// <returns>Listado de actividades ya paginadas</returns>
+        public static List<Actividad> GetActividadesPaginaPorObjeto(int pagina, int numeroActividades, int objetoId,
+            int objetoTipo, string filtroBusqueda, string columnaOrdenada, string ordenDireccion, string usuario)
+        {
+            List<Actividad> resultado = new List<Actividad>();
+
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    String query = "SELECT a FROM Actividad a WHERE a.estado = 1 AND a.objetoId = :objetoId AND a.objetoTipo = :objetoTipo ";
+                    String query_a = "";
+
+                    if (filtroBusqueda != null && filtroBusqueda.Trim().Length > 0)
+                    {
+                        query_a = String.Join("", query_a, " a.nombre LIKE '%", filtroBusqueda, "%' ");
+                    }
+
+                    query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
+
+                    if (usuario != null)
+                    {
+                        query = String.Join("", query, "AND a.estado = 1 AND a.id in (SELECT u.actividadid FROM actividad_usuario u where u.usuario=:usuario )");
+                    }
+
+                    query = String.Join(" ", query, ") a WHERE rownum < ((" + pagina + " * " + numeroActividades + ") + 1) ) WHERE r__ >= (((" + pagina + " - 1) * " + numeroActividades + ") + 1)");
+
+                    query = columnaOrdenada != null && columnaOrdenada.Trim().Length > 0 ? String.Join(" ", query, " ORDER BY", columnaOrdenada, ordenDireccion) : query;
+
+                    resultado = db.Query<Actividad>(query, new { objetoId, objetoTipo, filtroBusqueda, usuario }).AsList<Actividad>();
+                }
+            }
+            catch (Exception ex)
+            {
+                CLogger.write("8", "ActividadDAO.class", ex);
+            }
+            return resultado;
+        }
     }
 }
