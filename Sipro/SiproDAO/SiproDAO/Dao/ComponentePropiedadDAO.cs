@@ -185,7 +185,6 @@ namespace SiproDAO.Dao
 
                     ret = db.Query<ComponentePropiedad>(query).AsList<ComponentePropiedad>();
                 }
-
             }
             catch (Exception e)
             {

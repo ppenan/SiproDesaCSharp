@@ -330,7 +330,7 @@ namespace SComponentePropiedad.Controllers
             }
             catch (Exception e)
             {
-                CLogger.write("4", "ComponentePropiedadController.class", e);
+                CLogger.write("9", "ComponentePropiedadController.class", e);
                 return BadRequest(500);
             }
         }

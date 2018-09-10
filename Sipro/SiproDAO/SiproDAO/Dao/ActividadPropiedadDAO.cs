@@ -50,25 +50,32 @@ namespace SiproDAO.Dao
             return ret;
         }
 
-        /*public static List<ActividadPropiedad> getActividadPropiedadPaginaTotalDisponibles(int pagina, int numeroactividadpropiedades, String idPropiedades){
-            List<ActividadPropiedad> ret = new ArrayList<ActividadPropiedad>();
-            Session session = CHibernateSession.getSessionFactory().openSession();
-            try{
-                Query<ActividadPropiedad> criteria = session.createQuery("select p from ActividadPropiedad p  where p.estado = 1 "
-                        + (idPropiedades!=null && idPropiedades.length()>0 ?  " and p.id not in ("+ idPropiedades + ")" : "")
-                        ,ActividadPropiedad.class);
-                criteria.setFirstResult(((pagina-1)*(numeroactividadpropiedades)));
-                criteria.setMaxResults(numeroactividadpropiedades);
-                ret = criteria.getResultList();
+        //SIGUE 07-09-18 17:48
+        // Dudas por que utiliza string en minuscula y String en mayúscula
+        // por que en el where está r___, 
+        // La comparativa WHERE p.estado=1 es correcta?
+        public static List<ActividadPropiedad> getActividadPropiedadPaginaTotalDisponibles(int pagina, int numeroactividadpropiedades, String idPropiedades)
+        {
+            List<ActividadPropiedad> ret = new List<ActividadPropiedad>();
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    string query = String.Join(" ", "select p from actividad_propiedad p  where p.estado = 1 ",
+                        (idPropiedades != null && idPropiedades.Length > 0 ? " and p.id NOT IN (" + idPropiedades + ")" : "WHERE p.estado=1"));
+                    query = String.Join(" ", query, ") a WHERE rownum < ((" + pagina + " * " + numeroactividadpropiedades + ") + 1) ) WHERE r__ >= (((" + pagina + " - 1) * " + numeroactividadpropiedades + ") + 1)");
+                    ret = db.Query<ActividadPropiedad>(query).AsList<ActividadPropiedad>();
+                }
             }
-            catch(Throwable e){
-                CLogger.write("3", ActividadPropiedadDAO.class, e);
-            }
-            finally{
-                session.close();
+            catch (Exception e)
+            {
+                CLogger.write("3", "ActividadPropiedadDAO.class", e);
             }
             return ret;
-        }*/
+        }
+                    
+    
+
 
         public static ActividadPropiedad getActividadPropiedadPorId(int id)
         {
@@ -87,7 +94,12 @@ namespace SiproDAO.Dao
             return ret;
         }
 
-        /*public static boolean guardarActividadPropiedad(ActividadPropiedad actividadPropiedad){
+        /// <summary>
+        /// Método guardar
+        /// </summary>
+        /// <param name="actividadPropiedad"></param>
+        /// <returns></returns>
+        public static boolean guardarActividadPropiedad(ActividadPropiedad actividadPropiedad){
             boolean ret = false;
             Session session = CHibernateSession.getSessionFactory().openSession();
             try{
@@ -105,7 +117,13 @@ namespace SiproDAO.Dao
             return ret;
         }
 
-        public static boolean eliminarActividadPropiedad(ActividadPropiedad actividadPropiedad){
+
+
+
+
+
+
+        /* public static boolean eliminarActividadPropiedad(ActividadPropiedad actividadPropiedad){
             boolean ret = false;
             Session session = CHibernateSession.getSessionFactory().openSession();
             try{
@@ -140,63 +158,79 @@ namespace SiproDAO.Dao
                 session.close();
             }
             return ret;
-        }
+        } */
 
-        public static List<ActividadPropiedad> getActividadPropiedadesPagina(int pagina, int numeroActividadPropiedades,
-                String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion,
-                String columna_ordenada, String orden_direccion){
-            List<ActividadPropiedad> ret = new ArrayList<ActividadPropiedad>();
-            Session session = CHibernateSession.getSessionFactory().openSession();
-            try{
-                String query = "SELECT c FROM ActividadPropiedad c WHERE c.estado = 1 ";
-                String query_a="";
-                if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
-                    query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
-                if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
-                    query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " c.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
-                if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
-                    query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(c.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
-                query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
-                query = columna_ordenada!=null && columna_ordenada.trim().length()>0 ? String.join(" ",query,"ORDER BY",columna_ordenada,orden_direccion ) : query;
-                Query<ActividadPropiedad> criteria = session.createQuery(query,ActividadPropiedad.class);
-                criteria.setFirstResult(((pagina-1)*(numeroActividadPropiedades)));
-                criteria.setMaxResults(numeroActividadPropiedades);
-                ret = criteria.getResultList();
+        public static List<ActividadPropiedad> getActividadPropiedadesPagina(int pagina, int numeroActividadPropiedad,
+                String filtro_busqueda, String columna_ordenada, String orden_direccion)
+        {
+            List<ActividadPropiedad> ret = new List<ActividadPropiedad>();
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                { 
+                    String query = "SELECT p.* FROM actividad_propiedad p WHERE p.estado = 1"; 
+                    String query_a="";
+
+                    if(filtro_busqueda != null && filtro_busqueda.Length>0)
+                    { 
+                        query_a = String.Join("", query_a, "p.nombre LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " p.usuario_creo LIKE '%" + filtro_busqueda + "%' ");
+
+                        DateTime fecha_creacion;
+                        if (DateTime.TryParse(filtro_busqueda, out fecha_creacion))
+                        {
+                            query_a = String.Join(" ", query_a, (query_a.Length > 0 ? " OR " : ""), " TO_DATE(TO_CHAR(p.fecha_creacion,'DD/MM/YY'),'DD/MM/YY') LIKE TO_DATE('" + fecha_creacion.ToString("dd/MM/yyyy") + "','DD/MM/YY') ");
+                        }
+                    }
+
+                    query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
+                    query = columna_ordenada != null && columna_ordenada.Trim().Length > 0 ? String.Join(" ", query, "ORDER BY", columna_ordenada, orden_direccion) : query;
+                    query = String.Join(" ", query, ") a WHERE rownum < ((" + pagina + " * " + numeroActividadPropiedad + ") + 1) ) WHERE r__ >= (((" + pagina + " - 1) * " + numeroActividadPropiedad + ") + 1)");
+
+                    ret = db.Query<ActividadPropiedad>(query).AsList<ActividadPropiedad>();
+                }
             }
-            catch(Throwable e){
-                CLogger.write("8", ActividadPropiedadDAO.class, e);
-            }
-            finally{
-                session.close();
+        
+            catch (Exception e)
+            {
+                CLogger.write("8", "ActividadPropiedadDAO.class", e);
             }
             return ret;
         }
 
-        public static Long getTotalActividadPropiedad(String filtro_nombre, String filtro_usuario_creo, String filtro_fecha_creacion){
-            Long ret=0L;
-            Session session = CHibernateSession.getSessionFactory().openSession();
-            try{
-                String query = "SELECT count(c.id) FROM ActividadPropiedad c where c.estado = 1 ";
-                String query_a="";
-                if(filtro_nombre!=null && filtro_nombre.trim().length()>0)
-                    query_a = String.join("",query_a, " c.nombre LIKE '%",filtro_nombre,"%' ");
-                if(filtro_usuario_creo!=null && filtro_usuario_creo.trim().length()>0)
-                    query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " c.usuarioCreo LIKE '%", filtro_usuario_creo,"%' ");
-                if(filtro_fecha_creacion!=null && filtro_fecha_creacion.trim().length()>0)
-                    query_a = String.join("",query_a,(query_a.length()>0 ? " OR " :""), " str(date_format(c.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtro_fecha_creacion,"%' ");
-                query = String.join(" ", query, (query_a.length()>0 ? String.join("","AND (",query_a,")") : ""));
-                Query<Long> conteo = session.createQuery(query,Long.class);
-                ret = conteo.getSingleResult();
-            } catch(Throwable e){
-                CLogger.write("9", ActividadPropiedadDAO.class, e);
+        // Sigue 10/09/2018
+        public static long getTotalActividadPropiedad(String filtro_busqueda)
+        {
+            long ret = 0L;
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    String query = "SELECT COUNT(c.id) FROM actividad_propiedad c WHERE c.estado=1";
+                    String query_a = "";
+                    if (filtro_busqueda != null && filtro_busqueda.Length > 0)
+                    {
+                        query_a = String.Join("", query_a, " c.nombre LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " c.usuario_creo LIKE '%" + filtro_busqueda + "%' ");
+                        DateTime fecha_creacion;
+                        if (DateTime.TryParse(filtro_busqueda, out fecha_creacion))
+                        {
+                            query_a = String.Join(" ", query_a, (query_a.Length > 0 ? " OR " : ""), " TO_DATE(TO_CHAR(c.fecha_creacion,'DD/MM/YY'),'DD/MM/YY') LIKE TO_DATE('" + fecha_creacion.ToString("dd/MM/yyyy") + "','DD/MM/YY') ");
+                        }
+                    }
+                    query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
+                    ret = db.ExecuteScalar<long>(query);
+                }
             }
-            finally{
-                session.close();
+            catch (Exception e)
+            {
+                CLogger.write("9", "ActividadPropiedadDAO.class", e);
             }
             return ret;
         }
+                          
 
-        public static List<ActividadPropiedad> getActividadPropiedadesPorTipoActividad(int idTipoActividad){
+        /* public static List<ActividadPropiedad> getActividadPropiedadesPorTipoActividad(int idTipoActividad){
             List<ActividadPropiedad> ret = new ArrayList<ActividadPropiedad>();
             Session session = CHibernateSession.getSessionFactory().openSession();
             try{
