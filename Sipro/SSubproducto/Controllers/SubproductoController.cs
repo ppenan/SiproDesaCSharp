@@ -35,6 +35,7 @@ namespace SSubproducto.Controllers
             public int? programa;
             public int? subprograma;
             public int? proyecto;
+            public int? congelado;
             public int? actividad;
             public int? obra;
             public int? renglon;
@@ -46,7 +47,7 @@ namespace SSubproducto.Controllers
             public String latitud;
             public String longitud;
             public decimal costo;
-            public int acumulacionCostoid;
+            public Int64 acumulacionCostoid;
             public String acumulacionCostoNombre;
             public bool tieneHijos;
             public String fechaInicioReal;
@@ -180,9 +181,8 @@ namespace SSubproducto.Controllers
                     subproducto.nombre = value.nombre;
                     subproducto.descripcion = value.descripcion;
 
-                    subproducto.productoid = (int)value.producto;
-                    // todo no venia subproductopadre
-                    subproducto.su.subproductoPadreId = (int)value.subproductoPadre;
+                    subproducto.productoid = (int)value.producto;                    
+                    ///subproducto.su.subproductoPadreId = (int)value.subproductoPadre; no tiene subproductopadre
 
                     subproducto.subproductoTipoid = (int)value.tiposubproductoid;
                     subproducto.ueunidadEjecutora = value.unidadEjecutora != null ? (int)value.unidadEjecutora : default(int);
@@ -210,9 +210,8 @@ namespace SSubproducto.Controllers
 
                     Producto producto = ProductoDAO.getProductoPorId(subproducto.productoid);
 
-                    //TODO no hay subproductopadre
                     Subproducto subproductoPadre = new Subproducto();
-                    subproductoPadre.setId(subproductoPadreId);  // todo esta data no venia
+                    ///subproductoPadre.setId(subproductoPadreId);  // esta data no viene
 
                     SubproductoTipo subproductoTipo = new SubproductoTipo();
                     subproductoTipo.id = subproducto.subproductoTipoid;
@@ -314,6 +313,10 @@ namespace SSubproducto.Controllers
                             subproducto.usuarioActualizo,
                             subproducto.fechaActualizacion
                         });
+                    }
+                    else
+                    {
+                        return Ok(new { success = false });
                     }
                 }
                 else
@@ -345,8 +348,7 @@ namespace SSubproducto.Controllers
                     subproducto.nombre = value.nombre;
                     subproducto.descripcion = value.descripcion;
                     subproducto.productoid = (int)value.producto;
-                    // todo no venia subproductopadre
-                    subproducto.subproductoPadreId = (int)value.subproductoPadre;
+                    /// subproducto.subproductoPadreId = (int)value.subproductoPadre; // no hay nada de subproductopadreid
                     subproducto.subproductoTipoid = (int)value.tiposubproductoid;
                     subproducto.ueunidadEjecutora = value.unidadEjecutora != null ? (int)value.unidadEjecutora : default(int);
 
@@ -372,9 +374,8 @@ namespace SSubproducto.Controllers
 
                     Producto producto = ProductoDAO.getProductoPorId(subproducto.productoid);
 
-                    //TODO no hay subproductopadre
                     Subproducto subproductoPadre = new Subproducto();
-                    subproductoPadre.setId(subproductoPadreId);  // todo esta data no venia
+                    /// subproductoPadre.setId(subproductoPadreId);  // todo esta data no venia
 
                     SubproductoTipo subproductoTipo = new SubproductoTipo();
                     subproductoTipo.id = subproducto.subproductoTipoid;
@@ -475,6 +476,10 @@ namespace SSubproducto.Controllers
                             subproducto.usuarioActualizo,
                             subproducto.fechaActualizacion
                         });
+                    }
+                    else
+                    {
+                        return Ok(new { success = false });
                     }
                 }
                 else
@@ -527,12 +532,23 @@ namespace SSubproducto.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize("Subproductos - Visualizar")]
         public IActionResult ObtenerSubproductoPorId(int id)
         {
             try
             {
-                // todo aca voy
-                return Ok();
+                Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id);
+
+                return Ok(new
+                {
+                    success = true,
+                    subproducto.id,
+                    fechaInicio = Utils.ConvierteAFormatoFecha(subproducto.fechaInicio),
+                    fechaFin = Utils.ConvierteAFormatoFecha(subproducto.fechaFin),
+                    subproducto.duracion,
+                    subproducto.duracionDimension,
+                    subproducto.nombre
+                });
             }
             catch (Exception e)
             {
@@ -542,11 +558,88 @@ namespace SSubproducto.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize("Subproductos - Visualizar")]
         public IActionResult SubproductoPorId(int id)
         {
             try
             {
-                return Ok();
+                Subproducto subproducto = SubproductoDAO.getSubproductoPorId(id);
+
+                if (subproducto != null)
+                {
+                    Stsubproducto temp = new Stsubproducto();
+                    temp.id = subproducto.id;
+                    temp.nombre = subproducto.nombre;
+                    temp.descripcion = subproducto.descripcion;
+                    temp.usuarioCreo = subproducto.usuarioCreo;
+                    temp.usuarioActualizo = subproducto.usuarioActualizo;
+
+                    temp.fechaCreacion = Utils.ConvierteAFormatoFecha(subproducto.fechaCreacion);
+                    temp.fechaActualizacion = Utils.ConvierteAFormatoFecha(subproducto.fechaActualizacion);
+
+                    temp.estado = subproducto.estado;
+                    temp.snip = subproducto.snip;
+                    temp.programa = subproducto.programa;
+                    temp.subprograma = subproducto.subprograma;
+                    temp.proyecto = subproducto.proyecto;
+                    temp.actividad = subproducto.actividad;
+                    temp.obra = subproducto.obra;
+                    temp.renglon = subproducto.renglon;
+                    temp.ubicacionGeografica = subproducto.ubicacionGeografica;
+                    temp.latitud = subproducto.latitud;
+                    temp.longitud = subproducto.longitud;
+                    temp.fechaInicio = Utils.ConvierteAFormatoFecha(subproducto.fechaInicio);
+                    temp.fechaFin = Utils.ConvierteAFormatoFecha(subproducto.fechaFin);
+                    temp.duracion = subproducto.duracion;
+                    temp.duracionDimension = subproducto.duracionDimension;
+                    temp.costo = subproducto.costo ?? default(decimal);
+
+                    subproducto.acumulacionCostos = AcumulacionCostoDAO.getAcumulacionCostoById(subproducto.acumulacionCostoid);
+                    temp.acumulacionCostoid = subproducto.acumulacionCostoid;
+                    temp.acumulacionCostoNombre = subproducto.acumulacionCostos.nombre;
+                    temp.productoid = subproducto.productoid;
+
+                    subproducto.unidadEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutora(subproducto.ejercicio, subproducto.entidad ?? default(int), subproducto.ueunidadEjecutora);
+
+                    if (subproducto.unidadEjecutoras != null)
+                    {
+                        subproducto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subproducto.entidad ?? default(int), subproducto.ejercicio);
+
+                        temp.entidadnombre = subproducto.unidadEjecutoras.entidads.nombre;
+                        temp.nombreUnidadEjecutora = subproducto.unidadEjecutoras.nombre;
+                        temp.entidadentidad = subproducto.unidadEjecutoras.entidadentidad;
+                    }
+
+                    temp.ejercicio = subproducto.ejercicio;
+
+                    subproducto.subproductoTipos = SubproductoTipoDAO.getSubproductoTipo(subproducto.subproductoTipoid);
+
+                    if (subproducto.subproductoTipos != null)
+                    {
+                        temp.subproductoTipoid = subproducto.subproductoTipoid;
+                        temp.subProductoTipo = subproducto.subproductoTipos.nombre;
+                    }
+
+                    temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 4);
+                    temp.fechaInicioReal = Utils.ConvierteAFormatoFecha(subproducto.fechaInicioReal);
+                    temp.fechaFinReal = Utils.ConvierteAFormatoFecha(subproducto.fechaFinReal);
+
+                    subproducto.productos = ProductoDAO.getProductoPorId(subproducto.productoid);
+                    Proyecto proyecto = ProyectoDAO.getProyectobyTreePath(subproducto.productos.treepath);
+
+                    temp.congelado = proyecto.congelado != null ? proyecto.congelado : 0;
+                    temp.fechaElegibilidad = Utils.ConvierteAFormatoFecha(proyecto.fechaElegibilidad);
+                    temp.fechaCierre = Utils.ConvierteAFormatoFecha(proyecto.fechaCierre);
+
+                    temp.inversionNueva = subproducto.inversionNueva;
+
+                    return Ok(new { success = true, subproducto = temp });
+                }
+                else
+                {
+                    return Ok(new { success = false });
+                }
+
             }
             catch (Exception e)
             {
@@ -556,11 +649,13 @@ namespace SSubproducto.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize("Subproductos - Visualizar")]
         public IActionResult CantidadHistoria(int id)
         {
             try
             {
-                return Ok();
+                String versiones = SubproductoDAO.GetVersiones(id);
+                return Ok(new { success = true, versiones });
             }
             catch (Exception e)
             {
@@ -570,11 +665,14 @@ namespace SSubproducto.Controllers
         }
 
         [HttpGet("{id}/{version}")]
+        [Authorize("Subproductos - Visualizar")]
         public IActionResult Historia(int id, int version)
         {
             try
             {
-                return Ok();
+                String historia = SubproductoDAO.GetHistoria(id, version);
+
+                return Ok(new { success = true, historia });
             }
             catch (Exception e)
             {
@@ -584,11 +682,71 @@ namespace SSubproducto.Controllers
         }
 
         [HttpPost]
+        [Authorize("Subproductos - Visualizar")]
         public IActionResult ValidacionAsignado([FromBody]dynamic value)
         {
             try
             {
-                return Ok();
+
+                DateTime cal = new DateTime();
+                int ejercicio = cal.Year;
+                int id = value.id;
+
+                Subproducto objSubproducto = SubproductoDAO.getSubproductoPorId(id);
+                Proyecto objProyecto = ProyectoDAO.getProyectobyTreePath(objSubproducto.treepath);
+                int entidad = objProyecto.entidad ?? default(int);
+                int programa = value.programa;
+                int subprograma = value.subprograma;
+                int proyecto = value.proyecto;
+                int actividad = value.actividad;
+                int obra = value.obra;
+                int renglon = value.renglon;
+                int geografico = value.geografico;
+
+                decimal asignado = ObjetoDAO.getAsignadoPorLineaPresupuestaria(ejercicio, entidad, programa, subprograma, proyecto, actividad, obra, renglon, geografico);
+
+                decimal planificado = decimal.Zero;
+                switch (objSubproducto.acumulacionCostoid)
+                {
+                    case 1:
+                        cal = objSubproducto.fechaInicio;
+                        int ejercicioInicial = cal.Year;
+                        if (ejercicio.Equals(ejercicioInicial))
+                        {
+                            planificado = objSubproducto.costo ?? default(decimal);
+                        }
+                        break;
+                    case 2:
+                        List<PagoPlanificado> lstPagos = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(objSubproducto.id, 4);
+                        foreach (PagoPlanificado pago in lstPagos)
+                        {
+                            cal = pago.fechaPago;
+                            int ejercicioPago = cal.Year;
+                            if (ejercicio.Equals(ejercicioPago))
+                            {
+                                planificado += pago.pago;
+                            }
+                        }
+                        break;
+                    case 3:
+                        cal = objSubproducto.fechaFin ?? default(DateTime);
+                        int ejercicioFinal = cal.Year;
+                        if (ejercicio.Equals(ejercicioFinal))
+                        {
+                            planificado += objSubproducto.costo ?? default(decimal);
+                        }
+                        break;
+                }
+
+                bool sobrepaso = false;
+                asignado = asignado - planificado;
+
+                if (asignado.CompareTo(decimal.Zero) == -1)
+                {
+                    sobrepaso = true;
+                }
+
+                return Ok(new { success = true, asignado, sobrepaso });
             }
             catch (Exception e)
             {
