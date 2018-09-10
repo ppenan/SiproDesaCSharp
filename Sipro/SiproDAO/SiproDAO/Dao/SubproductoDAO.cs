@@ -774,7 +774,7 @@ namespace SiproDAO.Dao
         }
 
 
-        /*
+        
         public static List<Subproducto> getSubproductosByProductoid(int productoId)
         {
             List<Subproducto> ret = null;
@@ -791,6 +791,6 @@ namespace SiproDAO.Dao
             }
 
             return ret;
-        }*/
+        }
     }
 }
