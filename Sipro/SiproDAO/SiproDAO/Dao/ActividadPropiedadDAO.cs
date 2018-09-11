@@ -95,72 +95,82 @@ namespace SiproDAO.Dao
         }
 
         /// <summary>
-        /// Método guardar
+        /// Método para Guardar
         /// </summary>
         /// <param name="actividadPropiedad"></param>
         /// <returns></returns>
-        public static boolean guardarActividadPropiedad(ActividadPropiedad actividadPropiedad){
-            boolean ret = false;
-            Session session = CHibernateSession.getSessionFactory().openSession();
-            try{
-                session.beginTransaction();
-                session.saveOrUpdate(actividadPropiedad);
-                session.getTransaction().commit();
-                ret = true;
+        public static bool guardarActividadPropiedad(ActividadPropiedad actividadPropiedad)
+        {
+            bool ret = false;
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    int existe = db.ExecuteScalar<int>("SELECT COUNT(c.id) FROM actividad_propiedad c WHERE id=:id", new { id = actividadPropiedad.id });
+
+                    if (existe > 0)
+                    {
+                        int guardado = db.Execute("UPDATE actividad_propiedad SET nombre=:nombre, descripcion=:descripcion, usuario_creo=:usuarioCreo, usuario_actualizo=:usuarioActualizo, " +
+                            "fecha_creacion=:fechaCreacion, fecha_actualizacion=:fechaActualizacion, dato_tipoid=:datoTipoid, estado=:estado WHERE id=:id", actividadPropiedad);
+
+                        ret = guardado > 0 ? true : false;
+                    }
+                    else
+                    {
+                        int sequenceId = db.ExecuteScalar<int>("SELECT seq_actividad_propiedad.nextval FROM DUAL");
+                        actividadPropiedad.id = sequenceId;
+                        int guardado = db.Execute("INSERT INTO actividad_propiedad VALUES (:id, :nombre, :descripcion, :usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion, " +
+                            ":datoTipoid, :estado)", actividadPropiedad);
+
+                        ret = guardado > 0 ? true : false;
+                    }
+                }
             }
-            catch(Throwable e){
-                CLogger.write("5", ActividadPropiedadDAO.class, e);
+            catch (Exception e)
+            {
+                CLogger.write("5", "ActividadPropiedadDAO.class", e);
             }
-            finally{
-                session.close();
+            return ret;
+        }
+
+
+        public static bool eliminarActividadPropiedad(ActividadPropiedad actividadPropiedad)
+        {
+            bool ret = false;
+            try
+            {
+                actividadPropiedad.estado = 0;
+                actividadPropiedad.fechaActualizacion = DateTime.Now;
+                ret = guardarActividadPropiedad(actividadPropiedad);
+            }
+            catch (Exception e)
+            {
+                CLogger.write("6", "ActividadPropiedadDAO.class", e);
             }
             return ret;
         }
 
 
 
+/* public static boolean eliminarTotalActividadPropiedad(ActividadPropiedad actividadPropiedad){
+    boolean ret = false;
+    Session session = CHibernateSession.getSessionFactory().openSession();
+    try{
+        session.beginTransaction();
+        session.delete(actividadPropiedad);
+        session.getTransaction().commit();
+        ret = true;
+    }
+    catch(Throwable e){
+        CLogger.write("7", ActividadPropiedadDAO.class, e);
+    }
+    finally{
+        session.close();
+    }
+    return ret;
+} */
 
-
-
-
-        /* public static boolean eliminarActividadPropiedad(ActividadPropiedad actividadPropiedad){
-            boolean ret = false;
-            Session session = CHibernateSession.getSessionFactory().openSession();
-            try{
-                session.beginTransaction();
-                actividadPropiedad.setEstado(0);
-                session.update(actividadPropiedad);
-                session.getTransaction().commit();
-                ret = true;
-            }
-            catch(Throwable e){
-                CLogger.write("6", ActividadPropiedadDAO.class, e);
-            }
-            finally{
-                session.close();
-            }
-            return ret;
-        }
-
-        public static boolean eliminarTotalActividadPropiedad(ActividadPropiedad actividadPropiedad){
-            boolean ret = false;
-            Session session = CHibernateSession.getSessionFactory().openSession();
-            try{
-                session.beginTransaction();
-                session.delete(actividadPropiedad);
-                session.getTransaction().commit();
-                ret = true;
-            }
-            catch(Throwable e){
-                CLogger.write("7", ActividadPropiedadDAO.class, e);
-            }
-            finally{
-                session.close();
-            }
-            return ret;
-        } */
-
-        public static List<ActividadPropiedad> getActividadPropiedadesPagina(int pagina, int numeroActividadPropiedad,
+public static List<ActividadPropiedad> getActividadPropiedadesPagina(int pagina, int numeroActividadPropiedad,
                 String filtro_busqueda, String columna_ordenada, String orden_direccion)
         {
             List<ActividadPropiedad> ret = new List<ActividadPropiedad>();
@@ -230,28 +240,53 @@ namespace SiproDAO.Dao
         }
                           
 
-        /* public static List<ActividadPropiedad> getActividadPropiedadesPorTipoActividad(int idTipoActividad){
-            List<ActividadPropiedad> ret = new ArrayList<ActividadPropiedad>();
-            Session session = CHibernateSession.getSessionFactory().openSession();
-            try{
-                Query<ActividadPropiedad> criteria = session.createNativeQuery(" select cp.* "
-                    + "from actividad_tipo ct "
-                    + "join atipo_propiedad ctp ON ctp.actividad_tipoid = ct.id "
-                    + "join actividad_propiedad cp ON cp.id = ctp.actividad_propiedadid "
-                    + " where ct.id = :idTipoComp",ActividadPropiedad.class);
-
-                criteria.setParameter("idTipoComp", idTipoActividad);
-                ret = criteria.getResultList();
+        // Duda: WHERE at.id=:idTipoComp
+        public static List<ActividadPropiedad> getActividadPropiedadesPorTipoActividad(int idTipoActividad)
+        {
+            List<ActividadPropiedad> ret = new List<ActividadPropiedad>();
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    string query = String.Join(" ", "SELECT cp.* FROM actividad_tipo cp",
+                        "INNER JOIN atipo_propiedad atp ON atp.componente_propiedadid=cp.id",
+                        "INNER JOIN actividad_tipo at ON at.id=atp.componente_tipoid",
+                        "WHERE at.id=:idTipoComp AND cp.estado=1");
+                    ret = db.Query<ActividadPropiedad>(query, new { idTipoComp = idTipoActividad }).AsList<ActividadPropiedad>();
+                }
             }
-            catch(Throwable e){
-                CLogger.write("10", ActividadPropiedadDAO.class, e);
-            }
-            finally{
-                session.close();
+            catch (Exception e)
+            {
+                CLogger.write("10", "ActividadPropiedadDAO.class", e);
             }
             return ret;
         }
 
-             */
+        /* Equivalente Java
+         	public static List<ActividadPropiedad> getActividadPropiedadesPorTipoActividad(int idTipoActividad){
+		List<ActividadPropiedad> ret = new ArrayList<ActividadPropiedad>();
+		Session session = CHibernateSession.getSessionFactory().openSession();
+		try{
+			Query<ActividadPropiedad> criteria = session.createNativeQuery(" select cp.* "
+				+ "from actividad_tipo ct "
+				+ "join atipo_propiedad ctp ON ctp.actividad_tipoid = ct.id "
+				+ "join actividad_propiedad cp ON cp.id = ctp.actividad_propiedadid "
+				+ " where ct.id = :idTipoComp",ActividadPropiedad.class);
+			
+			criteria.setParameter("idTipoComp", idTipoActividad);
+			ret = criteria.getResultList();
+		}
+		catch(Throwable e){
+			CLogger.write("10", ActividadPropiedadDAO.class, e);
+		}
+		finally{
+			session.close();
+		}
+		return ret;
+	} 
+         
+        */
+
+
     }
 }
