@@ -65,7 +65,34 @@ namespace SActividadPropiedad.Controllers
         {
             try
             {
-                return Ok();
+                int pagina = value.pagina != null ? (int)value.pagina : 1;
+                int numeroActividadPropiedad = value.numeroactividadpropiedad != null ? (int)value.numeroactividadpropiedad : 20;
+                String filtro_busqueda = value.filtro_busqueda != null ? (string)value.filtro_busqueda : null;
+                /// String  filtro_nombre = map.get("filtro_nombre");
+                /// String filtro_usuario_creo = map.get("filtro_usuario_creo");
+                /// String filtro_fecha_creacion = map.get("filtro_fecha_creacion");
+                String columna_ordenada = value.columna_ordenada != null ? (string)value.columna_ordenada : null;
+                String orden_direccion = value.orden_direccion != null ? (string)value.orden_direccion : null;
+                List<ActividadPropiedad> actividadpropiedades = ActividadPropiedadDAO.getActividadPropiedadesPagina(pagina, numeroActividadPropiedad,
+                        filtro_busqueda, columna_ordenada, orden_direccion);
+                List<Stactividadpropiedad> stactividadpropiedad = new List<Stactividadpropiedad>();
+                foreach (ActividadPropiedad actividadpropiedad in actividadpropiedades)
+                {
+                    Stactividadpropiedad temp = new Stactividadpropiedad();
+                    temp.id = actividadpropiedad.id; // getId()
+                    temp.nombre = actividadpropiedad.nombre; // getNombre()
+                    temp.descripcion = actividadpropiedad.descripcion;
+                    temp.datotipoid = actividadpropiedad.datoTipoid; // getDatoTipo().getId()
+                    temp.datotiponombre = actividadpropiedad.datoTipos.nombre; // getDatoTipo().getNombre()
+                    temp.fechaActualizacion = actividadpropiedad.fechaActualizacion != null ? actividadpropiedad.fechaActualizacion.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.fechaCreacion = actividadpropiedad.fechaCreacion.ToString("dd/MM/yyyy H:mm:ss");
+                    temp.usuarioActualizo = actividadpropiedad.usuarioActualizo;
+                    temp.usuarioCreo = actividadpropiedad.usuarioCreo;
+                    stactividadpropiedad.Add(temp);
+                }
+
+                //return Ok();
+                return Ok(new { success = true, actividadpropiedades = stactividadpropiedad });
             }
             catch (Exception e)
             {
@@ -79,6 +106,28 @@ namespace SActividadPropiedad.Controllers
         {
             try
             {
+                int pagina = value.pagina != null ? (int)value.pagina : 1;
+                String idsPropiedades = value.idspropiedades != null ? (string)value.idspropiedades : "0";
+                int numeroActividadPropiedad = value.numeroactividadpropiedad != null ? (int)value.numeroactividadpropiedad : 0;
+                List<ActividadPropiedad> actividadpropiedades = ActividadPropiedadDAO.getActividadPropiedadPaginaTotalDisponibles(pagina, numeroActividadPropiedad, idsPropiedades);
+                List<stactividadpropiedad> stactividadpropiedad = new List<stactividadpropiedad>();
+                for (ActividadPropiedad actividadpropiedad:actividadpropiedades)
+                {
+                    stactividadpropiedad temp = new stactividadpropiedad();
+                    temp.id = actividadpropiedad.getId();
+                    temp.nombre = actividadpropiedad.getNombre();
+                    temp.descripcion = actividadpropiedad.getDescripcion();
+                    temp.datotipoid = actividadpropiedad.getDatoTipo().getId();
+                    temp.datotiponombre = actividadpropiedad.getDatoTipo().getNombre();
+                    temp.fechaActualizacion = Utils.formatDateHour(actividadpropiedad.getFechaActualizacion());
+                    temp.fechaCreacion = Utils.formatDateHour(actividadpropiedad.getFechaCreacion());
+                    temp.usuarioActualizo = actividadpropiedad.getUsuarioActualizo();
+                    temp.usuarioCreo = actividadpropiedad.getUsuarioCreo();
+                    stactividadpropiedad.add(temp);
+                }
+                response_text = new GsonBuilder().serializeNulls().create().toJson(stactividadpropiedad);
+                response_text = String.join("", "\"actividadpropiedades\":", response_text);
+                response_text = String.join("", "{\"success\":true,", response_text, "}");
                 return Ok();
             }
             catch (Exception e)
