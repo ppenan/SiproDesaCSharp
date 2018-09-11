@@ -13,6 +13,7 @@ import { DialogDelete, DialogOverviewDelete } from '../../../assets/modals/delet
   templateUrl: './actividadpropiedad.component.html',
   styleUrls: ['./actividadpropiedad.component.css']
 })
+
 export class ActividadpropiedadComponent implements OnInit {
     mostrarcargando: boolean;
     color = 'primary';
@@ -48,14 +49,59 @@ export class ActividadpropiedadComponent implements OnInit {
     this.modalDelete = new DialogOverviewDelete(dialog);
    }
 
+   settings = {
+    columns: {
+      id: {
+        title: 'ID',
+        width: '6%',
+        filter: false,
+        type: 'html',
+        valuePrepareFunction : (cell) => {
+          return '<div class="datos-numericos">' + cell + '</div>';
+        }
+      },
+      nombre: {
+        title: 'Nombre',
+        filter: false,
+      },
+      descripcion: {
+        title: 'Descripción',
+        filter: false,
+      },
+      datoTipoNombre: {
+        title: 'Tipo dato',
+        filter: false,
+      },
+      usuarioCreo: {
+        title: 'Usuario Creación',
+        filter: false
+      },
+      fechaCreacion: {
+        title: 'Fecha Creación',
+        type: 'html',
+        filter: false,
+        valuePrepareFunction : (cell) => {
+          return '<div class="datos-numericos">' + moment(cell,'DD/MM/YYYY HH:mm:ss').format('DD/MM/YYYY HH:mm:ss') + '</div>';
+        }
+      }
+    },
+    actions: false,
+    noDataMessage: 'No se obtuvo información...',
+    attr: {
+      class: 'table table-bordered grid'
+    },
+    hideSubHeader: true
+  };
+
+
   ngOnInit() {
     this.mostrarcargando = true;
     this.obtenerTotalActividadPropiedades();
     this.obtenerDatosTipo();
   }
 
-  obtenerTotalActividadPropiedades(){
-    var data = {
+  obtenerTotalActividadPropiedades() {
+    const data = {
       filtro_busqueda: this.busquedaGlobal,
       t: moment().unix()
     };
@@ -80,7 +126,7 @@ export class ActividadpropiedadComponent implements OnInit {
 
   cargarTabla(pagina?: any) {
     this.mostrarcargando = true;
-    var filtro = {
+    const filtro = {
       pagina: pagina,
       numeroActividadPropiedades: this.elementosPorPagina,
       filtro_busqueda: this.busquedaGlobal,
@@ -114,58 +160,111 @@ export class ActividadpropiedadComponent implements OnInit {
   }
 
   cambioOpcionDatoTipo(opcion) {
-    this.actividadpropiedad.datoTipoid = opcion;
+    this.actividadpropiedad.datotipoid = opcion;
   }
 
-  handlePage(event){
-    this.cargarTabla(event.pageIndex+1);
+  handlePage(event) {
+    this.cargarTabla(event.pageIndex + 1);
   }
 
-  nuevo(){
+  nuevo() {
     this.esColapsado = true;
     this.esNuevo = true;
-    this.componentepropiedad = new ComponentePropiedad();
+    this.actividadpropiedad = new ActividadPropiedad();
     this.datoTipoSelected = 0;
   }
 
-  editar(){
-    if(this.componentepropiedad.id > 0){
+  editar() {
+    if (this.actividadpropiedad.id > 0) {
       this.esColapsado = true;
       this.esNuevo = false;
-      this.datoTipoSelected = this.componentepropiedad.datoTipoid;
-    }
-    else{
-      this.utils.mensaje('warning', 'Debe seleccionar la Propiedad de componente que desea editar');
+      this.datoTipoSelected = this.actividadpropiedad.datotipoid;
+    } else {
+      this.utils.mensaje('warning', 'Debe seleccionar la Propiedad de actividad que desea editar');
     }
   }
 
-  borrar(){
-    if(this.componentepropiedad.id > 0){
+  borrar() {
+    if (this.actividadpropiedad.id > 0) {
       this.modalDelete.dialog.open(DialogDelete, {
         width: '600px',
         height: '200px',
-        data: { 
-          id: this.componentepropiedad.id,
-          titulo: 'Confirmación de Borrado', 
-          textoCuerpo: '¿Desea borrar la propiedad de componente?',
+        data: {
+          id: this.actividadpropiedad.id,
+          titulo: 'Confirmación de Borrado',
+          textoCuerpo: '¿Desea borrar la propiedad de actividad?',
           textoBotonOk: 'Borrar',
           textoBotonCancelar: 'Cancelar'
         }
       }).afterClosed().subscribe(result => {
-        if(result != null){
-          if(result){
-            this.http.delete('http://localhost:60013/api/ComponentePropiedad/ComponentePropiedad/'+ this.componentepropiedad.id, { withCredentials : true }).subscribe(response =>{
-              if(response['success'] == true){
-                this.obtenerTotalComponentePropiedades();
+        if (result != null) {
+          if (result) {
+            this.http.delete(
+              'http://localhost:60002/api/ActividadPropiedad/ActividadPropiedad/' + this.actividadpropiedad.id,
+              { withCredentials : true })
+            .subscribe(response => {
+              if (response['success'] === true) {
+                this.obtenerTotalActividadPropiedades();
               }
-            })
-          } 
+            });
+          }
         }
-      })
-    }
-    else{
-      this.utils.mensaje('warning', 'Seleccione una propiedad de componente');
+      });
+    } else {
+      this.utils.mensaje('warning', 'Seleccione una propiedad de actividad');
     }
   }
 
+  filtrar(campo) {
+    this.busquedaGlobal = campo;
+    this.obtenerTotalActividadPropiedades();
+  }
+
+  onDblClickRow(event) {
+    this.actividadpropiedad = event.data;
+    this.editar();
+  }
+
+  onSelectRow(event) {
+    this.actividadpropiedad = event.data;
+  }
+
+  guardar() {
+    if (this.actividadpropiedad != null && Number(this.datoTipoSelected) !== 0) {
+
+      var objetoHttp;
+
+      if (this.actividadpropiedad.id > 0) {
+        objetoHttp = this.http.put(
+          'http://localhost:60002/api/ActividadPropiedad/ActividadPropiedad/' + this.actividadpropiedad.id,
+          this.actividadpropiedad, { withCredentials: true }
+          );
+      } else {
+        objetoHttp = this.http.post(
+          'http://localhost:60002/api/ActividadPropiedad/ActividadPropiedad',
+          this.actividadpropiedad, { withCredentials: true });
+      }
+
+      objetoHttp.subscribe(response => {
+        if (response['success'] === true) {
+          this.actividadpropiedad.usuarioCreo = response['usuarioCreo'];
+          this.actividadpropiedad.fechaCreacion = response['fechaCreacion'];
+          this.actividadpropiedad.fechaActualizacion = response['fechaActualizacion'];
+          this.actividadpropiedad.usuarioActualizo = response['usuarioActualizo'];
+          this.actividadpropiedad.id = response['id'];
+
+          this.esNuevo = false;
+          this.obtenerTotalActividadPropiedades();
+          this.utils.mensaje('success', 'Propiedad guardada exitosamente');
+        }
+      });
+    } else {
+      this.utils.mensaje('warning', 'Debe seleccionar un Tipo de dato');
+    }
+  }
+
+  IrATabla() {
+    this.esColapsado = false;
+    this.actividadpropiedad = new ActividadPropiedad();
+  }
 }
