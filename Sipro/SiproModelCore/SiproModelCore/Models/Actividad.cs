@@ -57,7 +57,7 @@ namespace SiproModelCore.Models
 	    public virtual decimal? costo { get; set; }
 	    [Column("ACUMULACION_COSTO")]
 	    [ForeignKey("AcumulacionCosto")]
-        public virtual Int32 acumulacionCosto { get; set; }
+        public virtual Int64 acumulacionCosto { get; set; }
 	    public virtual Int32? renglon { get; set; }
 	    [Column("UBICACION_GEOGRAFICA")]
 	    public virtual Int32? ubicacionGeografica { get; set; }

@@ -1,23 +1,30 @@
-﻿using Identity;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SiproModelCore.Models;
+using System;
+using Utilities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.DataProtection;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 using System.Net;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using System.Threading.Tasks;
+using Identity;
 
-namespace SActividad
+namespace SActividadTipo
 {
     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            var mapper = (SqlMapper.ITypeMap)Activator
+               .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+               .MakeGenericType(typeof(ActividadTipo)));
+            SqlMapper.SetTypeMap(typeof(ActividadTipo), mapper);
         }
 
         public IConfiguration Configuration { get; }
@@ -25,15 +32,13 @@ namespace SActividad
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-
-            services.AddIdentity<User, Rol>()
+            services.AddIdentity<Identity.User, Rol>()
                 .AddRoleStore<RoleStore>()
                 .AddUserStore<UserPasswordStore>()
                 .AddUserManager<CustomUserManager>()
                 .AddDefaultTokenProviders();
 
-            services.AddScoped<IUserClaimsPrincipalFactory<User>, Identity.ApplicationClaimsIdentityFactory>();
+            services.AddScoped<IUserClaimsPrincipalFactory<Identity.User>, ApplicationClaimsIdentityFactory>();
 
             services.AddAuthentication(sharedOptions =>
             {
@@ -47,8 +52,7 @@ namespace SActividad
                     .SetApplicationName("SiproApp")
                     .DisableAutomaticKeyGeneration();
 
-            services.ConfigureApplicationCookie(options =>
-            {
+            services.ConfigureApplicationCookie(options => {
                 options.Cookie.Name = ".AspNet.Identity.Application";
                 options.Cookie.HttpOnly = true;
                 options.Cookie.SameSite = SameSiteMode.None;
@@ -82,14 +86,14 @@ namespace SActividad
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Actividades - Visualizar",
-                                  policy => policy.RequireClaim("sipro/permission", "Actividades - Visualizar"));
-                options.AddPolicy("Actividades - Crear",
-                                  policy => policy.RequireClaim("sipro/permission", "Actividades - Crear"));
-                options.AddPolicy("Actividades - Eliminar",
-                                  policy => policy.RequireClaim("sipro/permission", "Actividades - Eliminar"));
-                options.AddPolicy("Actividades - Editar",
-                                  policy => policy.RequireClaim("sipro/permission", "Actividades - Editar"));
+                options.AddPolicy("Actividad Tipos - Visualizar",
+                                  policy => policy.RequireClaim("sipro/permission", "Actividad Tipos - Visualizar"));
+                options.AddPolicy("Actividad Tipos - Crear",
+                                  policy => policy.RequireClaim("sipro/permission", "Actividad Tipos - Crear"));
+                options.AddPolicy("Actividad Tipos - Eliminar",
+                                  policy => policy.RequireClaim("sipro/permission", "Actividad Tipos - Eliminar"));
+                options.AddPolicy("Actividad Tipos - Editar",
+                                  policy => policy.RequireClaim("sipro/permission", "Actividad Tipos - Editar"));
             });
 
             services.AddCors(options =>
@@ -104,6 +108,7 @@ namespace SActividad
                       });
             });
 
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

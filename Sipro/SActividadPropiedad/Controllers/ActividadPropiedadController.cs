@@ -242,7 +242,7 @@ namespace SActividadPropiedad.Controllers
                     String descripcion = value.descripcion;
                     int datoTipoId = (int)value.datoTipoid;
 
-                    ActividadPropiedad actividadPropiedad = ActividadPropiedadDAO.getActividadPropiedadPorId(id);
+                    ActividadPropiedad actividadPropiedad = ActividadPropiedadDAO.GetActividadPropiedadPorId(id);
                     actividadPropiedad.nombre = nombre;
                     actividadPropiedad.usuarioActualizo = User.Identity.Name;
                     actividadPropiedad.fechaActualizacion = DateTime.Now;
@@ -278,7 +278,7 @@ namespace SActividadPropiedad.Controllers
         {
             try
             {
-                ActividadPropiedad actividadPropiedad = ActividadPropiedadDAO.getActividadPropiedadPorId(id);
+                ActividadPropiedad actividadPropiedad = ActividadPropiedadDAO.GetActividadPropiedadPorId(id);
                 actividadPropiedad.usuarioActualizo = User.Identity.Name;
                 actividadPropiedad.fechaActualizacion = DateTime.Now;
                 bool eliminado = ActividadPropiedadDAO.eliminarActividadPropiedad(actividadPropiedad);

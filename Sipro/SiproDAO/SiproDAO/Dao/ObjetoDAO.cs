@@ -597,7 +597,7 @@ namespace SiproDAO.Dao
 
         public static bool tieneHijos(int objetoId, int objetoTipo)
         {
-            if (ActividadDAO.getActividadesPorObjeto(objetoId, objetoTipo) != null && ActividadDAO.getActividadesPorObjeto(objetoId, objetoTipo).Count > 0)
+            if (ActividadDAO.GetActividadesPorObjeto(objetoId, objetoTipo) != null && ActividadDAO.GetActividadesPorObjeto(objetoId, objetoTipo).Count > 0)
             {
                 return true;
             }
@@ -764,7 +764,7 @@ namespace SiproDAO.Dao
                                 temp = new ObjetoHoja(5, obj, 4, subproducto);
                                 break;
                             case 5:
-                                actividadP = ActividadDAO.getActividadPorId(Convert.ToInt32(actividad.objetoId));
+                                actividadP = ActividadDAO.GetActividadPorId(Convert.ToInt32(actividad.objetoId));
                                 temp = new ObjetoHoja(5, obj, 5, actividadP);
                                 break;
                         }
@@ -786,7 +786,7 @@ namespace SiproDAO.Dao
                 case 2: ret = (Object)SubComponenteDAO.getSubComponente(id); break;
                 case 3: ret = (Object)ProductoDAO.getProductoPorId(id); break;
                 case 4: ret = (Object)SubproductoDAO.getSubproductoPorId(id); break;
-                case 5: ret = (Object)ActividadDAO.getActividadPorId(id); break;
+                case 5: ret = (Object)ActividadDAO.GetActividadPorId(id); break;
             }
             return ret;
         }

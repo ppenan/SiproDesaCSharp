@@ -7,13 +7,13 @@ using Utilities;
 
 namespace SiproDAO.Dao
 {
-    class ActividadTipoDAO
+    public class ActividadTipoDAO
     {
         /// <summary>
         /// Obtiene los tipos de actividad que tengan estado = 1
         /// </summary>
         /// <returns>Lista de Actividad Tipo</returns>
-        public static List<ActividadTipo> GetActividadTipos()
+        public static List<ActividadTipo> ActividadTipos()
         {
             List<ActividadTipo> result = new List<ActividadTipo>();
 
@@ -37,7 +37,7 @@ namespace SiproDAO.Dao
         /// </summary>
         /// <param name="id">Identificador del Tipo de Actividad</param>
         /// <returns>Tipo de Actividad</returns>
-        public static ActividadTipo GetActividadTipoPorId(int id)
+        public static ActividadTipo ActividadTipoPorId(int id)
         {
 
             ActividadTipo resultado = null;
@@ -46,7 +46,7 @@ namespace SiproDAO.Dao
             {
                 using (DbConnection db = new OracleContext().getConnection())
                 {
-                    resultado = db.QueryFirstOrDefault<ActividadTipo>("SELECT * FROM actividad_tipo WHERE id=:id AND estado=1", new { id });
+                    resultado = db.QueryFirstOrDefault<ActividadTipo>("SELECT * FROM actividad_tipo WHERE id = :id AND estado = 1", new { id });
                 }
 
             }
@@ -80,7 +80,7 @@ namespace SiproDAO.Dao
 
                     if (existe > 0)
                     {
-                        int guardado = db.Execute("UPDATE actividad_tipo SET nombre = :nombre, descripcion = :descripcion, usuario_creo = :usuario_creo, usuario_actualizo = :usuario_actualizo, fecha_creacion = :fecha_creacion, fecha_actualizacion = :fecha_actualizacion, estado = :estado WHERE id = :id", actividadTipo.);
+                        int guardado = db.Execute("UPDATE actividad_tipo SET nombre = :nombre, descripcion = :descripcion, usuario_creo = :usuarioCreo, usuario_actualizo = :usuarioActualizo, fecha_creacion = :fechaCreacion, fecha_actualizacion = :fechaActualizacion, estado = :estado WHERE id = :id", actividadTipo);
 
                         resultado = (guardado > 0) ? true : false;
                     }
@@ -90,7 +90,7 @@ namespace SiproDAO.Dao
 
                         actividadTipo.id = sequenceId;
 
-                        int guardado = db.Execute("INSERT INTO actividad_tipo VALUES (:id, :nombre, :descripcion, :usuario_creo, :usuario_actualizo, :fecha_creacion, :fecha_actualizacion, :estado)", actividadTipo);
+                        int guardado = db.Execute("INSERT INTO actividad_tipo VALUES (:id, :nombre, :descripcion, :usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion, :estado)", actividadTipo);
 
                         resultado = (guardado > 0) ? true : false;
                     }
@@ -166,7 +166,7 @@ namespace SiproDAO.Dao
         /// <param name="columna_ordenada">Nombre de la columna a ordenar</param>
         /// <param name="orden_direccion">Tipo de ordenamiento ASC o DESC</param>
         /// <returns>Listado de Actividad Tipo, ya paginada y en el orden solicitado</returns>
-        public static List<ActividadTipo> GetActividadTiposPagina(
+        public static List<ActividadTipo> ActividadTiposPagina(
             int pagina,
             int numeroactividadstipo,
             String filtro_busqueda,
@@ -187,7 +187,7 @@ namespace SiproDAO.Dao
                     {
                         query_a = String.Join("", query_a, " c.nombre LIKE '%" + filtro_busqueda + "%' ");
                         query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " c.descripcion LIKE '%" + filtro_busqueda + "%' ");
-                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " c.usuario_creo LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " c.usuarioCreo LIKE '%" + filtro_busqueda + "%' ");
 
                         if (DateTime.TryParse(filtro_busqueda, out DateTime fecha_creacion))
                         {

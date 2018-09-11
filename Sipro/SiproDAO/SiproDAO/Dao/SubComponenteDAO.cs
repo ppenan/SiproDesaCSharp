@@ -400,7 +400,7 @@ namespace SiproDAO.Dao
             try
             {
                 List<Producto> productos = ProductoDAO.getProductosBySubComponente(subcomponente.id);
-                List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(subcomponente.id, 2);
+                List<Actividad> actividades = ActividadDAO.GetActividadesPorObjeto(subcomponente.id, 2);
                 if ((productos != null && productos.Count > 0) || (actividades != null && actividades.Count > 0))
                 {
                     if (productos != null)
