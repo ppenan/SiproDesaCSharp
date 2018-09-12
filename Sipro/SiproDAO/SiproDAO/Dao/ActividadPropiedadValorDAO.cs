@@ -105,5 +105,30 @@ namespace SiproDAO.Dao
 		
 	    	return resultado;            
         }
+
+        /// <summary>
+        /// Obtiene el Valor de la Propiedad
+        /// </summary>
+        /// <param name="idPropiedad"></param>
+        /// <param name="idActividad"></param>
+        /// <returns></returns>
+        public static ActividadPropiedadValor getValorPorActividadYPropiedad(int idPropiedad, int idActividad)
+        {
+            ActividadPropiedadValor ret = null;
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    ret = db.QueryFirstOrDefault<ActividadPropiedadValor>("SELECT * FROM actividad_propiedad_valor WHERE actividadid=:actividadId AND " +
+                        "actividad_propiedadid=:propiedadid", new { actividadId = idActividad, propiedadid = idPropiedad });
+                }
+            }
+            catch (Exception e)
+            {
+                CLogger.write("4", "ActividadPropiedadValorDAO.class", e);
+            }
+            return ret;
+        }
+
     }
 }
