@@ -156,7 +156,7 @@ namespace SProducto.Controllers
                             temp.nombreUnidadEjecutora = producto.componentes.unidadEjecutoras.nombre;
 
                             producto.componentes.unidadEjecutoras.entidads = EntidadDAO.getEntidad(producto.componentes.entidad ?? default(int), producto.componentes.ejercicio);
-                            temp.entidadnombre = producto.componentes.unidadEjecutoras.entidads.nombre;
+                            temp.entidadnombre = producto.componentes.unidadEjecutoras.entidads != null ? producto.componentes.unidadEjecutoras.entidads.nombre : "SIN ENTIDAD";
                         }
                     }
 
@@ -175,7 +175,7 @@ namespace SProducto.Controllers
                             temp.nombreUnidadEjecutora = producto.subcomponentes.unidadEjecutoras.nombre;
 
                             producto.subcomponentes.unidadEjecutoras.entidads = EntidadDAO.getEntidad(producto.subcomponentes.entidad ?? default(int), producto.subcomponentes.ejercicio ?? default(int));
-                            temp.entidadnombre = producto.subcomponentes.unidadEjecutoras.entidads.nombre;
+                            temp.entidadnombre = producto.subcomponentes.unidadEjecutoras.entidads != null ? producto.subcomponentes.unidadEjecutoras.entidads.nombre : "SIN ENTIDAD";
                         }
                     }
 
@@ -188,7 +188,7 @@ namespace SProducto.Controllers
                         temp.nombreUnidadEjecutora = producto.unidadEjecutoras.nombre;
 
                         producto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(producto.entidad ?? default(int), producto.ejercicio);
-                        temp.entidadnombre = producto.unidadEjecutoras.entidads.nombre;
+                        temp.entidadnombre = producto.unidadEjecutoras.entidads != null ? producto.unidadEjecutoras.entidads.nombre : "SIN ENTIDAD";
                     }
                     
                     temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 3);
