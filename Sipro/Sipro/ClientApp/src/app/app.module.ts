@@ -11,7 +11,7 @@ import { MaterialModule } from './material/material.module';
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { utils } from 'protractor'; 
 import { Ng2SmartTableModule } from 'ng2-smart-table';
-import { MatInputModule, MatPaginatorModule, MatTabsModule, MatDatepickerModule, MatNativeDateModule, MAT_DATE_LOCALE, MatPaginatorIntl, MatTooltipModule, MatAutocompleteModule, MAT_DATE_FORMATS, MAT_NATIVE_DATE_FORMATS, DateAdapter, MatSelectModule, MatCheckboxModule } from '@angular/material';
+import { MatInputModule, MatPaginatorModule, MatTabsModule, MatDatepickerModule, MatNativeDateModule, MAT_DATE_LOCALE, MatPaginatorIntl, MatTooltipModule, MatAutocompleteModule, MAT_DATE_FORMATS, MAT_NATIVE_DATE_FORMATS, DateAdapter, MatSelectModule, MatCheckboxModule, MatRadioModule } from '@angular/material';
 import { MomentModule } from 'angular2-moment/moment.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogCodigoPresupuestario } from '../assets/modals/codigopresupuestario/modal-codigo-presupuestario';
@@ -71,6 +71,7 @@ import { SubproductotipoComponent } from './components/subproductotipo/subproduc
 import { ActividadComponent } from './components/actividad/actividad.component';
 import { ActividadpropiedadComponent } from './components/actividadpropiedad/actividadpropiedad.component';
 import { ActividadtipoComponent } from './components/actividadtipo/actividadtipo.component';
+import { AdquisicionComponent } from './components/adquisicion/adquisicion.component';
 
 const routes: Routes = [{
           path: '',    // Va a Main
@@ -160,7 +161,7 @@ const routes: Routes = [{
       DialogComponentePropiedad, DialogComponenteTipo, SubcomponenteComponent, SubcomponentepropiedadComponent, SubcomponentetipoComponent,
       DialogSubComponentePropiedad, DialogSubComponenteTipo, ProductoComponent, ProductopropiedadComponent, ProductotipoComponent,
       DialogProductoPropiedad, DialogProductoTipo, SubproductoComponent, SubproductopropiedadComponent, SubproductotipoComponent,
-      DialogSubproductoPropiedad, ActividadComponent, ActividadpropiedadComponent, ActividadtipoComponent
+      DialogSubproductoPropiedad, ActividadComponent, ActividadpropiedadComponent, ActividadtipoComponent, AdquisicionComponent
   ],
   imports: [
       BrowserModule,
@@ -174,7 +175,7 @@ const routes: Routes = [{
       Ng2SmartTableModule, 
       MatPaginatorModule, MatTabsModule, MatDatepickerModule, MatNativeDateModule, MomentModule, 
       MatInputModule, MatDialogModule, MatProgressSpinnerModule, MatTooltipModule, MatAutocompleteModule, 
-      MatMomentDateModule, MatSelectModule, MatCheckboxModule, CurrencyMaskModule
+      MatMomentDateModule, MatSelectModule, MatCheckboxModule, CurrencyMaskModule, MatRadioModule
   ],
   providers: [UtilsService, AuthService, RouteguardService, 
     { provide: MatPaginatorIntl, useClass: MatPaginatorIntlSpanish },
