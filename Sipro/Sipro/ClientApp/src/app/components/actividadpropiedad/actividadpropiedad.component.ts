@@ -81,7 +81,7 @@ export class ActividadpropiedadComponent implements OnInit {
         type: 'html',
         filter: false,
         valuePrepareFunction : (cell) => {
-          return '<div class="datos-numericos">' + moment(cell,'DD/MM/YYYY HH:mm:ss').format('DD/MM/YYYY HH:mm:ss') + '</div>';
+          return '<div class="datos-numericos">' + moment(cell, 'DD/MM/YYYY HH:mm:ss').format('DD/MM/YYYY HH:mm:ss') + '</div>';
         }
       }
     },

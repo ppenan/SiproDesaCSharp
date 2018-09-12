@@ -138,9 +138,8 @@ namespace SActividadTipo.Controllers
                                 satipoPropiedad.actividadTipoid = actividadTipo.id;
                                 satipoPropiedad.actividadPropiedadid = Convert.ToInt32(idPropiedad);
                                 satipoPropiedad.fechaCreacion = DateTime.Now;
-                                satipoPropiedad.usuarioCreo = User.Identity.Name;
-
-                                guardado = guardado & AtipoPropiedadDAO.guardarAtipoPropiedad(satipoPropiedad);
+                                satipoPropiedad.usuarioCreo = User.Identity.Name;                                
+                                guardado = guardado & ATipoPropiedadDAO.GuardarATipoPropiedad(satipoPropiedad);
                             }
                         }
 
@@ -193,13 +192,13 @@ namespace SActividadTipo.Controllers
 
                     if (guardado)
                     {
-                        List<AtipoPropiedad> propiedadesTemp = AtipoPropiedadDAO.getAtipoPropiedades(actividadTipo.id);
+                        List<AtipoPropiedad> propiedadesTemp = ATipoPropiedadDAO.GetATipoPropiedades(actividadTipo.id);
 
                         if (propiedadesTemp != null)
                         {
                             foreach (AtipoPropiedad atipoPropiedad in propiedadesTemp)
                             {
-                                guardado = guardado & AtipoPropiedadDAO.eliminarTotalAtipoPropiedad(atipoPropiedad);
+                                guardado = guardado & ATipoPropiedadDAO.EliminarTotalATipoPropiedad(atipoPropiedad);
                             }
 
                             if (guardado)
@@ -217,7 +216,7 @@ namespace SActividadTipo.Controllers
                                         atipoPropiedad.fechaCreacion = DateTime.Now;
                                         atipoPropiedad.usuarioCreo = User.Identity.Name;
 
-                                        guardado = guardado & AtipoPropiedadDAO.guardarAtipoPropiedad(atipoPropiedad);
+                                        guardado = guardado & ATipoPropiedadDAO.GuardarATipoPropiedad(atipoPropiedad);
                                     }
                                 }
                             }
@@ -225,14 +224,12 @@ namespace SActividadTipo.Controllers
                             {
                                 return Ok(new { success = false });
                             }
-
                         }
                     }
                     else
                     {
                         return Ok(new { success = false });
                     }
-
                 }
                 else
                 {
