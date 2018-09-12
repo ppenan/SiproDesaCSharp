@@ -1,0 +1,191 @@
+<div fxLayout="column" fxLayoutAlign="center" fxFlexFill fxFlex>
+  <div class="middle" fxFlexFill fxFlex>
+    <div fxLayout="column">
+      <div fxLayout="column" fxLayoutAlign="center">
+        <form #myForm="ngForm">
+          <div fxLayout="row" fxLayoutAlign="start" class="nuevo-edicion">
+            <label>{{esNuevo == true ? 'Nueva Adquisición' : 'Edición de Adquisición' }}</label>
+          </div>
+          <br>
+          <div fxLayout="row">
+            <div fxFlex fxLayoutAlign="end" fxLayoutGap="1px">
+              <button mat-raised-button style="min-width: 35px; border-color: #ccc; color:#333" (click)="agregarPagos()"
+                  matTooltip="Pagos" matTooltipPosition="above">
+                  <mat-icon>payment</mat-icon>
+              </button>
+              <button mat-raised-button style="min-width: 35px; border-color: #ccc; color:#333" (click)="borrar()"
+                  matTooltip="Borrar" matTooltipPosition="above">
+                  <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <br>
+          <div fxLayout="column">
+            <div [@.disabled]="true">
+                <mat-card>
+                    <mat-card-content>
+                        <div fxLayout="row" fxLayoutAlign="start">
+                            <label class="label-id">ID {{adquisicion.id}}</label>
+                        </div>
+                        <br>
+                        <div fxLayout="column">
+                          <mat-form-field>
+                            <input name="categoria" [formControl]="myControlCategoria" [(ngModel)]="adquisicion.categoria" matInput placeholder="Categoría"
+                              [required]="true" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete">
+                              <mat-option *ngFor="let value of filteredCategorias | async" [value]="value.nombre" (onSelectionChange)="categoriaSeleccionado(value)">
+                                <span>{{value.nombre}}</span>
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        </div>
+                        <div fxLayout="column">
+                          <mat-form-field>
+                            <input name="tipo" [formControl]="myControl" [(ngModel)]="adquisicion.tipo" matInput placeholder="Tipo"
+                              [required]="true" [matAutocomplete]="auto">
+                            <mat-autocomplete #auto="matAutocomplete">
+                              <mat-option *ngFor="let value of filteredTipos | async" [value]="value.tipoNombre" (onSelectionChange)="tipoSeleccionado(value)">
+                                <span>{{value.tipoNombre}}</span>
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="3px">
+                            <div fxLayout="row" fxFlex="25%">
+                                <mat-form-field>
+                                    <input name="medidaNombre" [(ngModel)]="adquisicion.medidaNombre" matInput placeholder="Medida" [required]="requerido" [readonly]="congelado > 0" (ngModelChange)="actualizaObligatorios()">
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" fxFlex="25%">
+                                <mat-form-field>
+                                    <input min="1" style="text-align: right;" matInput type="number" placeholder="Cantidad" [required]="requerido" name="cantidad"
+                                      [(ngModel)]="adquisicion.cantidad">
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" fxFlex="25%">
+                                <mat-form-field>
+                                    <input type="text" currencyMask [options]="{ prefix: 'Q ', thousands: ',', decimal: '.', precision: 2 }" name="precioUnitario" [(ngModel)]="adquisicion.precioUnitario"
+                                      (ngModelChange)="actualizaMontos('precio')" matInput placeholder="Precio (Q)" [readonly]="congelado > 0">
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" fxFlex="25%">
+                                <mat-form-field>
+                                    <input type="text" currencyMask [options]="{ prefix: 'Q ', thousands: ',', decimal: '.', precision: 2 }" name="total" [(ngModel)]="adquisicion.total"
+                                      (ngModelChange)="actualizaMontos('total')" matInput placeholder="Precio (Q)" [readonly]="congelado > 0" [required]="requerido">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div fxLayout="column">
+                            <mat-radio-group>
+                                <mat-radio-button value="1">Revisión ex-ante</mat-radio-button>
+                                <mat-radio-button value="2">Revisión ex-post</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                        <br>
+                        <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="3px">
+                          <div fxLayout="row" fxFlex="50%">
+                              <mat-form-field>
+                                  <input style="text-align: right" type="number" name="nog" [(ngModel)]="adquisicion.nog" [readonly]="congelado > 0" (blur)="getInfoNog()" matInput placeholder="NOG (Número de Orden Guatecompra)">
+                              </mat-form-field>
+                          </div>
+                          <div fxLayout="row" fxFlex="25%">
+                              <mat-form-field>
+                                  <input style="text-align: left" name="numeroContrato" [(ngModel)]="adquisicion.numeroContrato" [disabled]="adquisicion.montoContrato != null" (blur)="getInfoNog()" matInput placeholder="Número de contrato">
+                              </mat-form-field>
+                          </div>
+                          <div fxLayout="row" fxFlex="25%">
+                              <mat-form-field>
+                                  <input type="text" currencyMask [options]="{ prefix: 'Q ', thousands: ',', decimal: '.', precision: 2 }" name="montoContrato" [(ngModel)]="adquisicion.montoContrato"
+                                    matInput placeholder="Monto del contrato (Q)" [readonly]="congelado > 0">
+                              </mat-form-field>
+                          </div>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="3px">
+                            <mat-form-field fxFlex="50%">
+                                <input matInput [matDatepicker]="preparacionDocPlanificado" placeholder="Preparación de documentos (Planificada)" (blur)="validarFechas(adquisicion.preparacionDocumentosPlanificada, 1, 1)"
+                                  name="preparacionDocPlanificado" [(ngModel)]="adquisicion.preparacionDocPlanificado">
+                                <mat-datepicker-toggle matSuffix [for]="preparacionDocPlanificado"></mat-datepicker-toggle>
+                                <mat-datepicker #preparacionDocPlanificado></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="50%">
+                                <input matInput [matDatepicker]="preparacionDocReal" placeholder="Preparación de documentos (Real)" (blur)="validarFechas(adquisicion.preparacionDocReal, 1, 2)" [disabled]="inhabilitarFechas"
+                                  name="preparacionDocReal" [(ngModel)]="adquisicion.preparacionDocReal">
+                                <mat-datepicker-toggle matSuffix [for]="preparacionDocReal"></mat-datepicker-toggle>
+                                <mat-datepicker #preparacionDocReal></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="3px">
+                            <mat-form-field fxFlex="50%">
+                                <input matInput [matDatepicker]="lanzamientoEventoPlanificado" placeholder="Lanzamiento de evento (Planificada)" (blur)="validarFechas(adquisicion.lanzamientoEventoPlanificado, 2, 1)"
+                                  name="lanzamientoEventoPlanificado" [(ngModel)]="adquisicion.lanzamientoEventoPlanificado">
+                                <mat-datepicker-toggle matSuffix [for]="lanzamientoEventoPlanificado"></mat-datepicker-toggle>
+                                <mat-datepicker #lanzamientoEventoPlanificado></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="50%">
+                                <input matInput [matDatepicker]="lanzamientoEventoReal" placeholder="Lanzamiento de evento (Real)" (blur)="validarFechas(adquisicion.lanzamientoEventoReal, 2, 2)" [disabled]="inhabilitarFechas"
+                                  name="lanzamientoEventoReal" [(ngModel)]="adquisicion.lanzamientoEventoReal">
+                                <mat-datepicker-toggle matSuffix [for]="lanzamientoEventoReal"></mat-datepicker-toggle>
+                                <mat-datepicker #lanzamientoEventoReal></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="3px">
+                            <mat-form-field fxFlex="50%">
+                                <input matInput [matDatepicker]="recepcionOfertasPlanificado" placeholder="Recepción de ofertas (Planificada)" (blur)="validarFechas(adquisicion.recepcionOfertasPlanificado, 3, 1)"
+                                  name="recepcionOfertasPlanificado" [(ngModel)]="adquisicion.recepcionOfertasPlanificado">
+                                <mat-datepicker-toggle matSuffix [for]="recepcionOfertasPlanificado"></mat-datepicker-toggle>
+                                <mat-datepicker #recepcionOfertasPlanificado></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="50%">
+                                <input matInput [matDatepicker]="recepcionOfertasReal" placeholder="Recepción de ofertas (Real)" (blur)="validarFechas(adquisicion.recepcionOfertasReal, 3, 2)" [disabled]="inhabilitarFechas"
+                                  name="recepcionOfertasReal" [(ngModel)]="adquisicion.recepcionOfertasReal">
+                                <mat-datepicker-toggle matSuffix [for]="recepcionOfertasReal"></mat-datepicker-toggle>
+                                <mat-datepicker #recepcionOfertasReal></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="3px">
+                            <mat-form-field fxFlex="50%">
+                                <input matInput [matDatepicker]="adjudicacionPlanificado" placeholder="Adjudicación (Planificada)" (blur)="validarFechas(adquisicion.recepcionOfertasPlanificado, 4, 1)"
+                                  name="adjudicacionPlanificado" [(ngModel)]="adquisicion.adjudicacionPlanificado">
+                                <mat-datepicker-toggle matSuffix [for]="adjudicacionPlanificado"></mat-datepicker-toggle>
+                                <mat-datepicker #adjudicacionPlanificado></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="50%">
+                                <input matInput [matDatepicker]="adjudicacionReal" placeholder="Adjudicación (Real)" (blur)="validarFechas(adquisicion.adjudicacionReal, 4, 2)" [disabled]="inhabilitarFechas"
+                                  name="adjudicacionReal" [(ngModel)]="adquisicion.adjudicacionReal">
+                                <mat-datepicker-toggle matSuffix [for]="adjudicacionReal"></mat-datepicker-toggle>
+                                <mat-datepicker #adjudicacionReal></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="3px">
+                            <mat-form-field fxFlex="50%">
+                                <input matInput [matDatepicker]="firmaContratoPlanificado" placeholder="Firma contrato (Planificada)" (blur)="validarFechas(adquisicion.firmaContratoPlanificado, 5, 1)"
+                                  name="firmaContratoPlanificado" [(ngModel)]="adquisicion.firmaContratoPlanificado">
+                                <mat-datepicker-toggle matSuffix [for]="firmaContratoPlanificado"></mat-datepicker-toggle>
+                                <mat-datepicker #firmaContratoPlanificado></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field fxFlex="50%">
+                                <input matInput [matDatepicker]="firmaContratoReal" placeholder="Firma contrato (Real)" (blur)="validarFechas(adquisicion.firmaContratoReal, 5, 2)" [disabled]="inhabilitarFechas"
+                                  name="firmaContratoReal" [(ngModel)]="adquisicion.firmaContratoReal">
+                                <mat-datepicker-toggle matSuffix [for]="firmaContratoReal"></mat-datepicker-toggle>
+                                <mat-datepicker #firmaContratoReal></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <br>
+                        <div *ngIf="listaNog">
+                          <div fxlayout="column" fxLayoutAlign="center">
+                            <label class="label-form">Información general del NOG (Número de Orden Guatecompra)</label>
+                          </div>
+                          <br>
+                          <div style="position: relative; top: 0; bottom: 0; width:100%; height: 100%;">
+                              <ng2-smart-table [settings]="settingsNog" [source]="sourceNog"></ng2-smart-table>
+                          </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

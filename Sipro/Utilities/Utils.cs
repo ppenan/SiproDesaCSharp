@@ -28,6 +28,18 @@ namespace Utilities
             return getDateTime;
         }
 
+        public static String getFechaHora(DateTime fechaHora)
+        {
+            String getDateTime = fechaHora.ToString("dd/MM/yyyy H:mm:ss");
+            return getDateTime;
+        }
+
+        public static String getFechaHoraNull(DateTime? fechaHora)
+        {
+            String getDateTime = fechaHora != null ? fechaHora.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+            return getDateTime;
+        }
+
         public static int getWorkingDays(DateTime fecha_inicio, DateTime fecha_fin)
         {
             TimeSpan interval = fecha_fin - fecha_inicio;
