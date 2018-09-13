@@ -64,12 +64,12 @@ namespace SActividadTipo.Controllers
 
         [HttpPost]
         [Authorize("Actividad Tipos - Visualizar")]
-        public IActionResult ActividadtiposPagina([FromBody] dynamic value)
+        public IActionResult ActividadTiposPagina([FromBody] dynamic value)
         {
             try
             {
                 int pagina = value.pagina != null ? (int)value.pagina : 0;
-                int numeroCooperantesTipo = value.numeroactividadstipo != null ? (int)value.numeroactividadstipo : 0;
+                int numeroCooperantesTipo = value.numero_actividades_tipo != null ? (int)value.numero_actividades_tipo : 0;
                 String filtro_busqueda = value.filtro_busqueda != null ? (string)value.filtro_busqueda : null;
                 String columna_ordenada = value.columna_ordenada != null ? (string)value.columna_ordenada : null;
                 String orden_direccion = value.orden_direccion != null ? (string)value.orden_direccion : null;
@@ -138,7 +138,7 @@ namespace SActividadTipo.Controllers
                                 satipoPropiedad.actividadTipoid = actividadTipo.id;
                                 satipoPropiedad.actividadPropiedadid = Convert.ToInt32(idPropiedad);
                                 satipoPropiedad.fechaCreacion = DateTime.Now;
-                                satipoPropiedad.usuarioCreo = User.Identity.Name;                                
+                                satipoPropiedad.usuarioCreo = User.Identity.Name;
                                 guardado = guardado & ATipoPropiedadDAO.GuardarATipoPropiedad(satipoPropiedad);
                             }
                         }
@@ -265,6 +265,25 @@ namespace SActividadTipo.Controllers
                 return BadRequest(500);
             }
         }
+
+        [HttpPost]
+        [Authorize("Actividad Tipos - Visualizar")]
+        public IActionResult NumeroActividadTipos([FromBody]dynamic value)
+        {
+            try
+            {
+                String filtro_busqueda = value.filtro_busqueda != null ? (string)value.filtro_busqueda : null;
+                long total = ActividadTipoDAO.GetTotalActividadTipo(filtro_busqueda);
+
+                return Ok(new { success = true, totalactividadtipos = total });
+            }
+            catch (Exception e)
+            {
+                CLogger.write("6", "ActividadTipoController.class", e);
+                return BadRequest(500);
+            }
+        }
+
     }
 
 }

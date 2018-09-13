@@ -214,5 +214,43 @@ namespace SiproDAO.Dao
 
             return resultado;
         }
+
+        /// <summary>
+        /// Devuelve el total de actividades tipo
+        /// </summary>
+        /// <param name="filtro_busqueda">Query de consulta</param>
+        /// <returns>Cantidad total de actividad tipo</returns>
+        public static long GetTotalActividadTipo(string filtro_busqueda)
+        {
+            long resultado = 0L;
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    String query = "SELECT COUNT(*) FROM actividad_tipo c WHERE c.estado = 1 ";
+                    String query_a = "";
+                    if (filtro_busqueda != null && filtro_busqueda.Length > 0)
+                    {
+                        query_a = String.Join("", query_a, " c.nombre LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " c.descripcion LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " c.usuario_creo LIKE '%" + filtro_busqueda + "%' ");
+
+                        DateTime fecha_creacion;
+                        if (DateTime.TryParse(filtro_busqueda, out fecha_creacion))
+                        {
+                            query_a = String.Join(" ", query_a, (query_a.Length > 0 ? " OR " : ""), " TO_DATE(TO_CHAR(c.fecha_creacion,'DD/MM/YY'),'DD/MM/YY') LIKE TO_DATE('" + fecha_creacion.ToString("dd/MM/yyyy") + "','DD/MM/YY') ");
+                        }
+                    }
+                    query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
+
+                    resultado = db.ExecuteScalar<long>(query);
+                }
+            }
+            catch (Exception e)
+            {
+                CLogger.write("7", "ActividadTipoDAO.class", e);
+            }
+            return resultado;
+        }
     }
 }
