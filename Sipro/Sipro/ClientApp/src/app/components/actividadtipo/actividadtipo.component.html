@@ -63,17 +63,17 @@
           </div>
           <br>
           <div fxLayout="row" fxLayoutAlign="start">
-              <label class="label-id">ID {{ ActividadtipoComponent.id}}</label>
+              <label class="label-id">ID {{ actividadTipo.id}}</label>
           </div>
           <br>
           <div fxLayout="column">
             <mat-form-field>
-              <input name="nombre" [(ngModel)]="ActividadtipoComponent.nombre" matInput placeholder="Nombre" [required]="true">
+              <input name="nombre" [(ngModel)]="actividadTipo.nombre" matInput placeholder="Nombre" [required]="true">
             </mat-form-field>
           </div>
           <div fxLayout="column">
             <mat-form-field>
-              <textarea name="descripcion" matInput rows="4" [(ngModel)]="ActividadtipoComponent.descripcion" placeholder="Descripción"></textarea>
+              <textarea name="descripcion" matInput rows="4" [(ngModel)]="actividadTipo.descripcion" placeholder="Descripción"></textarea>
             </mat-form-field>
           </div>
           <div fxLayout="column">
@@ -95,23 +95,23 @@
                       <div fxLayout="row" fxLayoutGap="20px">
                         <div fxFlex="50%">
                           <label fxLayoutAlign="end" class="label-form" for="usuarioCreo">Usuario que creo</label>
-                          <p fxLayoutAlign="end">{{ ActividadtipoComponent.usuarioCreo }}</p>
+                          <p fxLayoutAlign="end">{{ actividadTipo.usuarioCreo }}</p>
                         </div>
 
                         <div fxFlex="50%">
                             <label fxLayoutAlign="start" class="label-form"  for="fechaCreacion">Fecha de creación</label>
-                            <p fxLayoutAlign="start">{{ ActividadtipoComponent.fechaCreacion }}</p>
+                            <p fxLayoutAlign="start">{{ actividadTipo.fechaCreacion }}</p>
                         </div>
                       </div>
                       <div fxLayout="row" fxLayoutGap="20px">
                           <div fxFlex="50%">
                             <label fxLayoutAlign="end" class="label-form" for="usuarioActualizo">Usuario que actualizo</label>
-                            <p fxLayoutAlign="end">{{ ActividadtipoComponent.usuarioActualizo }}</p>
+                            <p fxLayoutAlign="end">{{ actividadTipo.usuarioActualizo }}</p>
                           </div>
 
                           <div fxFlex="50%">
                             <label fxLayoutAlign="start" for="fechaActualizacion"  class="label-form" >Fecha de actualizacion</label>
-                            <p fxLayoutAlign="start">{{ ActividadtipoComponent.fechaActualizacion }}</p>
+                            <p fxLayoutAlign="start">{{ actividadTipo.fechaActualizacion }}</p>
                           </div>
                       </div>
                     </div>                                  
