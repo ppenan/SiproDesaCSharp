@@ -9,6 +9,11 @@ namespace SiproDAO.Dao
 {
     public class ATipoPropiedadDAO
     {
+        /// <summary>
+        /// Guarda la actividad tipo de propiedad
+        /// </summary>
+        /// <param name="atipoPropiedad">Objeto a guardar de la Actividad Tipo Propiedad</param>
+        /// <returns>TRUE registro con éxito, FALSE generó error</returns>
         public static bool GuardarATipoPropiedad(AtipoPropiedad atipoPropiedad)
         {
             bool resultado = false;
@@ -41,6 +46,11 @@ namespace SiproDAO.Dao
             return resultado;
         }
 
+        /// <summary>
+        /// Eliminación total de la actividad tipo propiedad
+        /// </summary>
+        /// <param name="aTipoPropiedad">Objeto de la actividad tipo propiedad</param>
+        /// <returns>TRUE eliminación exitosa, FALSE en caso de error</returns>
         public static bool EliminarTotalATipoPropiedad(AtipoPropiedad aTipoPropiedad)
         {
             bool resultado = false;
@@ -62,17 +72,13 @@ namespace SiproDAO.Dao
             return resultado;
         }
 
-
+        /// <summary>
+        /// Obtiene el listado de los tipos de propiedades
+        /// </summary>
+        /// <param name="actividadTipoId">Identificador del tipo de actividad</param>
+        /// <returns>Lista de tipos de propiedades que pertenecen a la actividad indicada</returns>
         public static List<AtipoPropiedad> GetATipoPropiedades(int actividadTipoId)
         {
-            /*                   
-                 ACTIVIDAD_TIPOID                          NOT NULL NUMBER(10)                  
-                 ACTIVIDAD_PROPIEDADID                     NOT NULL NUMBER(10)                  
-                 USUARIO_CREO                              NOT NULL VARCHAR2(30)                
-                 USUARIO_ACTUALIZO                                  VARCHAR2(30)                
-                 FECHA_CREACION                            NOT NULL TIMESTAMP(0)                
-                 FECHA_ACTUALIZACION                                TIMESTAMP(0)                
-            */
             List<AtipoPropiedad> resultado = new List<AtipoPropiedad>();
 
             try

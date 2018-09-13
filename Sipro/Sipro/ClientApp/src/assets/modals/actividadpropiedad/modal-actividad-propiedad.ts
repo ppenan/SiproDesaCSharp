@@ -17,6 +17,7 @@ export class DialogOverviewActividadPropiedad {
 })
 
 export class DialogActividadPropiedad {
+
   totalElementos: number;
   source: LocalDataSource;
   paginaActual: number;
@@ -31,7 +32,6 @@ export class DialogActividadPropiedad {
   strokewidth = 3;
   esColapsado: boolean;
   busquedaGlobal: string;
-
 
   settings = {
     columns: {
@@ -81,19 +81,18 @@ export class DialogActividadPropiedad {
       filtro_busqueda: this.busquedaGlobal
     };
     this.http.post(
-      'http://localhost:60013/api/ActividadPropiedad/NumeroActividadPropiedades',
+      'http://localhost:60002/api/ActividadPropiedad/NumeroActividadPropiedades',
       filtro,
       { withCredentials: true })
       .subscribe( response => {
 
         if (response['success'] === true) {
-          this.totalElementos = response['totalActividadPropiedades'];
+          this.totalElementos = response['totalactividadpropiedades'];
           this.paginaActual = 1;
           this.cargarTabla(this.paginaActual);
         } else {
           console.log('Error');
         }
-
       });
   }
 
@@ -101,12 +100,12 @@ export class DialogActividadPropiedad {
 
     const filtro = {
       pagina: pagina,
-      numeroActividadPropiedad: this.elementosPorPagina,
+      numero_actividad_propiedad: this.elementosPorPagina,
       filtro_busqueda: this.busquedaGlobal
     };
 
     this.http.post(
-      'http://localhost:60013/api/ActividadPropiedad/ActividadPropiedadPagina',
+      'http://localhost:60002/api/ActividadPropiedad/ActividadPropiedadPagina',
       filtro,
       { withCredentials: true })
       .subscribe(response => {

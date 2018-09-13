@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentValidation.Results;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SiproDAO.Dao;
 using SiproModelCore.Models;
+using System;
+using System.Collections.Generic;
 using Utilities;
 
 namespace SActividadPropiedad.Controllers
@@ -29,6 +27,7 @@ namespace SActividadPropiedad.Controllers
             public String usuarioActualizo;
             public String fechaCreacion;
             public String fechaActualizacion;
+            public int estado;
         }
 
         [HttpGet("{idActividadTipo}")]
@@ -76,7 +75,7 @@ namespace SActividadPropiedad.Controllers
             try
             {
                 int pagina = value.pagina != null ? (int)value.pagina : 1;
-                int numeroActividadPropiedad = value.numeroactividadpropiedad != null ? (int)value.numeroactividadpropiedad : 20;
+                int numeroActividadPropiedad = value.numero_actividad_propiedad != null ? (int)value.numero_actividad_propiedad : 20;
                 String filtro_busqueda = value.filtro_busqueda != null ? (string)value.filtro_busqueda : null;
                 String columna_ordenada = value.columna_ordenada != null ? (string)value.columna_ordenada : null;
                 String orden_direccion = value.orden_direccion != null ? (string)value.orden_direccion : null;
@@ -86,12 +85,12 @@ namespace SActividadPropiedad.Controllers
                 foreach (ActividadPropiedad actividadpropiedad in actividadpropiedades)
                 {
                     Stactividadpropiedad temp = new Stactividadpropiedad();
-                    temp.id = actividadpropiedad.id; 
-                    temp.nombre = actividadpropiedad.nombre; 
+                    temp.id = actividadpropiedad.id;
+                    temp.nombre = actividadpropiedad.nombre;
                     temp.descripcion = actividadpropiedad.descripcion;
                     actividadpropiedad.datoTipos = DatoTipoDAO.getDatoTipo(actividadpropiedad.datoTipoid);
-                    temp.datotipoid = actividadpropiedad.datoTipoid; 
-                    temp.datotiponombre = actividadpropiedad.datoTipos.nombre; 
+                    temp.datotipoid = actividadpropiedad.datoTipoid;
+                    temp.datotiponombre = actividadpropiedad.datoTipos.nombre;
                     //temp.fechaActualizacion = actividadpropiedad.fechaActualizacion != null ? actividadpropiedad.fechaActualizacion.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     //temp.fechaCreacion = actividadpropiedad.fechaCreacion.ToString("dd/MM/yyyy H:mm:ss");
                     temp.fechaActualizacion = Utils.ConvierteAFormatoFecha(actividadpropiedad.fechaActualizacion);
@@ -342,6 +341,44 @@ namespace SActividadPropiedad.Controllers
             catch (Exception e)
             {
                 CLogger.write("9", "ActividadPropiedadController.class", e);
+                return BadRequest(500);
+            }
+        }
+
+        [HttpGet("{idActividadTipo}")]
+        [Authorize("Actividad Propiedades - Visualizar")]
+        public IActionResult ActividadPropiedadPorTipo(int idActividadTipo)
+        {
+            try
+            {
+                List<ActividadPropiedad> actividadPropiedades = ActividadPropiedadDAO.getActividadPropiedadesPorTipoActividadPagina(idActividadTipo);
+                List<Stactividadpropiedad> stActividadPropiedades = new List<Stactividadpropiedad>();
+
+                foreach (ActividadPropiedad actividadPropiedad in actividadPropiedades)
+                {
+                    Stactividadpropiedad temp = new Stactividadpropiedad();
+                    temp.id = actividadPropiedad.id;
+                    temp.nombre = actividadPropiedad.nombre;
+                    temp.descripcion = actividadPropiedad.descripcion;
+
+                    actividadPropiedad.datoTipos = DatoTipoDAO.getDatoTipo(actividadPropiedad.datoTipoid);
+                    temp.datotipoid = actividadPropiedad.datoTipoid;
+                    temp.datotiponombre = actividadPropiedad.datoTipos.nombre;
+
+                    temp.fechaActualizacion = Utils.ConvierteAFormatoFecha(actividadPropiedad.fechaActualizacion);
+                    temp.fechaCreacion = Utils.ConvierteAFormatoFecha(actividadPropiedad.fechaCreacion);
+                    temp.usuarioActualizo = actividadPropiedad.usuarioActualizo;
+                    temp.usuarioCreo = actividadPropiedad.usuarioCreo;
+                    temp.estado = actividadPropiedad.estado;
+
+                    stActividadPropiedades.Add(temp);
+                }
+
+                return Ok(new { success = true, actividadpropiedades = stActividadPropiedades });
+            }
+            catch (Exception e)
+            {
+                CLogger.write("10", "ActividadPropiedadController.class", e);
                 return BadRequest(500);
             }
         }

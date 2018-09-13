@@ -432,6 +432,13 @@ namespace SiproDAO.Dao
             return ret;
         }
 
+        /// <summary>
+        /// Devuelve la cantidad total de subproductos
+        /// </summary>
+        /// <param name="subProductoId">Identificador del subproducto</param>
+        /// <param name="filtroBusqueda">Filtro de búsqueda</param>
+        /// <param name="usuario">Usuario que realiza la consulta</param>
+        /// <returns>Cantidad total de sub productos</returns>
         public static long GetTotalSubProductos(int? subProductoId, string filtroBusqueda, string usuario)
         {
 
@@ -774,7 +781,11 @@ namespace SiproDAO.Dao
         }
 
 
-        
+        /// <summary>
+        /// Devuelve los sub productos que pertenecen a producto
+        /// </summary>
+        /// <param name="productoId">Identificador del producto</param>
+        /// <returns>Listado de los subproductos</returns>
         public static List<Subproducto> getSubproductosByProductoid(int productoId)
         {
             List<Subproducto> ret = null;

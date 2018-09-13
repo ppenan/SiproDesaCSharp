@@ -103,7 +103,6 @@ namespace SActividadTipo.Controllers
             }
         }
 
-
         [HttpPost]
         [Authorize("Actividad Tipos - Crear")]
         public IActionResult ActividadTipos([FromBody]dynamic value)
@@ -146,18 +145,22 @@ namespace SActividadTipo.Controllers
                         return Ok(new
                         {
                             success = guardado,
-                            id = actividadTipo.id,
-                            usuarioCreo = actividadTipo.usuarioCreo,
+                            actividadTipo.id,
+                            actividadTipo.usuarioCreo,
                             fechaCreacion = Utils.ConvierteAFormatoFecha(actividadTipo.fechaCreacion),
-                            usuarioActualizo = actividadTipo.usuarioActualizo,
+                            actividadTipo.usuarioActualizo,
                             fechaActualizacion = Utils.ConvierteAFormatoFecha(actividadTipo.fechaActualizacion)
                         });
                     }
                     else
+                    {
                         return Ok(new { success = false });
+                    }
                 }
                 else
+                {
                     return Ok(new { success = false });
+                }
             }
             catch (Exception e)
             {
@@ -165,7 +168,6 @@ namespace SActividadTipo.Controllers
                 return BadRequest(500);
             }
         }
-
 
         [HttpPut("{id}")]
         [Authorize("Actividad Tipos - Editar")]
@@ -186,9 +188,7 @@ namespace SActividadTipo.Controllers
                     actividadTipo.usuarioActualizo = User.Identity.Name;
 
                     bool guardado = false;
-
                     guardado = ActividadTipoDAO.GuardarActividadTipo(actividadTipo);
-
 
                     if (guardado)
                     {
@@ -225,6 +225,16 @@ namespace SActividadTipo.Controllers
                                 return Ok(new { success = false });
                             }
                         }
+
+                        return Ok(new
+                        {
+                            success = guardado,
+                            actividadTipo.id,
+                            actividadTipo.usuarioCreo,
+                            fechaCreacion = Utils.ConvierteAFormatoFecha(actividadTipo.fechaCreacion),
+                            actividadTipo.usuarioActualizo,
+                            fechaActualizacion = Utils.ConvierteAFormatoFecha(actividadTipo.fechaActualizacion)
+                        });
                     }
                     else
                     {
@@ -235,7 +245,6 @@ namespace SActividadTipo.Controllers
                 {
                     return Ok(new { success = false });
                 }
-                return Ok(new { success = false });
             }
             catch (Exception ex)
             {

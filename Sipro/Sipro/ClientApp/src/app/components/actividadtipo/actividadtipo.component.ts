@@ -240,7 +240,7 @@ export class ActividadtipoComponent implements OnInit {
         { withCredentials : true })
         .subscribe(response => {
           if (response['success'] === true) {
-            this.propiedades = response['componentepropiedades'];
+            this.propiedades = response['actividadpropiedades'];
             this.sourcePropiedades = new LocalDataSource(this.propiedades);
           }
         });
