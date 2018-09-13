@@ -655,8 +655,9 @@ namespace SSubComponente.Controllers
 
                         subcomponente.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subcomponente.entidad ?? default(int), subcomponente.ejercicio ?? default(int));
                         temp.entidad = subcomponente.entidad ?? default(int);
+                        subcomponente.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subcomponente.entidad ?? default(int), subcomponente.ejercicio ?? default(int));
                         temp.unidadejecutoranombre = subcomponente.unidadEjecutoras.nombre;
-                        temp.entidadnombre = subcomponente.unidadEjecutoras.entidads.nombre;
+                        temp.entidadnombre = subcomponente.unidadEjecutoras.entidads != null ? subcomponente.unidadEjecutoras.entidads.nombre : "SIN ENTIDAD";
                     }
                     else
                     {
@@ -669,8 +670,9 @@ namespace SSubComponente.Controllers
 
                             componente.unidadEjecutoras.entidads = EntidadDAO.getEntidad(componente.entidad ?? default(int), componente.ejercicio);
                             temp.entidad = componente.entidad ?? default(int);
+                            subcomponente.unidadEjecutoras.entidads = EntidadDAO.getEntidad(componente.entidad ?? default(int), componente.ejercicio);
                             temp.unidadejecutoranombre = componente.unidadEjecutoras.nombre;
-                            temp.entidadnombre = subcomponente.unidadEjecutoras.entidads.nombre;
+                            temp.entidadnombre = subcomponente.unidadEjecutoras.entidads != null ? subcomponente.unidadEjecutoras.entidads.nombre : "SIN ENTIDAD";
                         }
                     }
 
