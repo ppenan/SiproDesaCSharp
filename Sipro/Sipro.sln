@@ -93,7 +93,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSubproductoPropiedad", "SS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SSubproductoTipo", "SSubproductoTipo\SSubproductoTipo.csproj", "{F0EE62C8-B9A1-4DB8-896A-F4E52B8DA673}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCategoriaAdquisicion", "SCategoriaAdquisicion\SCategoriaAdquisicion.csproj", "{8878A710-8C87-44DA-9F78-0F3C68633735}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCategoriaAdquisicion", "SCategoriaAdquisicion\SCategoriaAdquisicion.csproj", "{8878A710-8C87-44DA-9F78-0F3C68633735}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STipoAdquisicion", "STipoAdquisicion\STipoAdquisicion.csproj", "{0B975730-19ED-404C-BD90-7EBC1678CD66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -281,6 +283,10 @@ Global
 		{8878A710-8C87-44DA-9F78-0F3C68633735}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8878A710-8C87-44DA-9F78-0F3C68633735}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8878A710-8C87-44DA-9F78-0F3C68633735}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B975730-19ED-404C-BD90-7EBC1678CD66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B975730-19ED-404C-BD90-7EBC1678CD66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B975730-19ED-404C-BD90-7EBC1678CD66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B975730-19ED-404C-BD90-7EBC1678CD66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -324,6 +330,7 @@ Global
 		{AA464DE7-60A9-4185-9BF2-54475DA54071} = {0DA1BD0E-A90E-4608-ACE8-5971B84A1019}
 		{F0EE62C8-B9A1-4DB8-896A-F4E52B8DA673} = {0DA1BD0E-A90E-4608-ACE8-5971B84A1019}
 		{8878A710-8C87-44DA-9F78-0F3C68633735} = {0DA1BD0E-A90E-4608-ACE8-5971B84A1019}
+		{0B975730-19ED-404C-BD90-7EBC1678CD66} = {0DA1BD0E-A90E-4608-ACE8-5971B84A1019}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6BB888BE-6FA0-400D-B0C9-9F121D0B435A}
