@@ -72,6 +72,7 @@ import { ActividadComponent } from './components/actividad/actividad.component';
 import { ActividadpropiedadComponent } from './components/actividadpropiedad/actividadpropiedad.component';
 import { ActividadtipoComponent } from './components/actividadtipo/actividadtipo.component';
 import { AdquisicionComponent } from './components/adquisicion/adquisicion.component';
+import { CategoriaadquisicionComponent } from './components/categoriaadquisicion/categoriaadquisicion.component';
 
 const routes: Routes = [{
           path: '',    // Va a Main
@@ -87,6 +88,9 @@ const routes: Routes = [{
         },{
           path: 'main/actividadtipo',
           component: ActividadtipoComponent
+        },{
+          path: 'main/categoriaadquisicion',
+          component: CategoriaadquisicionComponent
         },{
           path: 'main/prestamo',
           component: PrestamoComponent
@@ -161,7 +165,7 @@ const routes: Routes = [{
       DialogComponentePropiedad, DialogComponenteTipo, SubcomponenteComponent, SubcomponentepropiedadComponent, SubcomponentetipoComponent,
       DialogSubComponentePropiedad, DialogSubComponenteTipo, ProductoComponent, ProductopropiedadComponent, ProductotipoComponent,
       DialogProductoPropiedad, DialogProductoTipo, SubproductoComponent, SubproductopropiedadComponent, SubproductotipoComponent,
-      DialogSubproductoPropiedad, ActividadComponent, ActividadpropiedadComponent, ActividadtipoComponent, AdquisicionComponent
+      DialogSubproductoPropiedad, ActividadComponent, ActividadpropiedadComponent, ActividadtipoComponent, AdquisicionComponent, CategoriaadquisicionComponent
   ],
   imports: [
       BrowserModule,

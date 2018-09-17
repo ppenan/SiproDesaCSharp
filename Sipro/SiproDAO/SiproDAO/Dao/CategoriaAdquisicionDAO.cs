@@ -66,7 +66,7 @@ namespace SiproDAO.Dao
             {
                 using (DbConnection db = new OracleContext().getConnection())
                 {
-                    String query = "SELECT * FROM (SELECT a.*, rownum r__ FROM (SELECT ca FROM CategoriaAdquisicion ca WHERE ca.estado = 1 ";
+                    String query = "SELECT * FROM (SELECT a.*, rownum r__ FROM (SELECT ca.* FROM categoria_adquisicion ca WHERE ca.estado = 1 ";
                     String query_a = "";
 
                     if (filtro_busqueda != null && filtro_busqueda.Length > 0)
@@ -126,7 +126,7 @@ namespace SiproDAO.Dao
 
                     if (existe > 0)
                     {
-                        guardado = db.Execute("UPDATE CATEGORIA_ADQUISICION SET nombre=:nombre, descripcion=:descripcion, usuario_creo=:usuarioCreo, usuario_actualizo=:usuario_actualizo, " +
+                        guardado = db.Execute("UPDATE CATEGORIA_ADQUISICION SET nombre=:nombre, descripcion=:descripcion, usuario_creo=:usuarioCreo, usuario_actualizo=:usuarioActualizo, " +
                             "fecha_creacion=:fechaCreacion, fecha_actualizacion=:fechaActualizacion, estado=:estado WHERE id=:id", Categoria);
 
                         ret = guardado > 0 ? true : false;
