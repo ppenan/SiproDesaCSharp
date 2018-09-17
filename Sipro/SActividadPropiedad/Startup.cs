@@ -29,10 +29,12 @@ namespace SActividadPropiedad
                .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
                .MakeGenericType(typeof(ActividadPropiedad)));
             SqlMapper.SetTypeMap(typeof(ActividadPropiedad), mapper);
+
             var mapper2 = (SqlMapper.ITypeMap)Activator
                .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
                .MakeGenericType(typeof(DatoTipo)));
             SqlMapper.SetTypeMap(typeof(DatoTipo), mapper2);
+
             var mapper3 = (SqlMapper.ITypeMap)Activator
                .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
                .MakeGenericType(typeof(ActividadPropiedadValor)));

@@ -110,7 +110,7 @@ namespace SiproDAO.Dao
                     if (existe > 0)
                     {
                         int guardado = db.Execute("UPDATE actividad_propiedad SET nombre=:nombre, descripcion=:descripcion, usuario_creo=:usuarioCreo, usuario_actualizo=:usuarioActualizo, " +
-                            "fecha_creacion=:fechaCreacion, fecha_actualizacion=:fechaActualizacion, dato_tipoid=:datoTipoid, estado=:estado WHERE id=:id", actividadPropiedad);
+                            "fecha_creacion=:fechaCreacion, fecha_actualizacion=:fechaActualizacion, estado=:estado, dato_tipoid=:datoTipoid WHERE id=:id", actividadPropiedad);
 
                         ret = guardado > 0 ? true : false;
                     }
@@ -119,7 +119,7 @@ namespace SiproDAO.Dao
                         int sequenceId = db.ExecuteScalar<int>("SELECT seq_actividad_propiedad.nextval FROM DUAL");
                         actividadPropiedad.id = sequenceId;
                         int guardado = db.Execute("INSERT INTO actividad_propiedad VALUES (:id, :nombre, :descripcion, :usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion, " +
-                            ":datoTipoid, :estado)", actividadPropiedad);
+                            ":estado, :datoTipoId)", actividadPropiedad);
 
                         ret = guardado > 0 ? true : false;
                     }
@@ -169,31 +169,32 @@ namespace SiproDAO.Dao
     return ret;
 } */
 
-public static List<ActividadPropiedad> getActividadPropiedadesPagina(int pagina, int numeroActividadPropiedad,
+                    public static List<ActividadPropiedad> getActividadPropiedadesPagina(int pagina, int numeroActividadPropiedad,
                 String filtro_busqueda, String columna_ordenada, String orden_direccion)
         {
             List<ActividadPropiedad> ret = new List<ActividadPropiedad>();
             try
             {
                 using (DbConnection db = new OracleContext().getConnection())
-                { 
-                    String query = "SELECT p.* FROM actividad_propiedad p WHERE p.estado = 1"; 
-                    String query_a="";
+                {
+                    String query = "SELECT * FROM (SELECT a.*, rownum r__ FROM (SELECT * FROM actividad_propiedad c WHERE c.estado=1";
+                    String query_a = "";                    
 
                     if(filtro_busqueda != null && filtro_busqueda.Length>0)
                     { 
-                        query_a = String.Join("", query_a, "p.nombre LIKE '%" + filtro_busqueda + "%' ");
-                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " p.usuario_creo LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, "c.nombre LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " c.usuario_creo LIKE '%" + filtro_busqueda + "%' ");
 
                         DateTime fecha_creacion;
                         if (DateTime.TryParse(filtro_busqueda, out fecha_creacion))
                         {
-                            query_a = String.Join(" ", query_a, (query_a.Length > 0 ? " OR " : ""), " TO_DATE(TO_CHAR(p.fecha_creacion,'DD/MM/YY'),'DD/MM/YY') LIKE TO_DATE('" + fecha_creacion.ToString("dd/MM/yyyy") + "','DD/MM/YY') ");
+                            query_a = String.Join(" ", query_a, (query_a.Length > 0 ? " OR " : ""), " TO_DATE(TO_CHAR(c.fecha_creacion,'DD/MM/YY'),'DD/MM/YY') LIKE TO_DATE('" + fecha_creacion.ToString("dd/MM/yyyy") + "','DD/MM/YY') ");
                         }
                     }
 
                     query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
                     query = columna_ordenada != null && columna_ordenada.Trim().Length > 0 ? String.Join(" ", query, "ORDER BY", columna_ordenada, orden_direccion) : query;
+                    
                     query = String.Join(" ", query, ") a WHERE rownum < ((" + pagina + " * " + numeroActividadPropiedad + ") + 1) ) WHERE r__ >= (((" + pagina + " - 1) * " + numeroActividadPropiedad + ") + 1)");
 
                     ret = db.Query<ActividadPropiedad>(query).AsList<ActividadPropiedad>();

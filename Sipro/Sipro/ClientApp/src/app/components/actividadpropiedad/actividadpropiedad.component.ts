@@ -68,7 +68,7 @@ export class ActividadpropiedadComponent implements OnInit {
         title: 'Descripción',
         filter: false,
       },
-      datoTipoNombre: {
+      datotiponombre: {
         title: 'Tipo dato',
         filter: false,
       },

@@ -192,7 +192,7 @@ namespace SActividadPropiedad.Controllers
                 {
                     String nombre = value.nombre;
                     String descripcion = value.descripcion;
-                    int datoTipoId = (int)value.datoTipoid;
+                    int datoTipoId = (int)value.datotipoid;
 
                     ActividadPropiedad actividadPropiedad = new ActividadPropiedad();
                     actividadPropiedad.nombre = nombre;
@@ -236,7 +236,7 @@ namespace SActividadPropiedad.Controllers
                 {
                     String nombre = value.nombre;
                     String descripcion = value.descripcion;
-                    int datoTipoId = (int)value.datoTipoid;
+                    int datoTipoId = (int)value.datotipoid;
 
                     ActividadPropiedad actividadPropiedad = ActividadPropiedadDAO.GetActividadPropiedadPorId(id);
                     actividadPropiedad.nombre = nombre;
