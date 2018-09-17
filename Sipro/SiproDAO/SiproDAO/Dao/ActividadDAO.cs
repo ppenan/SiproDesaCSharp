@@ -9,7 +9,11 @@ namespace SiproDAO.Dao
 {
     public class ActividadDAO
     {
-
+        /// <summary>
+        /// Devuelve todas las actividades
+        /// </summary>
+        /// <param name="usuario">Usuario que busca sus actividades</param>
+        /// <returns>Listado de actividades por usuario</returns>
         public static List<Actividad> GetActividades(string usuario)
         {
             List<Actividad> resultado = new List<Actividad>();
@@ -52,6 +56,12 @@ namespace SiproDAO.Dao
             return ret;
         }
 
+        /// <summary>
+        /// Registra la actividad en la Base de datos
+        /// </summary>
+        /// <param name="Actividad">Objeto de actividad</param>
+        /// <param name="calcular_valores_agregados">Determina si debe calcular los valores agregados</param>
+        /// <returns>TRUE si guardó con éxito, FALSE en caso de error</returns>
         public static bool guardarActividad(Actividad Actividad, bool calcular_valores_agregados)
         {
             bool ret = false;
@@ -169,9 +179,18 @@ namespace SiproDAO.Dao
             return ret;
         }
 
+        /// <summary>
+        /// Devuelve las actividades por página
+        /// </summary>
+        /// <param name="pagina">Número de página de la que desea información</param>
+        /// <param name="numeroActividad">Número de actividades a buscar</param>
+        /// <param name="filtro_busqueda">Cadena de búsqueda</param>
+        /// <param name="columna_ordenada">Nombre de columna a ordenar</param>
+        /// <param name="orden_direccion">ASC o DESC para ordenar la columna</param>
+        /// <param name="usuario">Usuario que desea las actividades por página</param>
+        /// <returns>Listado de actividades por usuario y paginadas</returns>
         public static List<Actividad> GetActividadesPagina(int pagina, int numeroActividad, String filtro_busqueda, String columna_ordenada, String orden_direccion, String usuario)
         {
-
             List<Actividad> resultado = new List<Actividad>();
 
             try
@@ -180,7 +199,6 @@ namespace SiproDAO.Dao
                 {
                     string query = String.Join(" ", "SELECT * FROM (SELECT a.*, rownum r__ FROM (SELECT * FROM actividad c WHERE c.estado = 1",
                         "AND c.id in (SELECT u.actividadid FROM actividad_usuario u WHERE u.usuario=:usuario)");
-
 
                     string query_a = "";
                     if (filtro_busqueda != null && filtro_busqueda.Length > 0)
@@ -196,9 +214,7 @@ namespace SiproDAO.Dao
                     }
 
                     query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
-
                     query = columna_ordenada != null && columna_ordenada.Trim().Length > 0 ? String.Join(" ", query, "ORDER BY", columna_ordenada, orden_direccion) : query;
-
                     query = String.Join(" ", query, ") a WHERE rownum < ((" + pagina + " * " + numeroActividad + ") + 1) ) WHERE r__ >= (((" + pagina + " - 1) * " + numeroActividad + ") + 1)");
 
                     resultado = db.Query<Actividad>(query, new { usuario }).AsList<Actividad>();

@@ -1,18 +1,18 @@
-﻿using Dapper;
+﻿using System;
+using System.IO;
+using System.Net;
+using System.Threading.Tasks;
+using Dapper;
+using Identity;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SiproModelCore.Models;
-using System;
 using Utilities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.DataProtection;
-using System.IO;
-using Microsoft.AspNetCore.Http;
-using System.Net;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using System.Threading.Tasks;
-using Identity;
 
 namespace SActividadTipo
 {
@@ -34,8 +34,8 @@ namespace SActividadTipo
         {
             services.AddIdentity<Identity.User, Rol>()
                 .AddRoleStore<RoleStore>()
-                .AddUserStore<UserPasswordStore>()
-                .AddUserManager<CustomUserManager>()
+                .AddUserStore<Identity.UserPasswordStore>()
+                .AddUserManager<Identity.CustomUserManager>()
                 .AddDefaultTokenProviders();
 
             services.AddScoped<IUserClaimsPrincipalFactory<Identity.User>, ApplicationClaimsIdentityFactory>();

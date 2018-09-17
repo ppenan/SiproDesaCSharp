@@ -275,8 +275,8 @@ namespace SActividad.Controllers
                     actividad.nombre = values.nombre;
                     actividad.descripcion = values.descripcion;
                     actividad.actividadTipoid = values.actividadTipoId;
-                    DateTime fechaInicio = values.fechainicio;
 
+                    DateTime fechaInicio = values.fechainicio;
                     DateTime.TryParse((string)values.fechaFin, out DateTime fechaFin);
                     DateTime fechaFinal = fechaFin;
 
@@ -383,7 +383,6 @@ namespace SActividad.Controllers
                             }
                         }
                     }
-
 
                     if (resultado)
                     {
@@ -987,7 +986,7 @@ namespace SActividad.Controllers
                 return BadRequest(500);
             }
         }
-       
+
         [HttpGet("{id}")]
         public IActionResult GetCantidadHistoria(int id)
         {

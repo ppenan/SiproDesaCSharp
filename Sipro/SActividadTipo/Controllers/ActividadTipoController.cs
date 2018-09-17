@@ -64,12 +64,12 @@ namespace SActividadTipo.Controllers
 
         [HttpPost]
         [Authorize("Actividad Tipos - Visualizar")]
-        public IActionResult ActividadtiposPagina([FromBody] dynamic value)
+        public IActionResult ActividadTiposPagina([FromBody] dynamic value)
         {
             try
             {
                 int pagina = value.pagina != null ? (int)value.pagina : 0;
-                int numeroCooperantesTipo = value.numeroactividadstipo != null ? (int)value.numeroactividadstipo : 0;
+                int numeroCooperantesTipo = value.numero_actividades_tipo != null ? (int)value.numero_actividades_tipo : 0;
                 String filtro_busqueda = value.filtro_busqueda != null ? (string)value.filtro_busqueda : null;
                 String columna_ordenada = value.columna_ordenada != null ? (string)value.columna_ordenada : null;
                 String orden_direccion = value.orden_direccion != null ? (string)value.orden_direccion : null;
@@ -103,10 +103,9 @@ namespace SActividadTipo.Controllers
             }
         }
 
-
         [HttpPost]
         [Authorize("Actividad Tipos - Crear")]
-        public IActionResult ActividadTipos([FromBody]dynamic value)
+        public IActionResult ActividadTipo([FromBody]dynamic value)
         {
             try
             {
@@ -139,26 +138,29 @@ namespace SActividadTipo.Controllers
                                 satipoPropiedad.actividadPropiedadid = Convert.ToInt32(idPropiedad);
                                 satipoPropiedad.fechaCreacion = DateTime.Now;
                                 satipoPropiedad.usuarioCreo = User.Identity.Name;
-
-                                guardado = guardado & AtipoPropiedadDAO.guardarAtipoPropiedad(satipoPropiedad);
+                                guardado = guardado & ATipoPropiedadDAO.GuardarATipoPropiedad(satipoPropiedad);
                             }
                         }
 
                         return Ok(new
                         {
                             success = guardado,
-                            id = actividadTipo.id,
-                            usuarioCreo = actividadTipo.usuarioCreo,
+                            actividadTipo.id,
+                            actividadTipo.usuarioCreo,
                             fechaCreacion = Utils.ConvierteAFormatoFecha(actividadTipo.fechaCreacion),
-                            usuarioActualizo = actividadTipo.usuarioActualizo,
+                            actividadTipo.usuarioActualizo,
                             fechaActualizacion = Utils.ConvierteAFormatoFecha(actividadTipo.fechaActualizacion)
                         });
                     }
                     else
+                    {
                         return Ok(new { success = false });
+                    }
                 }
                 else
+                {
                     return Ok(new { success = false });
+                }
             }
             catch (Exception e)
             {
@@ -166,7 +168,6 @@ namespace SActividadTipo.Controllers
                 return BadRequest(500);
             }
         }
-
 
         [HttpPut("{id}")]
         [Authorize("Actividad Tipos - Editar")]
@@ -187,19 +188,17 @@ namespace SActividadTipo.Controllers
                     actividadTipo.usuarioActualizo = User.Identity.Name;
 
                     bool guardado = false;
-
                     guardado = ActividadTipoDAO.GuardarActividadTipo(actividadTipo);
-
 
                     if (guardado)
                     {
-                        List<AtipoPropiedad> propiedadesTemp = AtipoPropiedadDAO.getAtipoPropiedades(actividadTipo.id);
+                        List<AtipoPropiedad> propiedadesTemp = ATipoPropiedadDAO.GetATipoPropiedades(actividadTipo.id);
 
                         if (propiedadesTemp != null)
                         {
                             foreach (AtipoPropiedad atipoPropiedad in propiedadesTemp)
                             {
-                                guardado = guardado & AtipoPropiedadDAO.eliminarTotalAtipoPropiedad(atipoPropiedad);
+                                guardado = guardado & ATipoPropiedadDAO.EliminarTotalATipoPropiedad(atipoPropiedad);
                             }
 
                             if (guardado)
@@ -217,7 +216,7 @@ namespace SActividadTipo.Controllers
                                         atipoPropiedad.fechaCreacion = DateTime.Now;
                                         atipoPropiedad.usuarioCreo = User.Identity.Name;
 
-                                        guardado = guardado & AtipoPropiedadDAO.guardarAtipoPropiedad(atipoPropiedad);
+                                        guardado = guardado & ATipoPropiedadDAO.GuardarATipoPropiedad(atipoPropiedad);
                                     }
                                 }
                             }
@@ -225,20 +224,27 @@ namespace SActividadTipo.Controllers
                             {
                                 return Ok(new { success = false });
                             }
-
                         }
+
+                        return Ok(new
+                        {
+                            success = guardado,
+                            actividadTipo.id,
+                            actividadTipo.usuarioCreo,
+                            fechaCreacion = Utils.ConvierteAFormatoFecha(actividadTipo.fechaCreacion),
+                            actividadTipo.usuarioActualizo,
+                            fechaActualizacion = Utils.ConvierteAFormatoFecha(actividadTipo.fechaActualizacion)
+                        });
                     }
                     else
                     {
                         return Ok(new { success = false });
                     }
-
                 }
                 else
                 {
                     return Ok(new { success = false });
                 }
-                return Ok(new { success = false });
             }
             catch (Exception ex)
             {
@@ -268,6 +274,25 @@ namespace SActividadTipo.Controllers
                 return BadRequest(500);
             }
         }
+
+        [HttpPost]
+        [Authorize("Actividad Tipos - Visualizar")]
+        public IActionResult NumeroActividadTipos([FromBody]dynamic value)
+        {
+            try
+            {
+                String filtro_busqueda = value.filtro_busqueda != null ? (string)value.filtro_busqueda : null;
+                long total = ActividadTipoDAO.GetTotalActividadTipo(filtro_busqueda);
+
+                return Ok(new { success = true, totalactividadtipos = total });
+            }
+            catch (Exception e)
+            {
+                CLogger.write("6", "ActividadTipoController.class", e);
+                return BadRequest(500);
+            }
+        }
+
     }
 
 }

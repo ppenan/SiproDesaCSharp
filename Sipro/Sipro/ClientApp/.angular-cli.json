@@ -58,6 +58,10 @@
   "defaults": {
     "styleExt": "css",
     "component": {
+    },
+    "serve": {
+      "port": 60000,
+      "host": "0.0.0.0"
     }
   }
 }

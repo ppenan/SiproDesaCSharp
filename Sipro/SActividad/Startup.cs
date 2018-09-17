@@ -1,4 +1,5 @@
-﻿using Identity;
+﻿using Dapper;
+using Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -7,9 +8,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SiproModelCore.Models;
+using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Utilities;
 
 namespace SActividad
 {
@@ -18,6 +21,55 @@ namespace SActividad
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            var mapper = (SqlMapper.ITypeMap)Activator
+                .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+                .MakeGenericType(typeof(Actividad)));
+            SqlMapper.SetTypeMap(typeof(Actividad), mapper);
+            var mapper2 = (SqlMapper.ITypeMap)Activator
+                .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+                .MakeGenericType(typeof(ActividadTipo)));
+            SqlMapper.SetTypeMap(typeof(ActividadTipo), mapper2);
+            var mapper3 = (SqlMapper.ITypeMap)Activator
+               .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+               .MakeGenericType(typeof(UnidadEjecutora)));
+            SqlMapper.SetTypeMap(typeof(UnidadEjecutora), mapper3);
+            var mapper4 = (SqlMapper.ITypeMap)Activator
+               .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+               .MakeGenericType(typeof(Entidad)));
+            SqlMapper.SetTypeMap(typeof(Entidad), mapper4);
+            var mapper5 = (SqlMapper.ITypeMap)Activator
+               .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+               .MakeGenericType(typeof(AcumulacionCosto)));
+            SqlMapper.SetTypeMap(typeof(AcumulacionCosto), mapper5);
+            var mapper6 = (SqlMapper.ITypeMap)Activator
+              .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+              .MakeGenericType(typeof(ActividadPropiedad)));
+            SqlMapper.SetTypeMap(typeof(ActividadPropiedad), mapper6);
+            var mapper7 = (SqlMapper.ITypeMap)Activator
+              .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+              .MakeGenericType(typeof(ActividadPropiedadValor)));
+            SqlMapper.SetTypeMap(typeof(ActividadPropiedadValor), mapper7);
+
+            var mapper8 = (SqlMapper.ITypeMap)Activator
+              .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+              .MakeGenericType(typeof(Actividad)));
+            SqlMapper.SetTypeMap(typeof(Actividad), mapper8);
+            var mapper9 = (SqlMapper.ITypeMap)Activator
+              .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+              .MakeGenericType(typeof(Subproducto)));
+            SqlMapper.SetTypeMap(typeof(Subproducto), mapper9);
+            var mapper10 = (SqlMapper.ITypeMap)Activator
+              .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+              .MakeGenericType(typeof(Producto)));
+            SqlMapper.SetTypeMap(typeof(Producto), mapper10);
+            var mapper11 = (SqlMapper.ITypeMap)Activator
+              .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+              .MakeGenericType(typeof(Subcomponente)));
+            SqlMapper.SetTypeMap(typeof(Subcomponente), mapper11);
+            var mapper12 = (SqlMapper.ITypeMap)Activator
+              .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+              .MakeGenericType(typeof(Proyecto)));
+            SqlMapper.SetTypeMap(typeof(Proyecto), mapper12);
         }
 
         public IConfiguration Configuration { get; }

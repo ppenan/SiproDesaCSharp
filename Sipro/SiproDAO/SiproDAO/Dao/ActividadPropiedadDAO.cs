@@ -1,10 +1,9 @@
-﻿using SiproModelCore.Models;
+﻿using Dapper;
+using SiproModelCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Text;
 using Utilities;
-using Dapper;
 
 namespace SiproDAO.Dao
 {

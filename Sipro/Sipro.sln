@@ -110,7 +110,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SActividad", "SActividad\SA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STipoAdquisicion", "STipoAdquisicion\STipoAdquisicion.csproj", "{CCC6A76A-8A59-437B-8BEE-313C506FF0C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCategoriaAdquisicion", "SCategoriaAdquisicion\SCategoriaAdquisicion.csproj", "{8878A710-8C87-44DA-9F78-0F3C68633735}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SCategoriaAdquisicion", "SCategoriaAdquisicion\SCategoriaAdquisicion.csproj", "{8878A710-8C87-44DA-9F78-0F3C68633735}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
