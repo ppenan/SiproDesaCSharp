@@ -187,7 +187,7 @@ namespace SiproDAO.Dao
                     {
                         query_a = String.Join("", query_a, " c.nombre LIKE '%" + filtro_busqueda + "%' ");
                         query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " c.descripcion LIKE '%" + filtro_busqueda + "%' ");
-                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " c.usuarioCreo LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " c.usuario_creo LIKE '%" + filtro_busqueda + "%' ");
 
                         if (DateTime.TryParse(filtro_busqueda, out DateTime fecha_creacion))
                         {

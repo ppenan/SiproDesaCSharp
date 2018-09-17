@@ -105,7 +105,7 @@ namespace SActividadTipo.Controllers
 
         [HttpPost]
         [Authorize("Actividad Tipos - Crear")]
-        public IActionResult ActividadTipos([FromBody]dynamic value)
+        public IActionResult ActividadTipo([FromBody]dynamic value)
         {
             try
             {

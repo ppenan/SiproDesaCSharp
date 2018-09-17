@@ -211,7 +211,6 @@ export class ActividadtipoComponent implements OnInit {
         response => {
           if (response['success'] === true) {
             const data = response['actividadtipos'];
-
             this.source = new LocalDataSource(data);
             this.source.setSort([
               { field: 'id', direction: 'asc'}
@@ -219,6 +218,7 @@ export class ActividadtipoComponent implements OnInit {
 
             this.busquedaGlobal = null;
           }
+          this.mostrarcargando = false;
         }
       )
       ;
@@ -309,6 +309,7 @@ export class ActividadtipoComponent implements OnInit {
         value.forEach(element => {
           this.propiedades.push(element);
         });
+
 
         for (let x = 0; x < this.propiedades.length; x++) {
           this.actividadTipo.propiedades = this.actividadTipo.propiedades + (x > 0 ? ',' : '') + this.propiedades[x].id;

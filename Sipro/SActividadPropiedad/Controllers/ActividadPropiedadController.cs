@@ -12,7 +12,7 @@ namespace SActividadPropiedad.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [EnableCors("AllowAllHeaders")]
     public class ActividadPropiedadController : Controller
     {
@@ -162,8 +162,7 @@ namespace SActividadPropiedad.Controllers
                 return BadRequest(500);
             }
         }
-
-        /* */
+        
         [HttpPost]
         [Authorize("Actividad Propiedades - Visualizar")]
         public IActionResult NumeroActividadPropiedades([FromBody]dynamic value)
@@ -180,8 +179,6 @@ namespace SActividadPropiedad.Controllers
                 return BadRequest(500);
             }
         }
-
-        /* */
 
         [HttpPost]
         [Authorize("Actividad Propiedades - Crear")]
