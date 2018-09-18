@@ -12,14 +12,14 @@
       <div fxLayout="column" fxLayoutAlign="center" fxFlexFill>
           <div [hidden]="esColapsado" *ngIf="!esTreeview">
               <div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="2px" *ngIf="!esTreeview">
-                  <button mat-raised-button class="primary-btn" (click)="congelado == 0 ? nuevo() : null" matTooltip="Nuevo" matTooltipPosition="above"><mat-icon>add</mat-icon>Nuevo</button>
+                  <button mat-raised-button class="primary-btn" (click)="congelado == 0 ? nuevo() : null" matTooltip="Nuevo" matTooltipPosition="above"><mat-icon>add</mat-icon>Nueva</button>
                   <button mat-raised-button class="primary-btn" (click)="editar()" matTooltip="Editar" matTooltipPosition="above"><mat-icon>mode_edit</mat-icon>Editar</button>
                   <button mat-raised-button class="danger-btn" (click)="congelado == 0 ? borrar() : null" matTooltip="Borrar" matTooltipPosition="above"><mat-icon>delete</mat-icon>Borrar</button>
               </div>
               <br>
               <div fxLayout="row" fxLayoutAlign="center">
                   <mat-form-field fxFlex="50%">
-                      <input matInput #search type="text" placeholder="Busqueda..." (keydown.enter)="filtrar(search.value)">
+                      <input matInput #search type="text" placeholder="Búsqueda..." (keydown.enter)="filtrar(search.value)">
                       <mat-icon class="search-info" (click)="filtrar(search.value)" matSuffix>search</mat-icon>
                   </mat-form-field>              
               </div> 
@@ -44,7 +44,7 @@
               </div>
               <br>
               <div fxLayout="row" fxLayoutAlign="end" style="font-weight: bold;">
-                  Total de Actividades: {{totalActividades}}
+                  Total de Actividades: {{ totalActividades }}
               </div>
               <div fxLayout="column" fxLayoutAlign="center">
                   <mat-paginator [length]="totalActividades" [hidePageSize]="true" [pageSize]="elementosPorPagina" 
@@ -55,14 +55,14 @@
           <div [hidden]="!esColapsado || esTreeview">
               <form #myForm="ngForm">
                   <div fxLayout="row" fxLayoutAlign="start" class="nuevo-edicion">
-                      <label>{{esNuevo == true ? 'Nuevo actividad' : 'Edición de actividad' }}</label>
+                      <label>{{ esNuevo == true ? 'Nueva actividad' : 'Edición de actividad' }}</label>
                   </div>
                   <br>
                   <div fxLayout="row">
                       <div [hidden]="esNuevo" fxFlex="50%" fxLayoutAlign="start" fxLayoutGap="1px">
-                          <button mat-raised-button style="min-width: 35px; border-color: #ccc; color:#333" (click)="irASubActividades(actividad.id)" matTooltip="SubActividades" matTooltipPosition="above"><mat-icon>equalizer</mat-icon></button>
+                          <!-- <button mat-raised-button style="min-width: 35px; border-color: #ccc; color:#333" (click)="irASubActividades(actividad.id)" matTooltip="SubActividades" matTooltipPosition="above"><mat-icon>equalizer</mat-icon></button>
                           <button mat-raised-button style="min-width: 35px; border-color: #ccc; color:#333" (click)="irAProductos(actividad.id)" matTooltip="Productos" matTooltipPosition="above"><mat-icon>inbox</mat-icon></button>
-                          <button mat-raised-button style="min-width: 35px; border-color: #ccc; color:#333" (click)="irAActividades(actividad.id)" matTooltip="Actividades" matTooltipPosition="above"><mat-icon>watch_later</mat-icon></button>
+                          <button mat-raised-button style="min-width: 35px; border-color: #ccc; color:#333" (click)="irAActividades(actividad.id)" matTooltip="Actividades" matTooltipPosition="above"><mat-icon>watch_later</mat-icon></button> -->
                           <button mat-raised-button style="min-width: 35px; border-color: #ccc; color:#333" (click)="verHistoria()" matTooltip="Ver Historia" matTooltipPosition="above"><mat-icon>history</mat-icon></button>
                           <button mat-raised-button style="min-width: 35px; border-color: #ccc; color:#333" (click)="actividad.acumulacionCostoid == 2 ? agregarPagos() : ''" matTooltip="Pagos planificados" matTooltipPosition="above" [disabled]="actividad.acumulacionCostoid != 2"><mat-icon>payment</mat-icon></button>
                       </div>
