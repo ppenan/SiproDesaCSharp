@@ -26,7 +26,7 @@ export class Subproducto{
     duracion: number;
     duracionDimension: string;
     fechaInicio: string;
-    fechaFin: Date;
+    fechaFin: string; // tenía date
     latitud: string;
     longitud: string;
     costo: number;
@@ -41,4 +41,6 @@ export class Subproducto{
     orden: number;
     treepath: string;
     nivel: number;
+
+    camposDinamicos: string;
 }
