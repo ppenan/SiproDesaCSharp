@@ -29,29 +29,31 @@ namespace SPlanAdquisicion.Controllers
         {
             public int id;
             public String tipoNombre;
-            public int tipoId;
+            public int tipoAdquisicion;
             public String categoriaNombre;
-            public int categoriaId;
-            public String medidaNombre;
+            public int categoriaAdquisicion;
+            public String unidadMedida;
             public int cantidad;
             public decimal precioUnitario;
             public decimal total;
             public long nog;
             public String numeroContrato;
             public decimal montoContrato;
-            public String preparacionDocumentoPlanificada;
-            public String preparacionDocumentoReal;
-            public String lanzamientoEventoPlanificada;
+            public String preparacionDocPlanificado;
+            public String preparacionDocReal;
+            public String lanzamientoEventoPlanificado;
             public String lanzamientoEventoReal;
-            public String recepcionOfertasPlanificada;
+            public String recepcionOfertasPlanificado;
             public String recepcionOfertasReal;
-            public String adjudicacionPlanificada;
+            public String adjudicacionPlanificado;
             public String adjudicacionReal;
-            public String firmaContratoPlanificada;
+            public String firmaContratoPlanificado;
             public String firmaContratoReal;
             public stpago[] pagos;
             public int tipoRevision;
             public String tipoRevisionNombre;
+            public int objetoId;
+            public int objetoTipo;
         }
 
         private class stnog
@@ -197,25 +199,25 @@ namespace SPlanAdquisicion.Controllers
                 {
                     stadquisicion temp = new stadquisicion();
                     temp.id = Convert.ToInt32(adquisicion.id);
-                    temp.adjudicacionPlanificada = adquisicion.adjudicacionPlanificado != null ? adquisicion.adjudicacionPlanificado.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.adjudicacionPlanificado = adquisicion.adjudicacionPlanificado != null ? adquisicion.adjudicacionPlanificado.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     temp.adjudicacionReal = adquisicion.adjudicacionReal != null ? adquisicion.adjudicacionReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     temp.cantidad = Convert.ToInt32(adquisicion.cantidad);
-                    temp.categoriaId = Convert.ToInt32(adquisicion.categoriaAdquisicions.id);
+                    temp.categoriaAdquisicion = Convert.ToInt32(adquisicion.categoriaAdquisicions.id);
                     temp.categoriaNombre = adquisicion.categoriaAdquisicions.nombre;
-                    temp.firmaContratoPlanificada = adquisicion.firmaContratoPlanificado != null ? adquisicion.firmaContratoPlanificado.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.firmaContratoPlanificado = adquisicion.firmaContratoPlanificado != null ? adquisicion.firmaContratoPlanificado.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     temp.firmaContratoReal = adquisicion.firmaContratoReal != null ? adquisicion.firmaContratoReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
-                    temp.lanzamientoEventoPlanificada = adquisicion.lanzamientoEventoPlanificado != null ? adquisicion.lanzamientoEventoPlanificado.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.lanzamientoEventoPlanificado = adquisicion.lanzamientoEventoPlanificado != null ? adquisicion.lanzamientoEventoPlanificado.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     temp.lanzamientoEventoReal = adquisicion.lanzamientoEventoReal != null ? adquisicion.lanzamientoEventoReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
-                    temp.medidaNombre = adquisicion.unidadMedida;
+                    temp.unidadMedida = adquisicion.unidadMedida;
                     temp.montoContrato = adquisicion.montoContrato;
                     temp.nog = Convert.ToInt64(adquisicion.nog);
                     temp.numeroContrato = adquisicion.numeroContrato;
                     temp.precioUnitario = adquisicion.precioUnitario ?? default(decimal);
-                    temp.preparacionDocumentoPlanificada = adquisicion.preparacionDocPlanificado != null ? adquisicion.preparacionDocPlanificado.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
-                    temp.preparacionDocumentoReal = adquisicion.preparacionDocReal != null ? adquisicion.preparacionDocReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
-                    temp.recepcionOfertasPlanificada = adquisicion.recepcionOfertasPlanificado != null ? adquisicion.recepcionOfertasPlanificado.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.preparacionDocPlanificado = adquisicion.preparacionDocPlanificado != null ? adquisicion.preparacionDocPlanificado.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.preparacionDocReal = adquisicion.preparacionDocReal != null ? adquisicion.preparacionDocReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.recepcionOfertasPlanificado = adquisicion.recepcionOfertasPlanificado != null ? adquisicion.recepcionOfertasPlanificado.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     temp.recepcionOfertasReal = adquisicion.recepcionOfertasReal != null ? adquisicion.recepcionOfertasReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
-                    temp.tipoId = Convert.ToInt32(adquisicion.tipoAdquisicions.id);
+                    temp.tipoAdquisicion = Convert.ToInt32(adquisicion.tipoAdquisicions.id);
                     temp.tipoNombre = adquisicion.tipoAdquisicions.nombre;
                     temp.total = adquisicion.total ?? default(decimal);
                     temp.tipoRevision = adquisicion.tipoRevision ?? default(int);

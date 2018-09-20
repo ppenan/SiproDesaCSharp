@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using SiproDAO.Dao;
 using SiproModelCore.Models;
+using System;
+using System.Collections.Generic;
 using Utilities;
-using FluentValidation.Results;
-using Newtonsoft.Json.Linq;
 
 namespace SComponente.Controllers
 {
@@ -180,7 +180,7 @@ namespace SComponente.Controllers
                     temp.fuenteDonacion = componente.fuenteDonacion ?? default(decimal);
                     temp.fuenteNacional = componente.fuenteNacional ?? default(decimal);
 
-                    esDeSigade = temp.esDeSigade==1 ? true : false;
+                    esDeSigade = temp.esDeSigade == 1 ? true : false;
 
                     temp.fechaInicioReal = componente.fechaInicioReal != null ? componente.fechaInicioReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     temp.fechaFinReal = componente.fechaFinReal != null ? componente.fechaFinReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
@@ -275,7 +275,7 @@ namespace SComponente.Controllers
                     temp.fuenteDonacion = componente.fuenteDonacion ?? default(decimal);
                     temp.fuenteNacional = componente.fuenteNacional ?? default(decimal);
 
-                    esDeSigade = temp.esDeSigade==1 ? true : false;
+                    esDeSigade = temp.esDeSigade == 1 ? true : false;
 
                     temp.fechaInicioReal = componente.fechaInicioReal != null ? componente.fechaInicioReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     temp.fechaFinReal = componente.fechaFinReal != null ? componente.fechaFinReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
@@ -316,7 +316,8 @@ namespace SComponente.Controllers
                     componente.unidadEjecutoras.entidads = EntidadDAO.getEntidad(componente.entidad ?? default(int), componente.ejercicio);
                 }
 
-                return Ok(new {
+                return Ok(new
+                {
                     id = componente.id,
                     ejercicio = componente.ejercicio,
                     entidad = componente.entidad,
@@ -411,7 +412,7 @@ namespace SComponente.Controllers
                 temp.fuenteDonacion = componente.fuenteDonacion ?? default(decimal);
                 temp.fuenteNacional = componente.fuenteNacional ?? default(decimal);
 
-                esDeSigade = temp.esDeSigade==1 ? true : false;
+                esDeSigade = temp.esDeSigade == 1 ? true : false;
 
                 temp.fechaInicioReal = componente.fechaInicioReal != null ? componente.fechaInicioReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                 temp.fechaFinReal = componente.fechaFinReal != null ? componente.fechaFinReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
@@ -435,7 +436,7 @@ namespace SComponente.Controllers
             {
                 Componente componente = ComponenteDAO.getComponente(id);
                 bool eliminado = ObjetoDAO.borrarHijos(componente.treepath, 1, User.Identity.Name);
-                return Ok(new { success = eliminado});
+                return Ok(new { success = eliminado });
             }
             catch (Exception e)
             {
@@ -534,7 +535,7 @@ namespace SComponente.Controllers
                 if ((asignado = (asignado - planificado)).CompareTo(decimal.Zero) == -1)
                     sobrepaso = true;
 
-                return Ok(new { success = true, asignado = asignado, sobrepaso = sobrepaso});
+                return Ok(new { success = true, asignado = asignado, sobrepaso = sobrepaso });
             }
             catch (Exception e)
             {

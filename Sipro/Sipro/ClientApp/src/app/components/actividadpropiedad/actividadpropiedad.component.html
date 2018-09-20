@@ -9,7 +9,7 @@
     <div fxLayout="column" fxLayoutAlign="center" fxFlexFill>
       <div [hidden]="esColapsado">
         <div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="2px">
-          <button mat-raised-button style="background-color: #337ab7; color:#fff" (click)="nuevo()" matTooltip="Nuevo" matTooltipPosition="above"><mat-icon>add</mat-icon>Nuevo</button>
+          <button mat-raised-button style="background-color: #337ab7; color:#fff" (click)="nuevo()" matTooltip="Nuevo" matTooltipPosition="above"><mat-icon>add</mat-icon>Nueva</button>
           <button mat-raised-button style="background-color: #337ab7; color: #fff;" (click)="editar()" matTooltip="Editar" matTooltipPosition="above"><mat-icon>mode_edit</mat-icon>Editar</button>
           <button mat-raised-button style="background-color: #d9534f; color: #fff;" (click)="borrar()" matTooltip="Borrar" matTooltipPosition="above"><mat-icon>delete</mat-icon>Borrar</button>
         </div>
@@ -41,7 +41,7 @@
         </div>
         <br>
         <div fxLayout="row" fxLayoutAlign="end" style="font-weight: bold;">
-          Total de propiedades de actividad: {{totalActividadPropiedades}}
+          Total de propiedades de actividad: {{ totalActividadPropiedades }}
         </div>
         <div fxLayout="column" fxLayoutAlign="center">
           <mat-paginator [length]="totalActividadPropiedades" [hidePageSize]="true" [pageSize]="elementosPorPagina" 
@@ -63,12 +63,12 @@
           </div>
           <br>
           <div fxLayout="row" fxLayoutAlign="start">
-              <label class="label-id">ID {{actividad.id}}</label>
+              <label class="label-id">ID {{actividadpropiedad.id}}</label>
           </div>
           <br>
           <div fxLayout="column">
             <mat-form-field>
-              <input name="nombre" [(ngModel)]="actividad.nombre" matInput placeholder="Nombre" [required]="true">
+              <input name="nombre" [(ngModel)]="actividadpropiedad.nombre" matInput placeholder="Nombre" [required]="true">
             </mat-form-field>
           </div>
           <div fxLayout="column">
@@ -88,23 +88,23 @@
                       <div fxLayout="row" fxLayoutGap="20px">
                         <div fxFlex="50%">
                           <label fxLayoutAlign="end" class="label-form" for="usuarioCreo">Usuario que creo</label>
-                          <p fxLayoutAlign="end">{{ actividad.usuarioCreo }}</p>
+                          <p fxLayoutAlign="end">{{ actividadpropiedad.usuarioCreo }}</p>
                         </div>
 
                         <div fxFlex="50%">
                             <label fxLayoutAlign="start" class="label-form"  for="fechaCreacion">Fecha de creación</label>
-                            <p fxLayoutAlign="start">{{ actividad.fechaCreacion }}</p>
+                            <p fxLayoutAlign="start">{{ actividadpropiedad.fechaCreacion }}</p>
                         </div>
                       </div>
                       <div fxLayout="row" fxLayoutGap="20px">
                           <div fxFlex="50%">
                             <label fxLayoutAlign="end" class="label-form" for="usuarioActualizo">Usuario que actualizo</label>
-                            <p fxLayoutAlign="end">{{ actividad.usuarioActualizo }}</p>
+                            <p fxLayoutAlign="end">{{ actividadpropiedad.usuarioActualizo }}</p>
                           </div>
 
                           <div fxFlex="50%">
                             <label fxLayoutAlign="start" for="fechaActualizacion"  class="label-form" >Fecha de actualizacion</label>
-                            <p fxLayoutAlign="start">{{ actividad.fechaActualizacion }}</p>
+                            <p fxLayoutAlign="start">{{ actividadpropiedad.fechaActualizacion }}</p>
                           </div>
                       </div>
                     </div>                                  

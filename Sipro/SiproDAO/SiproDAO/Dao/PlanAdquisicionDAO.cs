@@ -181,7 +181,7 @@ namespace SiproDAO.Dao
             int objetoId = Convert.ToInt32(pa.objetoId);
             int objetoTipo = Convert.ToInt32(pa.objetoTipo);
             List<PlanAdquisicionPago> pagos = PlanAdquisicionPagoDAO.getPagosByPlan(Convert.ToInt32(pa.id));
-            List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(objetoId, objetoTipo);
+            List<Actividad> actividades = ActividadDAO.GetActividadesPorObjeto(objetoId, objetoTipo);
             foreach (Actividad actividad in actividades)
                 ret += actividad.costo ?? default(decimal);
 
@@ -273,7 +273,7 @@ namespace SiproDAO.Dao
                     }
                     break;
                 case 5:
-                    Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
+                    Actividad actividad = ActividadDAO.GetActividadPorId(objetoId);
                     if (actividades != null && actividades.Count > 0)
                     {
                         actividad.costo = ret;
@@ -494,7 +494,7 @@ namespace SiproDAO.Dao
                     }
                 }
 
-                List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(objetoId, objetoTipo);
+                List<Actividad> actividades = ActividadDAO.GetActividadesPorObjeto(objetoId, objetoTipo);
                 switch (objetoTipo)
                 {
                     case 3:
@@ -522,7 +522,7 @@ namespace SiproDAO.Dao
                         }
                         break;
                     case 5:
-                        Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
+                        Actividad actividad = ActividadDAO.GetActividadPorId(objetoId);
                         if (!(actividades != null && actividades.Count > 0))
                         {
                             if (tiene_pagos)

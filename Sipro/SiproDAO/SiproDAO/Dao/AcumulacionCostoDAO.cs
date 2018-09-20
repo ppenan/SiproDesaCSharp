@@ -27,7 +27,7 @@ namespace SiproDAO.Dao
             return ret;
         }
 
-        public static AcumulacionCosto getAcumulacionCostoById(int id)
+        public static AcumulacionCosto getAcumulacionCostoById(Int64 id)
         {
             AcumulacionCosto ret = null;
             try

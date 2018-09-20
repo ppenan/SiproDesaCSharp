@@ -7,13 +7,13 @@ using Utilities;
 
 namespace SiproDAO.Dao
 {
-    class ActividadTipoDAO
+    public class ActividadTipoDAO
     {
         /// <summary>
         /// Obtiene los tipos de actividad que tengan estado = 1
         /// </summary>
         /// <returns>Lista de Actividad Tipo</returns>
-        public static List<ActividadTipo> GetActividadTipos()
+        public static List<ActividadTipo> ActividadTipos()
         {
             List<ActividadTipo> result = new List<ActividadTipo>();
 
@@ -37,7 +37,7 @@ namespace SiproDAO.Dao
         /// </summary>
         /// <param name="id">Identificador del Tipo de Actividad</param>
         /// <returns>Tipo de Actividad</returns>
-        public static ActividadTipo GetActividadTipoPorId(int id)
+        public static ActividadTipo ActividadTipoPorId(int id)
         {
 
             ActividadTipo resultado = null;
@@ -46,7 +46,7 @@ namespace SiproDAO.Dao
             {
                 using (DbConnection db = new OracleContext().getConnection())
                 {
-                    resultado = db.QueryFirstOrDefault<ActividadTipo>("SELECT * FROM actividad_tipo WHERE id=:id AND estado=1", new { id });
+                    resultado = db.QueryFirstOrDefault<ActividadTipo>("SELECT * FROM actividad_tipo WHERE id = :id AND estado = 1", new { id });
                 }
 
             }
@@ -80,7 +80,7 @@ namespace SiproDAO.Dao
 
                     if (existe > 0)
                     {
-                        int guardado = db.Execute("UPDATE actividad_tipo SET nombre = :nombre, descripcion = :descripcion, usuario_creo = :usuario_creo, usuario_actualizo = :usuario_actualizo, fecha_creacion = :fecha_creacion, fecha_actualizacion = :fecha_actualizacion, estado = :estado WHERE id = :id", actividadTipo.);
+                        int guardado = db.Execute("UPDATE actividad_tipo SET nombre = :nombre, descripcion = :descripcion, usuario_creo = :usuarioCreo, usuario_actualizo = :usuarioActualizo, fecha_creacion = :fechaCreacion, fecha_actualizacion = :fechaActualizacion, estado = :estado WHERE id = :id", actividadTipo);
 
                         resultado = (guardado > 0) ? true : false;
                     }
@@ -90,7 +90,7 @@ namespace SiproDAO.Dao
 
                         actividadTipo.id = sequenceId;
 
-                        int guardado = db.Execute("INSERT INTO actividad_tipo VALUES (:id, :nombre, :descripcion, :usuario_creo, :usuario_actualizo, :fecha_creacion, :fecha_actualizacion, :estado)", actividadTipo);
+                        int guardado = db.Execute("INSERT INTO actividad_tipo VALUES (:id, :nombre, :descripcion, :usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion, :estado)", actividadTipo);
 
                         resultado = (guardado > 0) ? true : false;
                     }
@@ -166,7 +166,7 @@ namespace SiproDAO.Dao
         /// <param name="columna_ordenada">Nombre de la columna a ordenar</param>
         /// <param name="orden_direccion">Tipo de ordenamiento ASC o DESC</param>
         /// <returns>Listado de Actividad Tipo, ya paginada y en el orden solicitado</returns>
-        public static List<ActividadTipo> GetActividadTiposPagina(
+        public static List<ActividadTipo> ActividadTiposPagina(
             int pagina,
             int numeroactividadstipo,
             String filtro_busqueda,
@@ -212,6 +212,44 @@ namespace SiproDAO.Dao
                 CLogger.write("6", "ActividadTipoDAO.class", e);
             }
 
+            return resultado;
+        }
+
+        /// <summary>
+        /// Devuelve el total de actividades tipo
+        /// </summary>
+        /// <param name="filtro_busqueda">Query de consulta</param>
+        /// <returns>Cantidad total de actividad tipo</returns>
+        public static long GetTotalActividadTipo(string filtro_busqueda)
+        {
+            long resultado = 0L;
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    String query = "SELECT COUNT(*) FROM actividad_tipo c WHERE c.estado = 1 ";
+                    String query_a = "";
+                    if (filtro_busqueda != null && filtro_busqueda.Length > 0)
+                    {
+                        query_a = String.Join("", query_a, " c.nombre LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " c.descripcion LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " c.usuario_creo LIKE '%" + filtro_busqueda + "%' ");
+
+                        DateTime fecha_creacion;
+                        if (DateTime.TryParse(filtro_busqueda, out fecha_creacion))
+                        {
+                            query_a = String.Join(" ", query_a, (query_a.Length > 0 ? " OR " : ""), " TO_DATE(TO_CHAR(c.fecha_creacion,'DD/MM/YY'),'DD/MM/YY') LIKE TO_DATE('" + fecha_creacion.ToString("dd/MM/yyyy") + "','DD/MM/YY') ");
+                        }
+                    }
+                    query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
+
+                    resultado = db.ExecuteScalar<long>(query);
+                }
+            }
+            catch (Exception e)
+            {
+                CLogger.write("7", "ActividadTipoDAO.class", e);
+            }
             return resultado;
         }
     }

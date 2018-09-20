@@ -238,7 +238,7 @@ namespace SSubComponenteTipo.Controllers
             }
             catch (Exception e)
             {
-                CLogger.write("4", "SubcomponenteTipoController.class", e);
+                CLogger.write("5", "SubcomponenteTipoController.class", e);
                 return BadRequest(500);
             }
         }

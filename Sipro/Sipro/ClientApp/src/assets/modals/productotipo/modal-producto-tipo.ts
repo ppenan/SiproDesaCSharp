@@ -54,7 +54,8 @@ export class DialogProductoTipo {
       if (response['success'] == true) {   
         this.totalElementos = response["total"];
         this.paginaActual = 1;
-        this.cargarTabla(this.paginaActual);
+        if(this.totalElementos > 0)
+          this.cargarTabla(this.paginaActual);
       } else {
         console.log('Error');
       }

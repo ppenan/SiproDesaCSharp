@@ -7,4 +7,6 @@ export class ActividadTipo {
     fechaCreacion: string;
     fechaActualizacion: string;
     estado: number;
+
+    propiedades: string;
 }

@@ -41,10 +41,10 @@
         </div>
         <br>
         <div fxLayout="row" fxLayoutAlign="end" style="font-weight: bold;">
-          Total de tipos de actividad: {{totalactividadtipos}}
+          Total de tipos de actividad: {{ totalActividadTipos }}
         </div>
         <div fxLayout="column" fxLayoutAlign="center">
-          <mat-paginator [length]="totalactividadtipos" [hidePageSize]="true" [pageSize]="elementosPorPagina" 
+          <mat-paginator [length]="totalActividadTipos" [hidePageSize]="true" [pageSize]="elementosPorPagina" 
           [showFirstLastButtons]="true" (page)="pageEvent = handlePage($event)">
           </mat-paginator>
         </div>
@@ -52,7 +52,7 @@
       <div [hidden]="!esColapsado">
         <form #myForm="ngForm">
           <div fxLayout="row" fxLayoutAlign="start" class="nuevo-edicion">
-            <label>{{esNuevo == true ? 'Nuevo tipo de actividad' : 'Edición de tipo de actividad' }}</label>
+            <label>{{ esNuevo == true ? 'Nuevo tipo de actividad' : 'Edición de tipo de actividad' }}</label>
           </div>
           <br>
           <div fxLayout="row">
@@ -63,17 +63,17 @@
           </div>
           <br>
           <div fxLayout="row" fxLayoutAlign="start">
-              <label class="label-id">ID {{actividadtipo.id}}</label>
+              <label class="label-id">ID {{ actividadTipo.id}}</label>
           </div>
           <br>
           <div fxLayout="column">
             <mat-form-field>
-              <input name="nombre" [(ngModel)]="actividadtipo.nombre" matInput placeholder="Nombre" [required]="true">
+              <input name="nombre" [(ngModel)]="actividadTipo.nombre" matInput placeholder="Nombre" [required]="true">
             </mat-form-field>
           </div>
           <div fxLayout="column">
             <mat-form-field>
-              <textarea name="descripcion" matInput rows="4" [(ngModel)]="actividadtipo.descripcion" placeholder="Descripción"></textarea>
+              <textarea name="descripcion" matInput rows="4" [(ngModel)]="actividadTipo.descripcion" placeholder="Descripción"></textarea>
             </mat-form-field>
           </div>
           <div fxLayout="column">
@@ -95,23 +95,23 @@
                       <div fxLayout="row" fxLayoutGap="20px">
                         <div fxFlex="50%">
                           <label fxLayoutAlign="end" class="label-form" for="usuarioCreo">Usuario que creo</label>
-                          <p fxLayoutAlign="end">{{ actividadtipo.usuarioCreo }}</p>
+                          <p fxLayoutAlign="end">{{ actividadTipo.usuarioCreo }}</p>
                         </div>
 
                         <div fxFlex="50%">
                             <label fxLayoutAlign="start" class="label-form"  for="fechaCreacion">Fecha de creación</label>
-                            <p fxLayoutAlign="start">{{ actividadtipo.fechaCreacion }}</p>
+                            <p fxLayoutAlign="start">{{ actividadTipo.fechaCreacion }}</p>
                         </div>
                       </div>
                       <div fxLayout="row" fxLayoutGap="20px">
                           <div fxFlex="50%">
                             <label fxLayoutAlign="end" class="label-form" for="usuarioActualizo">Usuario que actualizo</label>
-                            <p fxLayoutAlign="end">{{ actividadtipo.usuarioActualizo }}</p>
+                            <p fxLayoutAlign="end">{{ actividadTipo.usuarioActualizo }}</p>
                           </div>
 
                           <div fxFlex="50%">
                             <label fxLayoutAlign="start" for="fechaActualizacion"  class="label-form" >Fecha de actualizacion</label>
-                            <p fxLayoutAlign="start">{{ actividadtipo.fechaActualizacion }}</p>
+                            <p fxLayoutAlign="start">{{ actividadTipo.fechaActualizacion }}</p>
                           </div>
                       </div>
                     </div>                                  
