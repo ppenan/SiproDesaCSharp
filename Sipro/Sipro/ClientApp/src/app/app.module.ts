@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 import { RouteguardService } from './routeguard.service';
 import { MaterialModule } from './material/material.module';
 import { FlexLayoutModule } from "@angular/flex-layout";
-import { utils } from 'protractor'; 
+import { utils } from 'protractor';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { MatInputModule, MatPaginatorModule, MatTabsModule, MatDatepickerModule, MatNativeDateModule, MAT_DATE_LOCALE, MatPaginatorIntl, MatTooltipModule, MatAutocompleteModule, MAT_DATE_FORMATS, MAT_NATIVE_DATE_FORMATS, DateAdapter, MatSelectModule, MatCheckboxModule, MatRadioModule } from '@angular/material';
 import { MomentModule } from 'angular2-moment/moment.module';
@@ -77,7 +77,7 @@ import { CategoriaadquisicionComponent } from './components/categoriaadquisicion
 const routes: Routes = [{
           path: '',    // Va a Main
           component: MainComponent,
-          canActivate: [RouteguardService] 
+          canActivate: [RouteguardService]
         }, {
           path: 'main',
           component: MainComponent,
@@ -91,15 +91,10 @@ const routes: Routes = [{
         },{
           path: 'main/actividadtipo',
           component: ActividadtipoComponent
-<<<<<<< HEAD
-        },
-        {
-=======
         },{
           path: 'main/categoriaadquisicion',
           component: CategoriaadquisicionComponent
         },{
->>>>>>> master
           path: 'main/prestamo',
           component: PrestamoComponent
         },{
@@ -164,10 +159,10 @@ const routes: Routes = [{
 @NgModule({
   declarations: [
       AppComponent,
-      LoginComponent, 
+      LoginComponent,
       AccesodenegadoComponent, MainComponent, PagenotfoundComponent, FooterComponent, MainmenuComponent, PrestamoComponent,
-      DialogCodigoPresupuestario, DialogMoneda, DialogTipoPrestamo, ButtonDeleteComponent, ButtonDownloadComponent, DialogDownloadDocument, 
-      FormatoMillones, FormatoMillonesDolares, FormatoMillonesSinTipo, PepComponent, DialogProyectoTipo, PrestamotipoComponent, 
+      DialogCodigoPresupuestario, DialogMoneda, DialogTipoPrestamo, ButtonDeleteComponent, ButtonDownloadComponent, DialogDownloadDocument,
+      FormatoMillones, FormatoMillonesDolares, FormatoMillonesSinTipo, PepComponent, DialogProyectoTipo, PrestamotipoComponent,
       PeppropiedadComponent, PeptipoComponent, DialogProyectoPropiedad, DialogDelete, DialogUnidadEjecutora, DialogColaborador,
       DialogImpacto, DialogEntidad, ComponenteComponent, DialogCargarProject, DialogMapa, ComponentepropiedadComponent, ComponentetipoComponent,
       DialogComponentePropiedad, DialogComponenteTipo, SubcomponenteComponent, SubcomponentepropiedadComponent, SubcomponentetipoComponent,
@@ -177,29 +172,29 @@ const routes: Routes = [{
   ],
   imports: [
       BrowserModule,
-      FormsModule, ReactiveFormsModule, 
+      FormsModule, ReactiveFormsModule,
       NguiMapModule.forRoot({apiUrl: 'https://maps.google.com/maps/api/js?key=AIzaSyDgZeBouc6cujKM2NM3_F_jMJbKUc1XjKk'}),
       RouterModule.forRoot(routes),
       HttpClientModule,
       FlashMessagesModule.forRoot(),
       MaterialModule,
-      FlexLayoutModule,      
-      Ng2SmartTableModule, 
-      MatPaginatorModule, MatTabsModule, MatDatepickerModule, MatNativeDateModule, MomentModule, 
-      MatInputModule, MatDialogModule, MatProgressSpinnerModule, MatTooltipModule, MatAutocompleteModule, 
+      FlexLayoutModule,
+      Ng2SmartTableModule,
+      MatPaginatorModule, MatTabsModule, MatDatepickerModule, MatNativeDateModule, MomentModule,
+      MatInputModule, MatDialogModule, MatProgressSpinnerModule, MatTooltipModule, MatAutocompleteModule,
       MatMomentDateModule, MatSelectModule, MatCheckboxModule, CurrencyMaskModule, MatRadioModule
   ],
-  providers: [UtilsService, AuthService, RouteguardService, 
+  providers: [UtilsService, AuthService, RouteguardService,
     { provide: MatPaginatorIntl, useClass: MatPaginatorIntlSpanish },
     { provide: DateAdapter, useClass: MomentDateAdapter },
     { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMAT }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [DialogCodigoPresupuestario, DialogMoneda, DialogTipoPrestamo, ButtonDeleteComponent, ButtonDownloadComponent, 
+  entryComponents: [DialogCodigoPresupuestario, DialogMoneda, DialogTipoPrestamo, ButtonDeleteComponent, ButtonDownloadComponent,
     DialogDownloadDocument, DialogProyectoTipo, DialogProyectoPropiedad, DialogDelete, DialogUnidadEjecutora, DialogColaborador,
     DialogImpacto, DialogEntidad, DialogCargarProject, DialogMapa, DialogComponentePropiedad, DialogComponenteTipo, DialogSubComponentePropiedad,
     DialogSubComponenteTipo, DialogProductoPropiedad, DialogProductoTipo, DialogSubproductoPropiedad]
 })
-export class AppModule { 
+export class AppModule {
 
 }

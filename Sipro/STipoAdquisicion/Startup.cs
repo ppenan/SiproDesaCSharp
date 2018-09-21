@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-<<<<<<< HEAD
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-=======
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -17,16 +11,12 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
->>>>>>> master
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-<<<<<<< HEAD
-=======
 using SiproModelCore.Models;
 using Utilities;
->>>>>>> master
 
 namespace STipoAdquisicion
 {
@@ -35,13 +25,10 @@ namespace STipoAdquisicion
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-<<<<<<< HEAD
-=======
             var mapper = (SqlMapper.ITypeMap)Activator
                 .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
                 .MakeGenericType(typeof(TipoAdquisicion)));
             SqlMapper.SetTypeMap(typeof(TipoAdquisicion), mapper);
->>>>>>> master
         }
 
         public IConfiguration Configuration { get; }
@@ -49,8 +36,6 @@ namespace STipoAdquisicion
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-<<<<<<< HEAD
-=======
             services.AddIdentity<User, Rol>()
                 .AddRoleStore<RoleStore>()
                 .AddUserStore<UserPasswordStore>()
@@ -127,7 +112,6 @@ namespace STipoAdquisicion
                       });
             });
 
->>>>>>> master
             services.AddMvc();
         }
 
@@ -138,12 +122,8 @@ namespace STipoAdquisicion
             {
                 app.UseDeveloperExceptionPage();
             }
-
-<<<<<<< HEAD
-=======
             app.UseAuthentication();
             app.UseCors("AllowAllHeaders");
->>>>>>> master
             app.UseMvc();
         }
     }

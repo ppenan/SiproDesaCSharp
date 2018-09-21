@@ -20,10 +20,7 @@ namespace STipoAdquisicion
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-<<<<<<< HEAD
-=======
                 .UseUrls("http://0.0.0.0:60087")
->>>>>>> master
                 .Build();
     }
 }
