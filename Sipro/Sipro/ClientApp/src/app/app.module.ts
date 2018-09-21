@@ -77,114 +77,114 @@ import { CategoriaadquisicionComponent } from './components/categoriaadquisicion
 
 
 const routes: Routes = [{
-          path: '',    // Va a Main
-          component: MainComponent,
-          canActivate: [RouteguardService]
-        }, {
-          path: 'main',
-          component: MainComponent,
-          canActivate: [RouteguardService]
-        },{
-          path: 'main/actividad',
-          component: ActividadComponent,
-        },{
-          path: 'main/actividadpropiedad',
-          component: ActividadpropiedadComponent
-        },{
-          path: 'main/actividadtipo',
-          component: ActividadtipoComponent
-        },{
-          path: 'main/categoriaadquisicion',
-          component: CategoriaadquisicionComponent
-        },{
-          path: 'main/prestamo',
-          component: PrestamoComponent
-        },{
-          path: 'main/prestamotipo',
-          component: PrestamotipoComponent
-        },{
-          path: 'main/pep/:id',
-          component: PepComponent
-        },{
-          path: 'main/peppropiedad',
-          component: PeppropiedadComponent
-        },{
-          path: 'main/peptipo',
-          component: PeptipoComponent
-        },{
-          path: 'main/componente/:id',
-          component: ComponenteComponent
-        },{
-          path: 'main/componentepropiedad',
-          component: ComponentepropiedadComponent
-        },{
-          path: 'main/componentetipo',
-          component: ComponentetipoComponent
-        },{
-          path: 'main/producto/:objeto_id/:objeto_tipo',
-          component: ProductoComponent
-        },{
-          path: 'main/productopropiedad',
-          component: ProductopropiedadComponent
-        },{
-          path: 'main/productotipo',
-          component: ProductotipoComponent
-        },{
-          path: 'main/subcomponente/:id',
-          component: SubcomponenteComponent
-        },{
-          path: 'main/subcomponentepropiedad',
-          component: SubcomponentepropiedadComponent
-        },{
-          path: 'main/subcomponentetipo',
-          component: SubcomponentetipoComponent
-        },{
-          path: 'main/subproducto/:id',
-          component: SubproductoComponent
-        },{
-          path: 'main/subproductopropiedad',
-          component: SubproductopropiedadComponent
-        },{
-          path: 'main/subproductotipo',
-          component: SubproductotipoComponent
-        },{
-          path: 'accesodenegado',
-          component: AccesodenegadoComponent
-        },{
-          path: 'login',
-          component: LoginComponent
-        },{
-          path: '**',
-          component: PagenotfoundComponent
-        }];
+  path: '',    // Va a Main
+  component: MainComponent,
+  canActivate: [RouteguardService]
+}, {
+  path: 'main',
+  component: MainComponent,
+  canActivate: [RouteguardService]
+}, {
+  path: 'main/actividad',
+  component: ActividadComponent,
+}, {
+  path: 'main/actividadpropiedad',
+  component: ActividadpropiedadComponent
+}, {
+  path: 'main/actividadtipo',
+  component: ActividadtipoComponent
+}, {
+  path: 'main/categoriaadquisicion',
+  component: CategoriaadquisicionComponent
+}, {
+  path: 'main/prestamo',
+  component: PrestamoComponent
+}, {
+  path: 'main/prestamotipo',
+  component: PrestamotipoComponent
+}, {
+  path: 'main/pep/:id',
+  component: PepComponent
+}, {
+  path: 'main/peppropiedad',
+  component: PeppropiedadComponent
+}, {
+  path: 'main/peptipo',
+  component: PeptipoComponent
+}, {
+  path: 'main/componente/:id',
+  component: ComponenteComponent
+}, {
+  path: 'main/componentepropiedad',
+  component: ComponentepropiedadComponent
+}, {
+  path: 'main/componentetipo',
+  component: ComponentetipoComponent
+}, {
+  path: 'main/producto/:objeto_id/:objeto_tipo',
+  component: ProductoComponent
+}, {
+  path: 'main/productopropiedad',
+  component: ProductopropiedadComponent
+}, {
+  path: 'main/productotipo',
+  component: ProductotipoComponent
+}, {
+  path: 'main/subcomponente/:id',
+  component: SubcomponenteComponent
+}, {
+  path: 'main/subcomponentepropiedad',
+  component: SubcomponentepropiedadComponent
+}, {
+  path: 'main/subcomponentetipo',
+  component: SubcomponentetipoComponent
+}, {
+  path: 'main/subproducto/:id',
+  component: SubproductoComponent
+}, {
+  path: 'main/subproductopropiedad',
+  component: SubproductopropiedadComponent
+}, {
+  path: 'main/subproductotipo',
+  component: SubproductotipoComponent
+}, {
+  path: 'accesodenegado',
+  component: AccesodenegadoComponent
+}, {
+  path: 'login',
+  component: LoginComponent
+}, {
+  path: '**',
+  component: PagenotfoundComponent
+}];
 
 @NgModule({
   declarations: [
-      AppComponent,
-      LoginComponent,
-      AccesodenegadoComponent, MainComponent, PagenotfoundComponent, FooterComponent, MainmenuComponent, PrestamoComponent,
-      DialogCodigoPresupuestario, DialogMoneda, DialogTipoPrestamo, ButtonDeleteComponent, ButtonDownloadComponent, DialogDownloadDocument,
-      FormatoMillones, FormatoMillonesDolares, FormatoMillonesSinTipo, PepComponent, DialogProyectoTipo, PrestamotipoComponent,
-      PeppropiedadComponent, PeptipoComponent, DialogProyectoPropiedad, DialogDelete, DialogUnidadEjecutora, DialogColaborador,
-      DialogImpacto, DialogEntidad, ComponenteComponent, DialogCargarProject, DialogMapa, ComponentepropiedadComponent, ComponentetipoComponent,
-      DialogComponentePropiedad, DialogComponenteTipo, SubcomponenteComponent, SubcomponentepropiedadComponent, SubcomponentetipoComponent,
-      DialogSubComponentePropiedad, DialogSubComponenteTipo, ProductoComponent, ProductopropiedadComponent, ProductotipoComponent,
-      DialogProductoPropiedad, DialogProductoTipo, SubproductoComponent, SubproductopropiedadComponent, SubproductotipoComponent,
-      DialogSubProductoTipo, DialogSubproductoPropiedad, ActividadComponent, ActividadpropiedadComponent, ActividadtipoComponent, AdquisicionComponent, CategoriaadquisicionComponent
+    AppComponent,
+    LoginComponent,
+    AccesodenegadoComponent, MainComponent, PagenotfoundComponent, FooterComponent, MainmenuComponent, PrestamoComponent,
+    DialogCodigoPresupuestario, DialogMoneda, DialogTipoPrestamo, ButtonDeleteComponent, ButtonDownloadComponent, DialogDownloadDocument,
+    FormatoMillones, FormatoMillonesDolares, FormatoMillonesSinTipo, PepComponent, DialogProyectoTipo, PrestamotipoComponent,
+    PeppropiedadComponent, PeptipoComponent, DialogProyectoPropiedad, DialogDelete, DialogUnidadEjecutora, DialogColaborador,
+    DialogImpacto, DialogEntidad, ComponenteComponent, DialogCargarProject, DialogMapa, ComponentepropiedadComponent, ComponentetipoComponent,
+    DialogComponentePropiedad, DialogComponenteTipo, SubcomponenteComponent, SubcomponentepropiedadComponent, SubcomponentetipoComponent,
+    DialogSubComponentePropiedad, DialogSubComponenteTipo, ProductoComponent, ProductopropiedadComponent, ProductotipoComponent,
+    DialogProductoPropiedad, DialogProductoTipo, SubproductoComponent, SubproductopropiedadComponent, SubproductotipoComponent,
+    DialogSubProductoTipo, DialogSubproductoPropiedad, ActividadComponent, ActividadpropiedadComponent, ActividadtipoComponent, AdquisicionComponent, CategoriaadquisicionComponent
   ],
   imports: [
-      BrowserModule,
-      FormsModule, ReactiveFormsModule,
-      NguiMapModule.forRoot({apiUrl: 'https://maps.google.com/maps/api/js?key=AIzaSyDgZeBouc6cujKM2NM3_F_jMJbKUc1XjKk'}),
-      RouterModule.forRoot(routes),
-      HttpClientModule,
-      FlashMessagesModule.forRoot(),
-      MaterialModule,
-      FlexLayoutModule,
-      Ng2SmartTableModule,
-      MatPaginatorModule, MatTabsModule, MatDatepickerModule, MatNativeDateModule, MomentModule,
-      MatInputModule, MatDialogModule, MatProgressSpinnerModule, MatTooltipModule, MatAutocompleteModule,
-      MatMomentDateModule, MatSelectModule, MatCheckboxModule, CurrencyMaskModule, MatRadioModule
+    BrowserModule,
+    FormsModule, ReactiveFormsModule,
+    NguiMapModule.forRoot({ apiUrl: 'https://maps.google.com/maps/api/js?key=AIzaSyDgZeBouc6cujKM2NM3_F_jMJbKUc1XjKk' }),
+    RouterModule.forRoot(routes),
+    HttpClientModule,
+    FlashMessagesModule.forRoot(),
+    MaterialModule,
+    FlexLayoutModule,
+    Ng2SmartTableModule,
+    MatPaginatorModule, MatTabsModule, MatDatepickerModule, MatNativeDateModule, MomentModule,
+    MatInputModule, MatDialogModule, MatProgressSpinnerModule, MatTooltipModule, MatAutocompleteModule,
+    MatMomentDateModule, MatSelectModule, MatCheckboxModule, CurrencyMaskModule, MatRadioModule
   ],
   providers: [UtilsService, AuthService, RouteguardService,
     { provide: MatPaginatorIntl, useClass: MatPaginatorIntlSpanish },
