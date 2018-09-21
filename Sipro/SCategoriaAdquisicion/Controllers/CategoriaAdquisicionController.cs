@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SiproDAO.Dao;
 using SiproModelCore.Models;
@@ -10,7 +10,10 @@ using Utilities;
 
 namespace SCategoriaAdquisicion.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
+    [Produces("application/json")]
+    [Route("/api/[controller]/[action]")]
+    [EnableCors("AllowAllHeaders")]
     public class CategoriaAdquisicionController : Controller
     {
         private class Stcategoriaadquisicion
@@ -26,6 +29,7 @@ namespace SCategoriaAdquisicion.Controllers
         }
 
         [HttpGet]
+        [Authorize("Categorías de Adquisiciones - Visualizar")]
         public IActionResult CategoriasAdquisicion()
         {
             try
@@ -57,6 +61,7 @@ namespace SCategoriaAdquisicion.Controllers
         }
 
         [HttpPost]
+        [Authorize("Categorías de Adquisiciones - Visualizar")]
         public IActionResult NumeroCategoriaPorObjeto([FromBody]dynamic value)
         {
             try
@@ -75,6 +80,7 @@ namespace SCategoriaAdquisicion.Controllers
         }
 
         [HttpPost]
+        [Authorize("Categorías de Adquisiciones - Visualizar")]
         public IActionResult CategoriaAdquisicionPagina([FromBody]dynamic value)
         {
             try
@@ -110,6 +116,7 @@ namespace SCategoriaAdquisicion.Controllers
         }
 
         [HttpPost]
+        [Authorize("Categorías de Adquisiciones - Crear")]
         public IActionResult CategoriaAdquisicion([FromBody]dynamic value)
         {
             try
@@ -150,6 +157,7 @@ namespace SCategoriaAdquisicion.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize("Categorías de Adquisiciones - Editar")]
         public IActionResult CategoriaAdquisicion(int id, [FromBody]dynamic value)
         {
             try
@@ -189,6 +197,7 @@ namespace SCategoriaAdquisicion.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize("Categorías de Adquisiciones - Eliminar")]
         public IActionResult CategoriaAdquisicion(int id)
         {
             try
