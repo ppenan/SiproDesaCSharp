@@ -43,6 +43,7 @@ import { DialogSubComponenteTipo } from '../assets/modals/subcomponentetipo/moda
 import { DialogProductoPropiedad } from '../assets/modals/productopropiedad/modal-producto-propiedad';
 import { DialogProductoTipo } from '../assets/modals/productotipo/modal-producto-tipo';
 import { DialogSubproductoPropiedad } from '../assets/modals/subproductopropiedad/modal-subproducto-propiedad';
+import { DialogSubProductoTipo } from '../assets/modals/subproductotipo/modal-subproducto-tipo';
 
 import { AppComponent } from './app.component';
 import { MainComponent } from './components/main/main.component';
@@ -73,6 +74,7 @@ import { ActividadpropiedadComponent } from './components/actividadpropiedad/act
 import { ActividadtipoComponent } from './components/actividadtipo/actividadtipo.component';
 import { AdquisicionComponent } from './components/adquisicion/adquisicion.component';
 import { CategoriaadquisicionComponent } from './components/categoriaadquisicion/categoriaadquisicion.component';
+
 
 const routes: Routes = [{
           path: '',    // Va a Main
@@ -168,7 +170,7 @@ const routes: Routes = [{
       DialogComponentePropiedad, DialogComponenteTipo, SubcomponenteComponent, SubcomponentepropiedadComponent, SubcomponentetipoComponent,
       DialogSubComponentePropiedad, DialogSubComponenteTipo, ProductoComponent, ProductopropiedadComponent, ProductotipoComponent,
       DialogProductoPropiedad, DialogProductoTipo, SubproductoComponent, SubproductopropiedadComponent, SubproductotipoComponent,
-      DialogSubproductoPropiedad, ActividadComponent, ActividadpropiedadComponent, ActividadtipoComponent, AdquisicionComponent, CategoriaadquisicionComponent
+      DialogSubProductoTipo, DialogSubproductoPropiedad, ActividadComponent, ActividadpropiedadComponent, ActividadtipoComponent, AdquisicionComponent, CategoriaadquisicionComponent
   ],
   imports: [
       BrowserModule,
@@ -193,7 +195,7 @@ const routes: Routes = [{
   entryComponents: [DialogCodigoPresupuestario, DialogMoneda, DialogTipoPrestamo, ButtonDeleteComponent, ButtonDownloadComponent,
     DialogDownloadDocument, DialogProyectoTipo, DialogProyectoPropiedad, DialogDelete, DialogUnidadEjecutora, DialogColaborador,
     DialogImpacto, DialogEntidad, DialogCargarProject, DialogMapa, DialogComponentePropiedad, DialogComponenteTipo, DialogSubComponentePropiedad,
-    DialogSubComponenteTipo, DialogProductoPropiedad, DialogProductoTipo, DialogSubproductoPropiedad]
+    DialogSubComponenteTipo, DialogProductoPropiedad, DialogProductoTipo, DialogSubproductoPropiedad, DialogSubProductoTipo]
 })
 export class AppModule {
 
