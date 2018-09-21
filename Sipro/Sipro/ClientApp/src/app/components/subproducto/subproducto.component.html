@@ -106,51 +106,52 @@
                           <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="3px">
                             <div fxLayout="row" fxFlex="14%">
                               <mat-form-field>
-                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="programa" maxlength="4"
-                                       [(ngproductoprograma" matInput placeholder="Programa"
+                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="programa"
+                                       [(ngModel)]="subproducto.programa" matInput placeholder="Programa"
                                        [readonly]="congelado > 0">
                               </mat-form-field>
                             </div>
                             <div fxLayout="row" fxFlex="14%">
                               <mat-form-field>
-                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="subprograma" [(ngproductosubprograma"
+                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="subprograma" [(ngModel)]="subproducto.subprograma"
                                        matInput placeholder="Subprograma" [readonly]="congelado > 0">
                               </mat-form-field>
                             </div>
                             <div fxLayout="row" fxFlex="14%">
                               <mat-form-field>
-                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="proyecto" [(ngproductoproyecto"
+                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="proyecto" [(ngModel)]="subproducto.proyecto"
                                        matInput placeholder="Proyecto" [readonly]="congelado > 0">
                               </mat-form-field>
                             </div>
+
                             <div fxLayout="row" fxFlex="14%">
                               <mat-form-field>
-                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="actividad" [(ngproductoactividad"
+                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="actividad" [(ngModel)]="subproductoactividad"
                                        matInput placeholder="Actividad" [readonly]="congelado > 0">
                               </mat-form-field>
                             </div>
                             <div fxLayout="row" fxFlex="14%">
                               <mat-form-field>
-                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="obra" [(ngproductoobra"
+                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="obra" [(ngModel)]="subproductoobra"
                                        matInput placeholder="Obra" [readonly]="congelado > 0">
                               </mat-form-field>
                             </div>
                             <div fxLayout="row" fxFlex="14%">
                               <mat-form-field>
-                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="renglon" [(ngproductorenglon"
+                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="renglon" [(ngModel)]="subproductorenglon"
                                        matInput placeholder="Renglón" [readonly]="congelado > 0">
                               </mat-form-field>
                             </div>
                             <div fxLayout="row" fxFlex="14%">
                               <mat-form-field>
-                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="geografico" [(ngproductoubicacionGeografica"
+                                <input style="text-align: center" type="text" pattern="[0-9]{1,4}" minlength="0" maxlength="4" name="geografico" [(ngModel)]="subproductoubicacionGeografica"
                                        matInput placeholder="Geográfico" [readonly]="congelado > 0">
                               </mat-form-field>
                             </div>
                           </div>
                           <div fxLayout="column">
                             <mat-form-field>
-                              <input style="text-align: right;" type="number" name="snip" [(ngproductosnip" matInput placeholder="SNIP"
+                              <input style="text-align: right;" type="number" name="snip" [(ngModel)]="subproductosnip" matInput placeholder="SNIP"
                                      [readonly]="congelado > 0">
                             </mat-form-field>
                           </div>
@@ -184,11 +185,11 @@
                           </div>
                           <div fxLayout="column">
                             <mat-form-field>
-                              <input type="text" currencyMask [options]="{ prefix: 'Q ', thousands: ',', decimal: '.', precision: 2 }" name="costo" [(ngproductocosto"
+                              <input type="text" currencyMask [options]="{ prefix: 'Q ', thousands: ',', decimal: '.', precision: 2 }" name="costo" [(ngModel)]="subproductocosto"
                                      (ngModelChange)="validarAsignado()" matInput placeholder="Monto Planificado"
-                                     [required]="subproducto.acumulacionCostoid > 0" [reproductotieneHijos || congelado == 1 || bloquearCosto">
+                                     [required]="subproducto.acumulacionCostoid > 0" [readonly]="subproducto.tieneHijos || congelado == 1 || bloquearCosto">
                             </mat-form-field>
-                          </div>
+                          </div>                                                    
                           <div fxLayout="column">
                             <mat-form-field>
                               <input type="text" currencyMask [options]="{ prefix: 'Q ', thousands: ',', decimal: '.', precision: 2 }" name="asignado"
@@ -210,8 +211,8 @@
                           <div fxLayout="row" fxLayoutGap="15px">
                             <mat-form-field fxFlex="50%">
                               <input min="1" style="text-align: right;" matInput type="number" placeholder="Duración" [required]="true" name="duracion"
-                                     [(ngproductoduracion" (ngModelproductofechaInicio != null && dimensionSelected != 0 ? cambioDuracion(dimensiones[dimensionSelected-1]) : ''"
-                                     [reproductotieneHijos != true ? (dimensionSelected != 0 ? false :productotieneHijos">
+                                     [(ngModel)]="subproducto.duracion" (ngModelChange)="subproducto.fechaInicio != null && dimensionSelected != 0 ? cambioDuracion(dimensiones[dimensionSelected-1]) : ''"
+                                     [readonly]="subproducto.tieneHijos != true ? (dimensionSelected != 0 ? false : true) : subproducto.tieneHijos">
                             </mat-form-field>
                             <mat-form-field fxFlex="50%">
                               <mat-select placeholder="Dimensión" disableRipple [required]="true" [(value)]="dimensionSelected">
@@ -240,7 +241,7 @@
                             </mat-form-field>
                           </div>
                           <div fxLayout="column">
-                            <mat-checkbox color="primary" name="inversionNueva" [(ngproductoinversionNueva">
+                            <mat-checkbox color="primary" name="inversionNueva" [(ngModel)]="subproducto.inversionNueva">
                               Es Inversion Nueva
                             </mat-checkbox>
                           </div>
@@ -275,7 +276,7 @@
                           </div>
                           <div fxLayout="column">
                             <mat-form-field>
-                              <textarea name="descripcion" matInput rows="4" [(ngproductodescripcion" placeholder="Descripción"></textarea>
+                              <textarea name="descripcion" matInput rows="4" [(ngModel)]="subproducto.descripcion" placeholder="Descripción"></textarea>
                             </mat-form-field>
                           </div>
                           <div fxLayout="column">

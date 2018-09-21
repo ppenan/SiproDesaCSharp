@@ -14,36 +14,36 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { MatInputModule, MatPaginatorModule, MatTabsModule, MatDatepickerModule, MatNativeDateModule, MAT_DATE_LOCALE, MatPaginatorIntl, MatTooltipModule, MatAutocompleteModule, MAT_DATE_FORMATS, MAT_NATIVE_DATE_FORMATS, DateAdapter, MatSelectModule, MatCheckboxModule, MatRadioModule } from '@angular/material';
 import { MomentModule } from 'angular2-moment/moment.module';
 import { MatDialogModule } from '@angular/material/dialog';
-import { DialogCodigoPresupuestario } from '../assets/modals/codigopresupuestario/modal-codigo-presupuestario';
-import { DialogMoneda } from '../assets/modals/tipomoneda/modal-moneda';
-import { DialogTipoPrestamo } from '../assets/modals/tipoprestamo/modal-tipo-prestamo';
-import { DialogProyectoTipo } from '../assets/modals/peptipo/proyecto-tipo';
+import { DialogCodigoPresupuestario, DialogOverviewCodigoPresupuestario } from '../assets/modals/codigopresupuestario/modal-codigo-presupuestario';
+import { DialogMoneda, DialogOverviewMoneda } from '../assets/modals/tipomoneda/modal-moneda';
+import { DialogTipoPrestamo, DialogOverviewTipoPrestamo } from '../assets/modals/tipoprestamo/modal-tipo-prestamo';
+import { DialogProyectoTipo, DialogOverviewProyectoTipo } from '../assets/modals/peptipo/proyecto-tipo';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorIntlSpanish } from '../assets/customs/custom-paginator-spanish';
 import { ButtonDeleteComponent } from '../assets/customs/ButtonDeleteComponent';
 import { ButtonDownloadComponent } from '../assets/customs/ButtonDownloadComponent';
-import { DialogDownloadDocument } from '../assets/modals/documentosadjuntos/documento-adjunto';
+import { DialogDownloadDocument, DialogOverviewDownloadDocument } from '../assets/modals/documentosadjuntos/documento-adjunto';
 import { FormatoMillones, FormatoMillonesDolares, FormatoMillonesSinTipo } from '../assets/pipes/FormatoMillones.pipe';
 import { MatMomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { CUSTOM_DATE_FORMAT } from '../assets/customs/formatdate/CUSTOM_DATE_FORMAT';
-import { DialogProyectoPropiedad } from '../assets/modals/proyectopropiedad/modal-proyecto-propiedad';
-import { DialogDelete } from '../assets/modals/deleteconfirmation/confirmation-delete';
+import { DialogProyectoPropiedad, DialogOverviewProyectoPropiedad } from '../assets/modals/proyectopropiedad/modal-proyecto-propiedad';
+import { DialogDelete, DialogOverviewDelete } from '../assets/modals/deleteconfirmation/confirmation-delete';
 import { CurrencyMaskModule } from "ng2-currency-mask";
-import { DialogUnidadEjecutora } from '../assets/modals/unidadejecutora/unidad-ejecutora';
-import { DialogColaborador } from '../assets/modals/colaborador/modal-colaborador';
-import { DialogImpacto } from '../assets/modals/impacto/modal-impacto';
-import { DialogEntidad } from '../assets/modals/entidad/modal-entidad';
-import { DialogCargarProject } from '../assets/modals/cargarproject/modal-cargar-project';
+import { DialogUnidadEjecutora, DialogOverviewUnidadEjecutora } from '../assets/modals/unidadejecutora/unidad-ejecutora';
+import { DialogColaborador, DialogOverviewColaborador } from '../assets/modals/colaborador/modal-colaborador';
+import { DialogImpacto, DialogOverviewImpacto } from '../assets/modals/impacto/modal-impacto';
+import { DialogEntidad, DialogOverviewEntidad } from '../assets/modals/entidad/modal-entidad';
+import { DialogCargarProject, DialogOverviewCargarProject } from '../assets/modals/cargarproject/modal-cargar-project';
 import { NguiMapModule } from '@ngui/map';
-import { DialogMapa } from '../assets/modals/cargamapa/modal-carga-mapa';
-import { DialogComponentePropiedad } from '../assets/modals/componentepropiedad/modal-componente-propiedad';
-import { DialogComponenteTipo } from '../assets/modals/componentetipo/componente-tipo';
-import { DialogSubComponentePropiedad } from '../assets/modals/subcomponentepropiedad/modal-subcomponente-propiedad';
-import { DialogSubComponenteTipo } from '../assets/modals/subcomponentetipo/modal-subcomponente-tipo';
-import { DialogProductoPropiedad } from '../assets/modals/productopropiedad/modal-producto-propiedad';
-import { DialogProductoTipo } from '../assets/modals/productotipo/modal-producto-tipo';
-import { DialogSubproductoPropiedad } from '../assets/modals/subproductopropiedad/modal-subproducto-propiedad';
-import { DialogSubProductoTipo } from '../assets/modals/subproductotipo/modal-subproducto-tipo';
+import { DialogMapa, DialogOverviewMapa } from '../assets/modals/cargamapa/modal-carga-mapa';
+import { DialogComponentePropiedad, DialogOverviewComponentePropiedad } from '../assets/modals/componentepropiedad/modal-componente-propiedad';
+import { DialogComponenteTipo, DialogOverviewComponenteTipo } from '../assets/modals/componentetipo/componente-tipo';
+import { DialogSubComponentePropiedad, DialogOverviewSubComponentePropiedad } from '../assets/modals/subcomponentepropiedad/modal-subcomponente-propiedad';
+import { DialogSubComponenteTipo, DialogOverviewSubComponenteTipo } from '../assets/modals/subcomponentetipo/modal-subcomponente-tipo';
+import { DialogProductoPropiedad, DialogOverviewProductoPropiedad } from '../assets/modals/productopropiedad/modal-producto-propiedad';
+import { DialogProductoTipo, DialogOverviewProductoTipo } from '../assets/modals/productotipo/modal-producto-tipo';
+import { DialogSubproductoPropiedad, DialogOverviewSubproductoPropiedad } from '../assets/modals/subproductopropiedad/modal-subproducto-propiedad';
+import { DialogSubProductoTipo, DialogOverviewSubProductoTipo } from '../assets/modals/subproductotipo/modal-subproducto-tipo';
 
 import { AppComponent } from './app.component';
 import { MainComponent } from './components/main/main.component';
@@ -74,6 +74,7 @@ import { ActividadpropiedadComponent } from './components/actividadpropiedad/act
 import { ActividadtipoComponent } from './components/actividadtipo/actividadtipo.component';
 import { AdquisicionComponent } from './components/adquisicion/adquisicion.component';
 import { CategoriaadquisicionComponent } from './components/categoriaadquisicion/categoriaadquisicion.component';
+import { DialogActividadPropiedad, DialogOverviewActividadPropiedad } from '../assets/modals/actividadpropiedad/modal-actividad-propiedad';
 
 
 const routes: Routes = [{
@@ -170,7 +171,12 @@ const routes: Routes = [{
     DialogComponentePropiedad, DialogComponenteTipo, SubcomponenteComponent, SubcomponentepropiedadComponent, SubcomponentetipoComponent,
     DialogSubComponentePropiedad, DialogSubComponenteTipo, ProductoComponent, ProductopropiedadComponent, ProductotipoComponent,
     DialogProductoPropiedad, DialogProductoTipo, SubproductoComponent, SubproductopropiedadComponent, SubproductotipoComponent,
-    DialogSubProductoTipo, DialogSubproductoPropiedad, ActividadComponent, ActividadpropiedadComponent, ActividadtipoComponent, AdquisicionComponent, CategoriaadquisicionComponent
+    DialogSubProductoTipo, DialogSubproductoPropiedad, ActividadComponent, ActividadpropiedadComponent, ActividadtipoComponent, AdquisicionComponent, CategoriaadquisicionComponent,
+
+    DialogOverviewSubProductoTipo, DialogOverviewSubproductoPropiedad, DialogActividadPropiedad, DialogOverviewActividadPropiedad, DialogOverviewProductoPropiedad, DialogOverviewProductoTipo,
+    DialogOverviewSubComponentePropiedad, DialogOverviewSubComponenteTipo, DialogOverviewComponentePropiedad, DialogOverviewComponenteTipo, DialogOverviewMapa, DialogOverviewProyectoPropiedad,
+    DialogOverviewCargarProject, DialogOverviewImpacto, DialogOverviewEntidad, DialogOverviewColaborador, DialogOverviewUnidadEjecutora, DialogOverviewProyectoTipo, DialogOverviewDelete,
+    DialogOverviewDownloadDocument, DialogOverviewTipoPrestamo, DialogOverviewMoneda, DialogOverviewCodigoPresupuestario
   ],
   imports: [
     BrowserModule,
