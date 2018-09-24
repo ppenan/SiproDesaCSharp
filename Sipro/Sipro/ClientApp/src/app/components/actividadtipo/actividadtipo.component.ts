@@ -10,7 +10,6 @@ import * as moment from 'moment';
 import { ActividadTipo } from './model/ActividadTipo';
 import { DialogActividadPropiedad, DialogOverviewActividadPropiedad } from '../../../assets/modals/actividadpropiedad/modal-actividad-propiedad';
 import { DialogDelete, DialogOverviewDelete } from '../../../assets/modals/deleteconfirmation/confirmation-delete';
-// import { Actividad } from '../actividad/model/Actividad';
 
 @Component({
   selector: 'app-actividadtipo',

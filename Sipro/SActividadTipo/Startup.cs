@@ -25,6 +25,14 @@ namespace SActividadTipo
                .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
                .MakeGenericType(typeof(ActividadTipo)));
             SqlMapper.SetTypeMap(typeof(ActividadTipo), mapper);
+            var mapper2 = (SqlMapper.ITypeMap)Activator
+               .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+               .MakeGenericType(typeof(ActividadPropiedad)));
+            SqlMapper.SetTypeMap(typeof(ActividadPropiedad), mapper2);
+            var mapper3 = (SqlMapper.ITypeMap)Activator
+               .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
+               .MakeGenericType(typeof(AtipoPropiedad)));
+            SqlMapper.SetTypeMap(typeof(AtipoPropiedad), mapper3);
         }
 
         public IConfiguration Configuration { get; }
