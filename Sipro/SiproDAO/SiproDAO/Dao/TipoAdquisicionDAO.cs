@@ -120,7 +120,7 @@ namespace SiproDAO.Dao
                     }
                     break;
                 case 5:
-                    Actividad actividad = ActividadDAO.getActividadPorId(objetoId);
+                    Actividad actividad = ActividadDAO.GetActividadPorId(objetoId);
                     if (actividad.treepath != null)
                     {
                         int proyectoId = Convert.ToInt32(actividad.treepath.Substring(0, 8)) - 10000000;

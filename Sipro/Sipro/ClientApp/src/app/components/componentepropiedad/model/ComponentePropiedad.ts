@@ -1,4 +1,4 @@
-export class ComponentePropiedad{
+export class ComponentePropiedad {
     id: number;
     nombre: string;
     descripcion: string;

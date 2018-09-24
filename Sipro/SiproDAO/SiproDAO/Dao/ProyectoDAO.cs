@@ -428,7 +428,7 @@ namespace SiproDAO.Dao
             try
             {
                 List<Componente> componentes = ComponenteDAO.getComponentesPorProyecto(proyecto.id);
-                List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.id, 1);
+                List<Actividad> actividades = ActividadDAO.GetActividadesPorObjeto(proyecto.id, 1);
 
                 if ((componentes != null && componentes.Count > 0) || (actividades != null && actividades.Count > 0))
                 {
@@ -464,7 +464,7 @@ namespace SiproDAO.Dao
             DateTime fechaActual = default(DateTime);
             try
             {
-                List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.id, 1);
+                List<Actividad> actividades = ActividadDAO.GetActividadesPorObjeto(proyecto.id, 1);
                 if (actividades != null && actividades.Count > 0)
                 {
                     DateTime fechaMinima = new DateTime();
@@ -515,7 +515,7 @@ namespace SiproDAO.Dao
             DateTime fechaActual = default(DateTime);
             try
             {
-                List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(proyecto.id, 1);
+                List<Actividad> actividades = ActividadDAO.GetActividadesPorObjeto(proyecto.id, 1);
                 if (actividades != null && actividades.Count > 0)
                 {
                     DateTime fechaMaxima = new DateTime();

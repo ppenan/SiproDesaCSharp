@@ -280,7 +280,7 @@ namespace SiproDAO.Dao
                     }
 
                     query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
-                    query = String.Join("", query, " AND  c.id in (SELECT u.componenteid FROM componente_usuario u WHERE u.usuario=:usuario )");
+                    query = String.Join("", query, " AND  c.id in (SELECT u.actividadid FROM actividad_usuario u WHERE u.usuario=:usuario )");
 
                     ret = db.ExecuteScalar<long>(query, new { proyectoId = proyectoId, usuario = usuario });
                 }
@@ -408,7 +408,7 @@ namespace SiproDAO.Dao
             try
             {
                 List<Producto> productos = ProductoDAO.getProductosByComponente(componente.id);
-                List<Actividad> actividades = ActividadDAO.getActividadesPorObjeto(componente.id, 2);
+                List<Actividad> actividades = ActividadDAO.GetActividadesPorObjeto(componente.id, 2);
                 if ((productos != null && productos.Count > 0) || (actividades != null && actividades.Count > 0))
                 {
                     if (productos != null)
