@@ -75,6 +75,8 @@ import { ActividadtipoComponent } from './components/actividadtipo/actividadtipo
 import { AdquisicionComponent } from './components/adquisicion/adquisicion.component';
 import { CategoriaadquisicionComponent } from './components/categoriaadquisicion/categoriaadquisicion.component';
 import { DialogActividadPropiedad, DialogOverviewActividadPropiedad } from '../assets/modals/actividadpropiedad/modal-actividad-propiedad';
+import { DesembolsoComponent } from './components/desembolso/desembolso.component';
+import { DesembolsotipoComponent } from './components/desembolsotipo/desembolsotipo.component';
 
 
 const routes: Routes = [{
@@ -176,7 +178,7 @@ const routes: Routes = [{
     DialogOverviewSubProductoTipo, DialogOverviewSubproductoPropiedad, DialogActividadPropiedad, DialogOverviewActividadPropiedad, DialogOverviewProductoPropiedad, DialogOverviewProductoTipo,
     DialogOverviewSubComponentePropiedad, DialogOverviewSubComponenteTipo, DialogOverviewComponentePropiedad, DialogOverviewComponenteTipo, DialogOverviewMapa, DialogOverviewProyectoPropiedad,
     DialogOverviewCargarProject, DialogOverviewImpacto, DialogOverviewEntidad, DialogOverviewColaborador, DialogOverviewUnidadEjecutora, DialogOverviewProyectoTipo, DialogOverviewDelete,
-    DialogOverviewDownloadDocument, DialogOverviewTipoPrestamo, DialogOverviewMoneda, DialogOverviewCodigoPresupuestario
+    DialogOverviewDownloadDocument, DialogOverviewTipoPrestamo, DialogOverviewMoneda, DialogOverviewCodigoPresupuestario, DesembolsoComponent, DesembolsotipoComponent
   ],
   imports: [
     BrowserModule,

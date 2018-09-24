@@ -170,10 +170,10 @@
                           </div>
                           <div fxLayout="column">
                             <mat-form-field>
-                              <input class="search-info" name="subcomponentetiponombre" [(ngproductosubcomponentetiponombre" matInput placeholder="Tipo de Subcomponente"
-                                     [readonly]="true" (click)="congelado > 0 ? '' : buscarSubcomponenteTipo()"
+                              <input class="search-info" name="subproductotiponombre" [(ngModel)]="subproductotiponombre" matInput placeholder="Tipo de Subproducto"
+                                     [readonly]="true" (click)="congelado > 0 ? '' : buscarSubproductoTipo()"
                                      [required]="true">
-                              <mat-icon class="search-info" matSuffix (click)="congelado > 0 ? '' : buscarSubcomponenteTipo()">search</mat-icon>
+                              <mat-icon class="search-info" matSuffix (click)="congelado > 0 ? '' : buscarSubproductoTipo()">search</mat-icon>
                             </mat-form-field>
                           </div>
                           <div fxLayout="column">
@@ -200,7 +200,7 @@
                           <div fxLayout="column">
                             <mat-form-field>
                               <input name="acumulacionCosto" [formControl]="myControl" [(ngModel)]="subproducto.acumulacionCostoId" matInput placeholder="Tipo de Acumulación Monto Planificado"
-                                     [reproductocosto>0" [matAutocomplete]="auto">
+                                     [required]="subproducto.costo >0" [matAutocomplete]="auto">
                               <mat-autocomplete #auto="matAutocomplete">
                                 <mat-option *ngFor="let value of filteredAcumulacionCosto | async" [value]="value.nombre" (onSelectionChange)="acumulacionCostoSeleccionado(value)">
                                   <span>{{value.nombre}}</span>
@@ -223,12 +223,12 @@
                           <div fxLayout="row" fxLayoutGap="15px">
                             <mat-form-field fxFlex="50%">
                               <input matInput [matDatepicker]="fechaInicio" placeholder="Fecha Inicio" (ngModelChange)="modelChangedFechaInicio($event, dimensiones[dimensionSelected-1]);"
-                                     name="fechaInicio" [(ngproductofechaInicio" [required]="true">
+                                     name="fechaInicio" [(ngModel)]="subproducto.fechaInicio" [required]="true">
                               <mat-datepicker-toggle matSuffix [for]="fechaInicio"></mat-datepicker-toggle>
                               <mat-datepicker #fechaInicio></mat-datepicker>
                             </mat-form-field>
                             <mat-form-field fxFlex="50%">
-                              <input matInput placeholder="Fecha Fin" name="fechaFin" [(ngproductofechaFin" [required]="true" [readonly]="true">
+                              <input matInput placeholder="Fecha Fin" name="fechaFin" [(ngModel)]="subproducto.fechaFin" [required]="true" [readonly]="true">
                               <mat-icon style="font-size: 14px;" matSuffix>date_range</mat-icon>
                             </mat-form-field>
                           </div>

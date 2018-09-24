@@ -134,7 +134,7 @@ export class SubproductoComponent implements OnInit {
   }
 
   obtenerProducto(){
-    this.http.get('http://localhost:60058/api/Producto/ProductoPorId/' + this.productoid, { withCredentials: true }).subscribe(response => {
+    this.http.get('http://localhost:60058/api/Producto/ObtenerProductoPorId/' + this.productoid, { withCredentials: true }).subscribe(response => {
       if (response['success'] == true) {
         this.productoNombre = response['nombre'];
         this.objetoTipoNombre = 'Producto';
