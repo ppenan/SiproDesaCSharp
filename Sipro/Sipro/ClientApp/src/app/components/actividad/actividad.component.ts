@@ -13,7 +13,7 @@ import { DialogMapa, DialogOverviewMapa } from '../../../assets/modals/cargamapa
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { DialogActividadTipo, DialogOverviewActividadTipo } from '../../../assets/modals/actividadtipo/actividad-tipo';
+//import { DialogActividadTipo, DialogOverviewActividadTipo } from '../../../assets/modals/actividadtipo/actividad-tipo';
 import { DialogOverviewUnidadEjecutora, DialogUnidadEjecutora } from '../../../assets/modals/unidadejecutora/unidad-ejecutora';
 import { DialogDelete, DialogOverviewDelete } from '../../../assets/modals/deleteconfirmation/confirmation-delete';
 
@@ -74,7 +74,7 @@ export class ActividadComponent implements OnInit {
   sobrepaso: boolean;
   acumulacion_costo = [];
   dimensionSelected: number;
-  modalActividadTipo: DialogOverviewActividadTipo;
+  //modalActividadTipo: DialogOverviewActividadTipo;
   unidadejecutoraid: number;
   unidadejecutoranombre: string;
   entidadnombre: string;
@@ -125,7 +125,7 @@ export class ActividadComponent implements OnInit {
         map(value => value ? this._filterAcumulacionCosto(value) : this.acumulacion_costo.slice())
       );
 
-    this.modalActividadTipo = new DialogOverviewActividadTipo(dialog);
+    //this.modalActividadTipo = new DialogOverviewActividadTipo(dialog);
     this.modalUnidadEjecutora = new DialogOverviewUnidadEjecutora(dialog);
     this.modalDelete = new DialogOverviewDelete(dialog);
   }
@@ -164,8 +164,8 @@ export class ActividadComponent implements OnInit {
     const data = {
       filtro_busqueda: this.busquedaGlobal,
       // TODO: Estas variables deben de obtenerse del path
-      objeto_id: objeto_id, 
-      objeto_tipo: objeto_tipo,
+      //objeto_id: objeto_id, 
+      //objeto_tipo: objeto_tipo,
       t: new Date().getTime(),
     };
 
@@ -200,8 +200,8 @@ export class ActividadComponent implements OnInit {
     this.mostrarcargando = true;
     const filtro = {
       // TODO pendiente de obtener información de los objetos
-      objetoId: this.objetoId,
-      tipo: this.objetoTipo,
+      //objetoId: this.objetoId,
+      //tipo: this.objetoTipo,
       pagina: pagina,
       numeroActividades: this.elementosPorPagina,
       filtro_busqueda: this.busquedaGlobal,
@@ -251,28 +251,28 @@ export class ActividadComponent implements OnInit {
       this.tabActive = 0;
       this.dimensionSelected = 0;
 
-      this.unidadejecutoraid = this.actividad.ueunidadEjecutora;
+      /*this.unidadejecutoraid = this.actividad.ueunidadEjecutora;
       this.unidadejecutoranombre = this.actividad.unidadejecutoranombre;
       this.ejercicio = this.actividad.ejercicio;
       this.entidad = this.actividad.entidad;
-      this.entidadnombre = this.actividad.entidadnombre;
+      this.entidadnombre = this.actividad.entidadnombre;*/
 
-      if (this.actividad.acumulacionCostoid == 2){
+      /*if (this.actividad.acumulacionCostoid == 2){
         this.bloquearCosto = true;
       } else {
         this.bloquearCosto = false;
-      }
+      }*/
 
 
       this.mostraringreso = true;
       this.esNuevo = false;
 
-      this.coordenadas = (this.componente.latitud !=null ?  this.componente.latitud : '') +
+      /*this.coordenadas = (this.componente.latitud !=null ?  this.componente.latitud : '') +
         (this.componente.latitud!=null ? ', ' : '') + (this.componente.longitud!=null ? this.componente.longitud : '');
         
       this.obtenerCamposDinamicos();
 
-      this.getAsignado();      
+      this.getAsignado();    */  
     }
     else
       this.utils.mensaje("warning", "Debe de seleccionar el componente que desea editar");

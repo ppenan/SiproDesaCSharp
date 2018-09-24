@@ -30,6 +30,7 @@ export class AdquisicionComponent implements OnInit {
   isLoggedIn : boolean;
   isMasterPage : boolean;
   adquisicion: Adquisicion;
+  categorias = [];
 
   @Input() public objeto_tipo: number;
   @Input() public obj_componentIn: object;
@@ -43,23 +44,32 @@ export class AdquisicionComponent implements OnInit {
     this.utils.setIsMasterPage(this.isMasterPage);
     this.adquisicion = new Adquisicion();
 
-    /*this.filteredCategoria = this.myControlCategoria.valueChanges
+    this.filteredCategoria = this.myControlCategoria.valueChanges
       .pipe(
         startWith(''),
-        map(value => value ? this._filterAcumulacionCosto(value) : this.acumulacion_costo.slice())
-      );*/
+        map(value => value ? this._filterCategoria(value) : this.categorias.slice())
+      );
   }
 
-  /*private _filterCategoria(value: string): AcumulacionCosto[] {
+  private _filterCategoria(value: string): Categoria[] {
     const filterValue = value.toLowerCase();
-    return this.acumulacion_costo.filter(c => c.nombre.toLowerCase().indexOf(filterValue) === 0);
+    return this.categorias.filter(c => c.nombre.toLowerCase().indexOf(filterValue) === 0);
   }
 
   acumulacionCostoSeleccionado(value){
-    this.producto.acumulacionCostoid = value.id;
-  }*/
+    this.adquisicion.categoriaAdquisicion = value.id;
+  }
 
   ngOnInit() {
+    this.obtenerCategoriasAdquisicion();
+  }
+
+  obtenerCategoriasAdquisicion(){
+    this.http.get('http://localhost:60010/api/CategoriaAdquisicion/CategoriasAdquisicion', { withCredentials: true}).subscribe(response => {
+      if (response['success'] == true) {
+        this.categorias = response["categoriasAdquisicion"];        
+      }
+    })
   }
 
   settingsNog = {
