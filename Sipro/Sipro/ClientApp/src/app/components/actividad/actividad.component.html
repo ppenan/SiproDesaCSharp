@@ -177,15 +177,15 @@
                                                   </mat-form-field>
                                               </div>
                                               <div fxLayout="column">
-                                                  <mat-form-field>
-                                                      <input name="acumulacionCosto" [formControl]="myControl" [(ngModel)]="actividad.acumulacionCostoId" matInput placeholder="Tipo de Acumulación Monto Planificado" 
-                                                      [required]="actividad.costo>0" [matAutocomplete]="auto">
-                                                      <mat-autocomplete #auto="matAutocomplete">
-                                                      <mat-option *ngFor="let value of filteredAcumulacionCosto | async" [value]="value.nombre" (onSelectionChange)="acumulacionCostoSeleccionado(value)">                                                
-                                                          <span>{{value.nombre}}</span>
-                                                      </mat-option>
-                                                      </mat-autocomplete>
-                                                  </mat-form-field>
+                                                <mat-form-field>
+                                                    <input name="acumulacionCosto" [formControl]="myControl" [(ngModel)]="actividad.acumulacionCostoId" matInput placeholder="Tipo de Acumulación Monto Planificado" 
+                                                    [required]="actividad.costo>0" [matAutocomplete]="auto">
+                                                    <mat-autocomplete #auto="matAutocomplete">
+                                                    <mat-option *ngFor="let value of filteredAcumulacionCosto | async" [value]="value.nombre" (onSelectionChange)="acumulacionCostoSeleccionado(value)">                                                
+                                                        <span>{{value.nombre}}</span>
+                                                    </mat-option>
+                                                    </mat-autocomplete>
+                                                </mat-form-field>
                                               </div>
                                               <div fxLayout="row" fxLayoutGap="15px">
                                                   <mat-form-field fxFlex="50%">

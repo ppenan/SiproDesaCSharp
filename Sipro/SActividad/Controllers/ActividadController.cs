@@ -802,14 +802,14 @@ namespace SActividad.Controllers
 
         [HttpPost]
         [Authorize("Actividades - Visualizar")]
-        public IActionResult GetActividadesPaginaPorObjeto([FromBody]dynamic value)
+        public IActionResult ActividadesPaginaPorObjeto([FromBody]dynamic value)
         {
             try
             {
-                int pagina = value.pagina != null ? (int)value.pagina : 0;
+                int pagina = value.pagina != null ? (int)value.pagina : 1;
                 int objetoId = value.objetoId != null ? (int)value.objetoId : 0;
                 int objetoTipo = value.tipo != null ? (int)value.tipo : 0;
-                int numeroActividades = value.numeroActividades != null ? (int)value.numeroActividades : 0;
+                int numeroActividades = value.numeroActividades != null ? (int)value.numeroActividades : 20;
 
                 String filtroBusqueda = value.filtroBusqueda;
                 String columnaOrdenada = value.columna_ordenada;
@@ -863,11 +863,11 @@ namespace SActividad.Controllers
                     temp.programa = actividad.programa ?? 0;
                     temp.subprograma = actividad.subprograma ?? 0;
 
-                    temp.proyecto = actividad.proyecto ?? 0;
-                    temp.actividad = actividad.actividad ?? 0;
-                    temp.obra = actividad.obra ?? 0;
-                    temp.ubicacionGeografica = actividad.ubicacionGeografica ?? 0;
-                    temp.renglon = actividad.renglon ?? 0;
+                    temp.proyecto = actividad.proyecto ?? default(int);
+                    temp.actividad = actividad.actividad ?? default(int);
+                    temp.obra = actividad.obra ?? default(int);
+                    temp.ubicacionGeografica = actividad.ubicacionGeografica ?? default(int);
+                    temp.renglon = actividad.renglon ?? default(int);
                     temp.longitud = actividad.longitud;
                     temp.latitud = actividad.latitud;
                     temp.costo = actividad.costo;

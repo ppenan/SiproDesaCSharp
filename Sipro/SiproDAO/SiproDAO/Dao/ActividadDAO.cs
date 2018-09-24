@@ -349,34 +349,38 @@ namespace SiproDAO.Dao
         /// <param name="usuario">Usuario dueño de las actividades</param>
         /// <returns>Listado de actividades ya paginadas</returns>
         public static List<Actividad> GetActividadesPaginaPorObjeto(int pagina, int numeroActividades, int objetoId,
-            int objetoTipo, string filtroBusqueda, string columnaOrdenada, string ordenDireccion, string usuario)
+            int objetoTipo, string filtro_busqueda, string columnaOrdenada, string ordenDireccion, string usuario)
         {
             List<Actividad> resultado = new List<Actividad>();
-
             try
             {
                 using (DbConnection db = new OracleContext().getConnection())
                 {
-                    String query = "SELECT a FROM Actividad a WHERE a.estado = 1 AND a.objetoId = :objetoId AND a.objetoTipo = :objetoTipo ";
+                    String query = "SELECT * FROM (SELECT a.*, rownum r__ FROM (SELECT a.* FROM Actividad a WHERE a.estado = 1 AND a.objeto_id = :objetoId AND a.objeto_tipo = :objetoTipo ";
                     String query_a = "";
 
-                    if (filtroBusqueda != null && filtroBusqueda.Trim().Length > 0)
+                    if (filtro_busqueda != null && filtro_busqueda.Length > 0)
                     {
-                        query_a = String.Join("", query_a, " a.nombre LIKE '%", filtroBusqueda, "%' ");
+                        query_a = String.Join(" ", query_a, "a.nombre LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " a.usuario_creo LIKE '%" + filtro_busqueda + "%' ");
+
+                        DateTime fecha_creacion;
+                        if (DateTime.TryParse(filtro_busqueda, out fecha_creacion))
+                        {
+                            query_a = String.Join(" ", query_a, (query_a.Length > 0 ? " OR " : ""), " TO_DATE(TO_CHAR(a.fecha_creacion,'DD/MM/YY'),'DD/MM/YY') LIKE TO_DATE('" + fecha_creacion.ToString("dd/MM/yyyy") + "','DD/MM/YY') ");
+                        }
                     }
 
                     query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
 
                     if (usuario != null)
                     {
-                        query = String.Join("", query, "AND a.estado = 1 AND a.id in (SELECT u.actividadid FROM actividad_usuario u where u.usuario=:usuario )");
+                        query = String.Join("", query, "AND a.estado = 1 AND a.id in (SELECT u.actividadid FROM actividad_usuario u where u.usuario=:usuario)");
                     }
-
+                    query = columnaOrdenada != null && columnaOrdenada.Trim().Length > 0 ? String.Join(" ", query, " ORDER BY", columnaOrdenada, ordenDireccion) : query;
                     query = String.Join(" ", query, ") a WHERE rownum < ((" + pagina + " * " + numeroActividades + ") + 1) ) WHERE r__ >= (((" + pagina + " - 1) * " + numeroActividades + ") + 1)");
 
-                    query = columnaOrdenada != null && columnaOrdenada.Trim().Length > 0 ? String.Join(" ", query, " ORDER BY", columnaOrdenada, ordenDireccion) : query;
-
-                    resultado = db.Query<Actividad>(query, new { objetoId, objetoTipo, filtroBusqueda, usuario }).AsList<Actividad>();
+                    resultado = db.Query<Actividad>(query, new { objetoId, objetoTipo, usuario }).AsList<Actividad>();
                 }
             }
             catch (Exception ex)

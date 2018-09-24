@@ -85,7 +85,7 @@ const routes: Routes = [{
           component: MainComponent,
           canActivate: [RouteguardService]
         },{
-          path: 'main/actividad',
+          path: 'main/actividad/:objeto_id/:objeto_tipo',
           component: ActividadComponent,
         },{
           path: 'main/actividadpropiedad',
