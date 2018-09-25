@@ -134,7 +134,7 @@ export class SubproductoComponent implements OnInit {
   }
 
   obtenerProducto(){
-    this.http.get('http://localhost:60058/api/Producto/ObtenerProductoPorId/' + this.productoid, { withCredentials: true }).subscribe(response => {
+    this.http.get('http://localhost:60058/api/Producto/ProductoPorId/' + this.productoid, { withCredentials: true }).subscribe(response => {
       if (response['success'] == true) {
         this.productoNombre = response['nombre'];
         this.objetoTipoNombre = 'Producto';
@@ -155,7 +155,7 @@ export class SubproductoComponent implements OnInit {
       productoid: this.productoid,
       t: new Date().getTime()      
     };
-    this.http.post('http://localhost:60083/api/Subproducto/NumeroSubProductosPorProducto', data, { withCredentials : true}).subscribe(response =>{
+    this.http.post('http://localhost:60083/api/Subproducto/TotalElementos', data, { withCredentials : true}).subscribe(response =>{
       if(response['success'] == true){
         this.totalSubProductos = response['totalsubproductos'];
         this.paginaActual = 1;
@@ -542,7 +542,7 @@ export class SubproductoComponent implements OnInit {
 
   irAActividades(subproductoId){
     if(this.subproducto!=null){
-      this.router.navigateByUrl('/main/actividad/'+ subproductoId);
+      this.router.navigateByUrl('/main/actividad/'+ subproductoId+'/4');
     }
   }
 }

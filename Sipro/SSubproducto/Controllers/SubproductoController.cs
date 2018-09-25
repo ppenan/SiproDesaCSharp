@@ -7,10 +7,14 @@ using SiproModelCore.Models;
 using System;
 using System.Collections.Generic;
 using Utilities;
+using Microsoft.AspNetCore.Cors;
 
 namespace SSubproducto.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
+    [Route("/api/[controller]/[action]")]
+    [EnableCors("AllowAllHeaders")]
     public class SubproductoController : Controller
     {
         private class Stsubproducto
@@ -70,6 +74,7 @@ namespace SSubproducto.Controllers
         }
 
         [HttpPost]
+        [Authorize("Subproductos - Visualizar")]
         public IActionResult SubproductoPagina([FromBody]dynamic value)
         {
             try
@@ -165,7 +170,7 @@ namespace SSubproducto.Controllers
         }
 
         [HttpPost]
-        [Authorize("Subproducto - Crear")]
+        [Authorize("Subproductos - Crear")]
         public IActionResult Subproducto([FromBody]dynamic value)
         {
             try
@@ -332,7 +337,7 @@ namespace SSubproducto.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize("Subproducto - Editar")]
+        [Authorize("Subproductos - Editar")]
         public IActionResult Subproducto(int id, [FromBody]dynamic value)
         {
             try
@@ -495,7 +500,7 @@ namespace SSubproducto.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize("Subproducto - Visualizar")]
+        [Authorize("Subproductos - Visualizar")]
         public IActionResult Subproducto(int id)
         {
             try
