@@ -240,7 +240,6 @@ namespace SiproDAO.Dao
         }
                           
 
-        // Duda: WHERE at.id=:idTipoComp
         public static List<ActividadPropiedad> getActividadPropiedadesPorTipoActividad(int idTipoActividad)
         {
             List<ActividadPropiedad> ret = new List<ActividadPropiedad>();
@@ -248,9 +247,9 @@ namespace SiproDAO.Dao
             {
                 using (DbConnection db = new OracleContext().getConnection())
                 {
-                    string query = String.Join(" ", "SELECT cp.* FROM actividad_tipo cp",
-                        "INNER JOIN atipo_propiedad atp ON atp.componente_propiedadid=cp.id",
-                        "INNER JOIN actividad_tipo at ON at.id=atp.componente_tipoid",
+                    string query = String.Join(" ", "SELECT cp.* FROM actividad_propiedad cp",
+                        "INNER JOIN atipo_propiedad atp ON atp.actividad_propiedadid=cp.id",
+                        "INNER JOIN actividad_tipo at ON at.id=atp.actividad_tipoid",
                         "WHERE at.id=:idTipoComp AND cp.estado=1");
                     ret = db.Query<ActividadPropiedad>(query, new { idTipoComp = idTipoActividad }).AsList<ActividadPropiedad>();
                 }

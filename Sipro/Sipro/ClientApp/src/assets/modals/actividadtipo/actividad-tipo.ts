@@ -64,7 +64,7 @@ export class DialogActividadTipo {
   cargarTabla(pagina? : number){
     var filtro = {
       pagina: pagina,
-      numeroproyectotipo: this.elementosPorPagina,
+      numero_actividades_tipo: this.elementosPorPagina,
       filtro_busqueda: this.busquedaGlobal,
     }
     this.http.post('http://localhost:60003/api/ActividadTipo/ActividadTiposPagina', filtro, { withCredentials: true }).subscribe(response => {

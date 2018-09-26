@@ -2,19 +2,20 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as moment from 'moment';
 import { LocalDataSource } from 'ng2-smart-table';
 import { Actividad } from './model/Actividad';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from "@angular/router";
 import { AuthService } from '../../auth.service';
 import { UtilsService } from '../../utils.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
-import { DialogMapa, DialogOverviewMapa } from '../../../assets/modals/cargamapa/modal-carga-mapa';
+import { DialogActividadTipo, DialogOverviewActividadTipo } from '../../../assets/modals/actividadtipo/actividad-tipo';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { DialogActividadTipo, DialogOverviewActividadTipo } from '../../../assets/modals/actividadtipo/actividad-tipo';
-import { DialogOverviewUnidadEjecutora, DialogUnidadEjecutora } from '../../../assets/modals/unidadejecutora/unidad-ejecutora';
-import { DialogDelete, DialogOverviewDelete } from '../../../assets/modals/deleteconfirmation/confirmation-delete';
+import { ButtonDeleteComponent } from '../../../assets/customs/ButtonDeleteComponent';
+import { ButtonDownloadComponent } from '../../../assets/customs/ButtonDownloadComponent';
+import { DialogDownloadDocument, DialogOverviewDownloadDocument } from '../../../assets/modals/documentosadjuntos/documento-adjunto';
+import { DialogResponsables, DialogOverviewResponsables } from '../../../assets/modals/responsables/modal-responsables';
 
 export interface AcumulacionCosto {
   id: number;
@@ -31,67 +32,55 @@ export interface AcumulacionCosto {
   templateUrl: './actividad.component.html',
   styleUrls: ['./actividad.component.css']
 })
-
 export class ActividadComponent implements OnInit {
-
-  mostrarcargando: boolean;
+  mostrarcargando : boolean;
   color = 'primary';
   mode = 'indeterminate';
   value = 50;
   diameter = 45;
   strokewidth = 3;
 
-  isLoggedIn: boolean;
-  isMasterPage: boolean;
-  objetoTipoNombre: string;
-  proyectoNombre: string;
+  isLoggedIn : boolean;
+  isMasterPage : boolean;
   esTreeview: boolean;
   esColapsado: boolean;
   congelado: number;
-  source: LocalDataSource;
+  source : LocalDataSource;
   totalActividades: number;
+  busquedaGlobal: string;
+  actividad: Actividad;
+  objetoTipo: number;
+  objetoId: number;
+  paginaActual : number;
+  tabActive: number;
   elementosPorPagina: number;
   numeroMaximoPaginas: number;
-  actividad: Actividad;
-  pepid: number;
-  busquedaGlobal: string;
-  paginaActual: number;
-  tabActive: number;
-  prestamoid: number;
-  unidadEjecutoraNombre: string;
-  unidadEjecutora: number;
-  entidad: number;
-  entidadNombre: string;
-  ejercicio: number;
   esNuevo: boolean;
-  modalMapa: DialogOverviewMapa;
-  coordenadas: string;
-  bloquearCosto: boolean;
-  asignado: number;
   sobrepaso: boolean;
-  acumulacion_costo = [];
-  dimensionSelected: number;
   modalActividadTipo: DialogOverviewActividadTipo;
-  unidadejecutoraid: number;
-  unidadejecutoranombre: string;
-  entidadnombre: string;
-  mostraringreso: boolean;
   camposdinamicos = [];
-  modalUnidadEjecutora: DialogOverviewUnidadEjecutora;
-  botones: boolean;
-  modalDelete: DialogOverviewDelete;
-  objeto_id: number;
-  objeto_tipo: number;
+  dimensionSelected: number;
+  asignado: number;
+  bloquearCosto: boolean;
+  objetoTipoNombre: string;
+  objetoNombre: string;
+  minFechaPadre: Date;
+  acumulacion_costo = [];
+  sourceArchivosAdjuntos: LocalDataSource;
+  modalAdjuntarDocumento: DialogOverviewDownloadDocument;
+  responsables = [];
+  sourceResponsables: LocalDataSource;
+  modalResponsalbes: DialogOverviewResponsables;
 
   dimensiones = [
-    {value: 1, nombre: 'Dias', sigla: 'd'}
+    {value:1,nombre:'Dias',sigla:'d'}
   ];
 
   @ViewChild('search') divSearch: ElementRef;
   myControl = new FormControl();
   filteredAcumulacionCosto: Observable<AcumulacionCosto[]>;
 
-  constructor(private route: ActivatedRoute, private auth: AuthService, private utils: UtilsService, private http: HttpClient, private dialog: MatDialog, private router: Router) {
+  constructor(private route: ActivatedRoute, private auth: AuthService, private utils: UtilsService, private http: HttpClient, private dialog: MatDialog, private router: Router) { 
     this.isMasterPage = this.auth.isLoggedIn();
     this.utils.setIsMasterPage(this.isMasterPage);
     this.elementosPorPagina = utils._elementosPorPagina;
@@ -99,15 +88,16 @@ export class ActividadComponent implements OnInit {
     this.totalActividades = 0;
 
     this.route.params.subscribe(param => {
-      this.objeto_id = Number(param.objeto_id);
-      this.objeto_tipo = Number(param.objeto_tipo);
-    });
+        this.objetoTipo = Number(param.objeto_tipo);
+        this.objetoId = Number(param.objeto_id);
+    })
 
     this.busquedaGlobal = null;
     this.tabActive = 0;
     this.congelado = 0;
+    this.obtenerObjeto();
     this.actividad = new Actividad();
-    this.modalMapa = new DialogOverviewMapa(dialog);
+    this.modalActividadTipo = new DialogOverviewActividadTipo(dialog);
 
     this.filteredAcumulacionCosto = this.myControl.valueChanges
       .pipe(
@@ -115,9 +105,8 @@ export class ActividadComponent implements OnInit {
         map(value => value ? this._filterAcumulacionCosto(value) : this.acumulacion_costo.slice())
       );
 
-    this.modalActividadTipo = new DialogOverviewActividadTipo(dialog);
-    this.modalUnidadEjecutora = new DialogOverviewUnidadEjecutora(dialog);
-    this.modalDelete = new DialogOverviewDelete(dialog);
+    this.modalAdjuntarDocumento = new DialogOverviewDownloadDocument(dialog);
+    this.modalResponsalbes = new DialogOverviewResponsables(dialog);
   }
 
   private _filterAcumulacionCosto(value: string): AcumulacionCosto[] {
@@ -130,124 +119,114 @@ export class ActividadComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.mostrarcargando = true;
+    this.mostrarcargando=true;
     this.obtenerTotalActividades();
     this.obtenerAcumulacionCosto();
   }
 
-  obtenerAcumulacionCosto(){
-    this.http.get('http://localhost:60004/api/AcumulacionCosto/AcumulacionesCosto', { withCredentials: true}).subscribe(response => {
-      if (response['success'] == true) {
-        this.acumulacion_costo = response["acumulacionesTipos"];        
+  obtenerObjeto(){
+    this.http.get('http://localhost:60045/api/Objecto/ObjetoPorId/' + this.objetoId + '/' + this.objetoTipo, { withCredentials : true}).subscribe(response =>{
+      if(response['success'] == true){
+        this.objetoTipoNombre = response['tiponombre'];
+        this.objetoNombre = response['nombre'];
+
+        let fechaInicioPadre = moment(response['fechaInicio'], 'DD/MM/YYYY').toDate();
+				this.modificarFechaInicial(fechaInicioPadre);
       }
     })
   }
 
-  obtenerTotalActividades() {
-    const data = {
-      filtro_busqueda: this.busquedaGlobal,
-      objetoid: this.objeto_id, 
-      tipo: this.objeto_tipo,
-      t: new Date().getTime(),
-    };
-
-    this.http.post(
-      'http://localhost:60001/api/Actividad/NumeroActividadesPorObjeto',
-      data,
-      {
-        withCredentials: true
-      })
-      .subscribe(
-        response => {
-          if (response['success'] === true) {
-            this.totalActividades = response['totalActividades'];
-            this.paginaActual = 1;
-
-            if (this.totalActividades > 0) {
-              this.cargarTabla(this.paginaActual);
-            } else {
-              this.source = new LocalDataSource();
-              this.mostrarcargando=false;
-            }
-          }
-        });
+  modificarFechaInicial = function(fechaPadre){
+    this.minFechaPadre = fechaPadre;
   }
 
-  cargarTabla(pagina?: number){
+  obtenerTotalActividades(){
+    var data = {  
+      filtro_busqueda: this.busquedaGlobal,
+      objetoid: this.objetoId,
+      tipo: this.objetoTipo,
+      t: new Date().getTime()
+    };
+
+    this.http.post('http://localhost:60001/api/Actividad/NumeroActividadesPorObjeto', data, { withCredentials : true}).subscribe(response =>{
+      if(response['success'] == true){
+        this.totalActividades = response['total'];
+        this.paginaActual = 1;
+        if(this.totalActividades > 0){
+          this.cargarTabla(this.paginaActual);
+        }
+        else{
+          this.source = new LocalDataSource();
+          this.mostrarcargando=false;
+        }
+      }
+    })
+  }
+
+  cargarTabla(pagina? : number){
     this.mostrarcargando = true;
-    const filtro = {
-      objetoId: this.objeto_id,
-      tipo: this.objeto_tipo,
+    var filtro = {
+      objetoId: this.objetoId,
+      tipo: this.objetoTipo,
       pagina: pagina,
       numeroActividades: this.elementosPorPagina,
       filtro_busqueda: this.busquedaGlobal,
       columna_ordenada: null,
-      t: moment().unix()
+      t:moment().unix()
     };
 
-    this.http.post('http://localhost:60001/api/Actividad/ActividadesPaginaPorObjeto', filtro, { withCredentials : true}).subscribe(response => {
-      if (response['success'] === true) {
-        let data = response['actividades'];
+    this.http.post('http://localhost:60001/api/Actividad/ActividadesPaginaPorObjeto', filtro, { withCredentials : true}).subscribe(
+      response =>{
+        if(response['success'] == true){
+          var data = response['actividades'];
 
-        for(let i = 0; i < data.length; i++) {
-          data[i].fechaInicio = data[i].fechaInicio != null ? moment(data[i].fechaInicio, 'DD/MM/YYYY').toDate() : null;
-          data[i].fechaFin = data[i].fechaFin != null ? moment(data[i].fechaFin, 'DD/MM/YYYY').format('DD/MM/YYYY') : null;
-        }
+          for(var i =0; i<data.length; i++){
+            data[i].fechaInicio = data[i].fechaInicio != null ? moment(data[i].fechaInicio,'DD/MM/YYYY').toDate() : null;
+            data[i].fechaFin = data[i].fechaFin != null ? moment(data[i].fechaFin,'DD/MM/YYYY').format('DD/MM/YYYY') : null;
+          }
 
-        this.source = new LocalDataSource(data);
-        this.source.setSort([
-            { field: 'id', direction: 'asc' }  // primary sort
-        ]);
-        this.busquedaGlobal = null;
+          this.source = new LocalDataSource(data);
+          this.source.setSort([
+              { field: 'id', direction: 'asc' }  // primary sort
+          ]);
+          this.busquedaGlobal = null;
       }
       this.mostrarcargando = false;
-    });
+    })
   }
 
-  nuevo() {
+  nuevo(){
     this.esColapsado = true;
     this.esNuevo = true;
     this.tabActive = 0;
     this.dimensionSelected = 1;
-    this.coordenadas = null;
-    this.camposdinamicos = [];
-    this.unidadejecutoraid= this.prestamoid != null ? this.unidadEjecutora :  null;
-    this.unidadejecutoranombre= this.prestamoid != null ? this.unidadEjecutoraNombre : null;
-    this.actividad.duracionDimension = this.dimensiones[this.dimensionSelected - 1].sigla;
+    this.actividad.duracionDimension = this.dimensiones[this.dimensionSelected-1].sigla;
+    this.sourceArchivosAdjuntos = new LocalDataSource();
+    this.sourceResponsables = new LocalDataSource();
   }
 
-  editar() {
-    if (this.actividad.id != null) {
+  editar(){
+    if(this.actividad.id != null){
       this.esColapsado = true;
       this.esNuevo = false;
       this.tabActive = 0;
       this.dimensionSelected = 0;
 
-      /*this.unidadejecutoraid = this.actividad.ueunidadEjecutora;
-      this.unidadejecutoranombre = this.actividad.unidadejecutoranombre;
-      this.ejercicio = this.actividad.ejercicio;
-      this.entidad = this.actividad.entidad;
-      this.entidadnombre = this.actividad.entidadnombre;*/
-
-      if (this.actividad.acumulacionCostoId == 2){
+      if(this.actividad.acumulacionCostoId==2)
         this.bloquearCosto = true;
-      } else {
+      else
         this.bloquearCosto = false;
-      }
-
-
-      this.mostraringreso = true;
+      
       this.esNuevo = false;
 
-      /*this.coordenadas = (this.componente.latitud !=null ?  this.componente.latitud : '') +
-        (this.componente.latitud!=null ? ', ' : '') + (this.componente.longitud!=null ? this.componente.longitud : '');
-        
       this.obtenerCamposDinamicos();
-
-      this.getAsignado();    */  
+      this.obtenerAsignacionesRaci();
+      this.getAsignado();
     }
-    else
-      this.utils.mensaje("warning", "Debe de seleccionar el componente que desea editar");
+  }
+
+  borrar(){
+
   }
 
   filtrar(campo){
@@ -282,7 +261,7 @@ export class ActividadComponent implements OnInit {
       nombre: {
         title: 'Nombre',
         width: '35%',
-        filter: false,       
+        filter: false,
       },
       descripcion: {
         title: 'Descripción',
@@ -312,8 +291,309 @@ export class ActividadComponent implements OnInit {
     }
   };
 
+  irAActividad(actividadId){
+    if(this.actividad!=null){
+      this.router.navigateByUrl('/main/actividad/'+ actividadId+'/'+5);
+    }
+  }
+
+  verHistoria(){
+
+  }
+
+  agregarPagos(){
+
+  }
+
+  guardar(){
+
+  }
+
   IrATabla(){
     this.esColapsado = false;
     this.actividad = new Actividad();
+    this.sourceArchivosAdjuntos = new LocalDataSource();
+  }
+
+  buscarActividadTipo(){
+    this.modalActividadTipo.dialog.open(DialogActividadTipo, {
+      width: '600px',
+      height: '585px',
+      data: { titulo: 'Actividad Tipo' }
+    }).afterClosed().subscribe(result => {
+      if(result != null){
+        this.actividad.actividadtipoid = result.id;
+        this.actividad.actividadtiponombre = result.nombre;
+
+        this.obtenerCamposDinamicos();
+      }
+    })
+  }
+
+  obtenerCamposDinamicos(){
+    var parametros ={
+      t: new Date().getTime() 
+    }
+    this.http.get('http://localhost:60002/api/ActividadPropiedad/ActividadPropiedadPorTipo/'+this.actividad.id+'/'+this.actividad.actividadtipoid,  { withCredentials: true }).subscribe(response => {
+      if (response['success'] == true) {
+        this.camposdinamicos = response['actividadpropiedades'];
+        for(var i=0; i<this.camposdinamicos.length; i++){
+          switch(this.camposdinamicos[i].tipo){
+            case "fecha":
+              this.camposdinamicos[i].valor = this.camposdinamicos[i].valor != null ? moment(this.camposdinamicos[i].valor, 'DD/MM/YYYY').toDate() : null;
+            break;
+            case "entero":
+              this.camposdinamicos[i].valor = this.camposdinamicos[i].valor != null ? Number(this.camposdinamicos[i].valor) : null;
+            break;
+            case "decimal":
+              this.camposdinamicos[i].valor = this.camposdinamicos[i].valor != null ? Number(this.camposdinamicos[i].valor) : null;
+            break;
+            case "booleano":
+              this.camposdinamicos[i].valor = this.camposdinamicos[i].valor == 'true' ? true : false;
+            break;
+          }
+        }
+      }
+    })
+  }
+
+  cambioDuracion(dimension){
+    this.actividad.fechaFin = this.sumarDias(this.actividad.fechaInicio, this.actividad.duracion, dimension.sigla);
+  }
+
+  modelChangedFechaInicio(event, dimension){
+    this.actividad.fechaFin = this.sumarDias(event._d, this.actividad.duracion, dimension.sigla);
+  }
+
+  sumarDias(fecha, dias, dimension){
+    if(dimension != undefined && dias != undefined && fecha != ""){
+      var cnt = 0;
+      var tmpDate = moment(fecha,'DD/MM/YYYY');
+        while (cnt < (dias -1 )) {
+          if(dimension=='d'){
+            tmpDate = tmpDate.add(1,'days');	
+          }
+            if (tmpDate.weekday() != moment().day("Sunday").weekday() && tmpDate.weekday() != moment().day("Saturday").weekday()) {
+                cnt = cnt + 1;
+            }
+        }
+        tmpDate = moment(tmpDate,'DD/MM/YYYY');
+        return tmpDate.format('DD/MM/YYYY');
+    }
+  }
+
+  validarAsignado(){
+    if(this.actividad.costo != null){
+      if(this.actividad.programa != null){
+        if(this.actividad.costo <= this.asignado)
+          this.sobrepaso = false;
+        else
+          this.sobrepaso = true;
+      }
+    }
+  }
+
+  getAsignado() {
+    var params = {
+      id: this.actividad.id,
+      programa: this.actividad.programa,
+      subprograma: this.actividad.subprograma,
+      proyecto: this.actividad.proyecto,
+      actividad: this.actividad.actividad,
+      obra: this.actividad.obra,
+      renglon: this.actividad.renglon,
+      geografico: this.actividad.ubicacionGeografica,
+      t: new Date().getDate()
+    }
+    this.http.post('http://localhost:60001/api/Actividad/ValidacionAsignado', params, { withCredentials: true }).subscribe(response =>{
+      if(response['success']==true){
+        this.asignado = response['asignado'];
+        this.sobrepaso = response['sobrepaso'];
+      }
+    })
+  }
+
+  obtenerAcumulacionCosto(){
+    this.http.get('http://localhost:60004/api/AcumulacionCosto/AcumulacionesCosto', { withCredentials: true}).subscribe(response => {
+      if (response['success'] == true) {
+        this.acumulacion_costo = response["acumulacionesTipos"];        
+      }
+    })
+  }
+
+  settingsArchivosAdjuntos = {
+    columns: {
+      id: {
+        title: 'ID',
+        width: '5%',
+        filter: false,
+        type: 'html',
+        valuePrepareFunction : (cell) => {
+          return "<div class=\"datos-numericos\">" + cell + "</div>";
+        }
+      },
+      nombre: {
+        title: 'Nombre',
+        width: '42.5%',
+        filter: false
+      },
+      extension: {
+        title: 'Extensión',
+        width: '42.5%',
+        filter: false
+      },
+      descargar: {
+        title: 'Descargar',
+        sort: false,
+        type: 'custom',
+        renderComponent: ButtonDownloadComponent,
+        onComponentInitFunction: (instance) =>{
+          instance.actionEmitter.subscribe(row => {
+            window.location.href='http://localhost:60021/api/DocumentoAdjunto/Descarga/' + row.id;
+          });
+        }
+      },
+      eliminar:{
+        title: 'Eliminar',
+        sort: false,
+        type: 'custom',
+        renderComponent: ButtonDeleteComponent,
+        onComponentInitFunction: (instance) =>{
+          instance.actionEmitter.subscribe(row => {
+            this.http.delete('http://localhost:60021/api/DocumentoAdjunto/Documento/' + row.id, { withCredentials: true }).subscribe(response => {
+              if (response['success'] == true){
+                this.sourceArchivosAdjuntos.remove(row);
+              }
+              else{
+                this.utils.mensaje("danger", "Error al borrar el documento");
+              } 
+            })
+            
+          });
+        }
+      }
+    },
+    actions: false,
+    attr: {
+      class: 'table table-bordered grid estilo-letra'
+    },
+    hideSubHeader: true,
+    noDataMessage: ''
+  };
+
+  adjuntarDocumentos(){
+    this.modalAdjuntarDocumento.dialog.open(DialogDownloadDocument, {
+      width: '600px',
+      height: '200px',
+      data: { titulo: 'Documentos Adjuntos', idObjeto: this.actividad.id, idTipoObjeto: 5 }
+    }).afterClosed().subscribe(result => {
+      if(result != null){
+        this.sourceArchivosAdjuntos = new LocalDataSource(result);
+      }
+    });
+  }
+
+  getDocumentosAdjuntos = function(objetoId, tipoObjetoId){
+    var formatData = {
+      idObjeto: objetoId,
+      idTipoObjeto: tipoObjetoId,
+      t: new Date().getTime()
+    }
+    
+    this.http.post('http://localhost:60021/api/DocumentoAdjunto/Documentos', formatData, { withCredentials: true }).subscribe(response => {
+      if (response['success'] == true) {
+        this.sourceArchivosAdjuntos = new LocalDataSource(response['documentos']);
+      }
+    })
+  }
+
+  obtenerAsignacionesRaci(){
+    this.http.get('http://localhost:60039/api/MatrizRaci/AsignacionPorObjeto/'+ this.objetoId + '/'+ this.objetoTipo, { withCredentials: true }).subscribe(response => {
+      if(response['success'] == true){
+        let asignaciones = response['asignaciones'];
+        for(let i = 0; i<asignaciones.length; i++){
+          let responsable = [];
+					responsable['id'] = asignaciones[i].colaboradorId;
+					responsable['nombre'] = asignaciones[i].colaboradorNombre;
+					responsable['nombrerol'] = this.obtenerNombreRol(asignaciones[i].rolId);
+					responsable['rol'] = asignaciones[i].rolId;
+				  this.responsables.push(responsable);
+        }
+      }
+
+      this.sourceResponsables = new LocalDataSource(this.responsables);
+    })
+  }
+
+  obtenerNombreRol = function(valor){
+    switch (valor){
+      case 'r': return "Responsable";
+      case 'a': return "Cuentadante";
+      case 'c': return "Consutor";
+      case 'i': return "Quien informa";
+    }
+    return "";
+  }
+
+  buscarActividadResponsable(){
+    let idRoles = [];
+    for (let x in this.sourceResponsables['data']){
+      idRoles.push(this.sourceResponsables['data'][x].r);
+    }
+
+    this.modalResponsalbes.dialog.open(DialogResponsables, {
+      width: '600px',
+      height: '600px',
+      data: { titulo: 'Responsables', idRoles: idRoles }
+    }).afterClosed().subscribe(result => {
+      if(result != null){
+        this.sourceResponsables['data'].push({ id: result.id, nombre: result.nombre, rol : this.obtenerNombreRol(result.rol), r: result.rol });
+
+        this.sourceResponsables.setSort([
+          { field: 'id', direction: 'asc' }  // primary sort
+        ]);
+      }
+    });
+  }
+
+  settingsResponsables = {
+    columns: {
+      id: {
+        title: 'ID',
+        width: '5%',
+        filter: false,
+        type: 'html',
+        valuePrepareFunction : (cell) => {
+          return "<div class=\"datos-numericos\">" + cell + "</div>";
+        }
+      },
+      nombre: {
+        title: 'Nombre',
+        width: '42.5%',
+        filter: false
+      },
+      rol: {
+        title: 'Rol',
+        width: '42.5%',
+        filter: false
+      },
+      eliminar:{
+        title: 'Eliminar',
+        sort: false,
+        type: 'custom',
+        renderComponent: ButtonDeleteComponent,
+        onComponentInitFunction: (instance) =>{
+          instance.actionEmitter.subscribe(row => {
+              this.sourceResponsables.remove(row);
+          });
+        }
+      }
+    },
+    actions: false,
+    attr: {
+      class: 'table table-bordered grid estilo-letra'
+    },
+    hideSubHeader: true,
+    noDataMessage: ''
   }
 }

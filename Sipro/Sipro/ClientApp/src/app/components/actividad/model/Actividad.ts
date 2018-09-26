@@ -1,4 +1,4 @@
-export class Actividad {
+export class Actividad{
     id: number;
     nombre: string;
     descripcion: string;
@@ -18,9 +18,9 @@ export class Actividad {
     obra: number;
     renglon: number;
     ubicacionGeografica: number;
-    longitud: string;
-    latitud: string;
-    prececesorId: number;
+    longitud: number;
+    latitud: number;
+    predecesorId: number;
     predecesorTipo: number;
     duracion: number;
     duracionDimension: string;
@@ -35,10 +35,10 @@ export class Actividad {
     estado: number;
     proyectoBase: number;
     tieneHijos: boolean;
-    fechaInicioReal: string;
-    fechaFinReal: string;
+    fechaInicioReal: Date;
+    fechaFinReal: Date;
     congelado: number;
-    fechaElegibilidad: string;
-    fechaCierre: string;
-    inversionNueva: number;
+    fechaElegibilidad: Date;
+    fechaCierre: Date;
+    inversionNueva: number
 }

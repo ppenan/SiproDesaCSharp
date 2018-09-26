@@ -333,7 +333,7 @@ namespace SActividadPropiedad.Controllers
 
                 List<object> estructuraCamposDinamicos = CFormaDinamica.convertirEstructura(campos);
 
-                return Ok(new { success = true, componentepropiedades = estructuraCamposDinamicos });
+                return Ok(new { success = true, actividadpropiedades = estructuraCamposDinamicos });
             }
             catch (Exception e)
             {

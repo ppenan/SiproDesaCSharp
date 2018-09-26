@@ -567,7 +567,7 @@ export class ProductoComponent implements OnInit {
 
   irAActividad(productoId){
     if(this.producto!=null){
-      this.router.navigateByUrl('/main/actividad/'+ productoId);
+      this.router.navigateByUrl('/main/actividad/'+ productoId+'/'+3);
     }
   }
 }

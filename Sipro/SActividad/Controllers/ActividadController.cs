@@ -31,13 +31,13 @@ namespace SActividad.Controllers
             public int actividadtipoid;
             public string actividadtiponombre;
             public int porcentajeavance;
-            public int programa;
-            public int subprograma;
-            public int proyecto;
-            public int actividad;
-            public int obra;
-            public int renglon;
-            public int ubicacionGeografica;
+            public Int32 programa;
+            public Int32 subprograma;
+            public Int32 proyecto;
+            public Int32 actividad;
+            public Int32 obra;
+            public Int32 renglon;
+            public Int32 ubicacionGeografica;
             public string longitud;
             public string latitud;
             public Int64 predecesorId;
@@ -134,13 +134,13 @@ namespace SActividad.Controllers
                     temp.actividadtiponombre = actividad.actividadTipos.nombre;
 
                     temp.porcentajeavance = actividad.porcentajeAvance;
-                    temp.programa = actividad.programa ?? 0;
-                    temp.subprograma = actividad.subprograma ?? 0;
-                    temp.proyecto = actividad.proyecto ?? 0;
-                    temp.actividad = actividad.actividad ?? 0;
-                    temp.obra = actividad.obra ?? 0;
-                    temp.renglon = actividad.renglon ?? 0;
-                    temp.ubicacionGeografica = actividad.ubicacionGeografica ?? 0;
+                    temp.programa = actividad.programa ?? default(int);
+                    temp.subprograma = actividad.subprograma ?? default(int);
+                    temp.proyecto = actividad.proyecto ?? default(int);
+                    temp.actividad = actividad.actividad ?? default(int);
+                    temp.obra = actividad.obra ?? default(int);
+                    temp.renglon = actividad.renglon ?? default(int);
+                    temp.ubicacionGeografica = actividad.ubicacionGeografica ?? default(int);
                     temp.longitud = actividad.longitud;
                     temp.latitud = actividad.latitud;
                     temp.costo = actividad.costo;
@@ -214,13 +214,13 @@ namespace SActividad.Controllers
                     temp.actividadtiponombre = actividad.actividadTipos.nombre;
 
                     temp.porcentajeavance = actividad.porcentajeAvance;
-                    temp.programa = actividad.programa ?? 0;
-                    temp.subprograma = actividad.subprograma ?? 0;
-                    temp.proyecto = actividad.proyecto ?? 0;
-                    temp.actividad = actividad.actividad ?? 0;
-                    temp.obra = actividad.obra ?? 0;
-                    temp.renglon = actividad.renglon ?? 0;
-                    temp.ubicacionGeografica = actividad.ubicacionGeografica ?? 0;
+                    temp.programa = actividad.programa ?? default(int);
+                    temp.subprograma = actividad.subprograma ?? default(int);
+                    temp.proyecto = actividad.proyecto ?? default(int);
+                    temp.actividad = actividad.actividad ?? default(int);
+                    temp.obra = actividad.obra ?? default(int);
+                    temp.renglon = actividad.renglon ?? default(int);
+                    temp.ubicacionGeografica = actividad.ubicacionGeografica ?? default(int);
                     temp.longitud = actividad.longitud;
                     temp.latitud = actividad.latitud;
                     temp.costo = actividad.costo;
@@ -791,7 +791,7 @@ namespace SActividad.Controllers
 
                 long totalActividades = ActividadDAO.GetTotalActividadesPorObjeto(objetoId, objetoTipo, filtro_busqueda, User.Identity.Name);
 
-                return Ok(new { success = true, totalActividades });
+                return Ok(new { success = true, total = totalActividades });
             }
             catch (Exception ex)
             {
@@ -860,8 +860,8 @@ namespace SActividad.Controllers
                     temp.actividadtiponombre = actividad.actividadTipos.nombre;
 
                     temp.porcentajeavance = actividad.porcentajeAvance;
-                    temp.programa = actividad.programa ?? 0;
-                    temp.subprograma = actividad.subprograma ?? 0;
+                    temp.programa = actividad.programa ?? default(int);
+                    temp.subprograma = actividad.subprograma ?? default(int);
 
                     temp.proyecto = actividad.proyecto ?? default(int);
                     temp.actividad = actividad.actividad ?? default(int);
@@ -1019,7 +1019,7 @@ namespace SActividad.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetValidacionAsignado([FromBody]dynamic value)
+        public IActionResult ValidacionAsignado([FromBody]dynamic value)
         {
             try
             {
@@ -1088,7 +1088,7 @@ namespace SActividad.Controllers
                     sobrepaso = true;
                 }
 
-                return Ok(new { success = true, asignado, sobrepaso });
+                return Ok(new { success = true, asignado = asignado, sobrepaso = sobrepaso });
             }
             catch (Exception e)
             {

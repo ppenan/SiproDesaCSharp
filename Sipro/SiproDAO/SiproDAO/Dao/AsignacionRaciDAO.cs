@@ -9,62 +9,56 @@ namespace SiproDAO.Dao
 {
     public class AsignacionRaciDAO
     {
-        /*
-         public static List<AsignacionRaci> getAsignacionesRaci(Integer objetoId, int objetoTipo, String lineaBase){
-		List<AsignacionRaci> ret = new ArrayList<AsignacionRaci>();
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			String query = String.join(" ", "select a.* ",
-											"from sipro_history.asignacion_raci a ",
-											"where a.estado = 1 ",
-											"and a.objeto_id = :objId ",
-											"and a.objeto_tipo  = :objTipo ",
-											lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual=1");
-			
-			Query<AsignacionRaci> criteria = session.createNativeQuery(query, AsignacionRaci.class);
-			criteria.setParameter("objId", objetoId);
-			criteria.setParameter("objTipo", objetoTipo);
-			ret = criteria.getResultList();
-		}
-		catch(Throwable e){
-			CLogger.write("1", AsignacionRaciDAO.class, e);
-		}
-		finally{
-			session.close();
-		}
-		return ret;
-	}
-	
-	public static List<Colaborador> getColaboradoresPorProyecto(Integer proyectoId, String lineaBase){
-		List<Colaborador> ret = new ArrayList<Colaborador>();
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		try{
-			String query = String.join(" ", "select distinct c.*", 
-					"FROM sipro_history.asignacion_raci ar",
-					"inner join sipro_history.colaborador c on c.id=ar.colaboradorid",
-					"where ar.objeto_tipo = 5",
-					lineaBase != null ? "and ar.linea_base= like '%" + lineaBase + "%'" : "and ar.actual=1",
-					"and ar.estado=1",
-					"and ar.objeto_id in (", 
-						"select a.id",
-						"from sipro_history.actividad a",
-						"where a.estado = 1",
-						"and a.treePath like '"+(10000000+proyectoId)+"%'",
-						lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual=1",
-					")");
-			
-			Query<Colaborador> criteria = session.createNativeQuery(query, Colaborador.class);
-			
-			ret = criteria.getResultList();
-		}
-		catch(Throwable e){
-			CLogger.write("2", AsignacionRaciDAO.class, e);
-		}
-		finally{
-			session.close();
-		}
-		return ret;
-	}*/
+        public static List<AsignacionRaci> getAsignacionesRaci(int objetoId, int objetoTipo, String lineaBase)
+        {
+            List<AsignacionRaci> ret = new List<AsignacionRaci>();
+
+            try
+            {
+                using (DbConnection db = lineaBase != null ? new OracleContext().getConnectionHistory() : new OracleContext().getConnection())
+                {
+                    String query = String.Join(" ", "SELECT a.* FROM .asignacion_raci a",
+                        "WHERE a.estado=1 AND a.objeto_id=:objId AND a.objeto_tipo=:objTipo",
+                        lineaBase != null ? "AND a.linea_base '%" + lineaBase + "%'" : "");
+
+                    ret = db.Query<AsignacionRaci>(query, new { objId = objetoId, objTipo = objetoTipo }).AsList<AsignacionRaci>();
+                }
+            }
+            catch (Exception e)
+            {
+                CLogger.write("1", "AsignacionRaciDAO.class", e);
+            }
+            return ret;
+        }
+
+        public static List<Colaborador> getColaboradoresPorProyecto(int proyectoId, String lineaBase)
+        {
+            List<Colaborador> ret = new List<Colaborador>();
+            try
+            {
+                using (DbConnection db = lineaBase != null ? new OracleContext().getConnectionHistory() : new OracleContext().getConnection())
+                {
+                    String query = String.Join(" ", "SELECT distinct c.* FROM asignacion_raci ar",
+                    "INNER JOIN colaborador c ON c.id=ar.colaboradorid",
+                    "WHERE ar.objeto_tipo = 5",
+                    lineaBase != null ? "AND ar.linea_base LIKE '%" + lineaBase + "%'" : "",
+                    "AND ar.estado=1",
+                    "AND ar.objeto_id IN (",
+                        "SELECT a.id actividad a",
+                        "WHERE a.estado = 1",
+                        "AND a.treePath LIKE '" + (10000000 + proyectoId) + "%'",
+                        lineaBase != null ? "AND a.linea_base LIKE '%" + lineaBase + "%'" : "",
+                    ")");
+
+                    ret = db.Query<Colaborador>(query).AsList<Colaborador>();
+                }
+            }
+            catch (Exception e)
+            {
+                CLogger.write("2", "AsignacionRaciDAO.class", e);
+            }
+            return ret;
+        }
 
         public static AsignacionRaci getAsignacionPorRolTarea(int objetoId, int objetoTipo, String rol, String lineaBase)
         {
@@ -108,42 +102,34 @@ namespace SiproDAO.Dao
             return ret;
         }
 
-
-        /*public static Colaborador getResponsablePorRol(Integer objetoId, int objetoTipo,String rol, String lineaBase){
+        public static Colaborador getResponsablePorRol(int objetoId, int objetoTipo, String rol, String lineaBase)
+        {
             Colaborador ret = null;
-            List<Colaborador> listRet = null;
-            Session session = CHibernateSession.getSessionFactory().openSession();
-            try{
-                String query = String.join(" ", "select c.* ",
-                                        "from sipro_history.colaborador c, sipro_history.asignacion_raci a",
-                                        "where c.id=a.colaboradorid",
-                                        "and a.objeto_id =:objId",
-                                        "and a.objeto_tipo =:objTipo",
-                                        "and a.rol_raci=:rol ",
-                                        "and a.estado=1 ",									
-                                        lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "and a.actual=1");
+            try
+            {
+                using (DbConnection db = lineaBase != null ? new OracleContext().getConnectionHistory() : new OracleContext().getConnection())
+                {
+                    String query = String.Join(" ", "SELECT c.* FROM colaborador c, asignacion_raci a",
+                        "WHERE c.id=a.colaboradorid",
+                        "AND a.objeto_id =:objId",
+                        "AND a.objeto_tipo =:objTipo",
+                        "AND a.rol_raci=:rol ",
+                        "AND a.estado=1 ",
+                        lineaBase != null ? "and a.linea_base like '%" + lineaBase + "%'" : "");
 
-                Query<Colaborador> criteria = session.createNativeQuery(query, Colaborador.class);
-                criteria.setParameter("objId", objetoId);
-                criteria.setParameter("objTipo", objetoTipo);
-                criteria.setParameter("rol", rol);
-                listRet = criteria.getResultList();
-
-                ret = !listRet.isEmpty() ? listRet.get(0) : null;
+                    ret = db.QueryFirstOrDefault<Colaborador>(query, new { objId = objetoId, objTipo = objetoTipo, rol = rol });
+                }
             }
-            catch(Throwable e){
-                CLogger.write("4", AsignacionRaciDAO.class, e);
-            }
-            finally{
-                session.close();
+            catch (Exception e)
+            {
+                CLogger.write("4", "AsignacionRaciDAO.class", e);
             }
             return ret;
-        }*/
+        }
 
         public static bool GuardarAsignacion(AsignacionRaci asignacion)
         {
             bool resultado = false;
-
             try
             {
                 using (DbConnection db = new OracleContext().getConnection())
@@ -180,12 +166,9 @@ namespace SiproDAO.Dao
             return resultado;
         }
 
-
-
         public static bool EliminarTotalAsignacion(AsignacionRaci asignacion)
         {
             bool resultado = false;
-
             try
             {
                 using (DbConnection db = new OracleContext().getConnection())
@@ -209,7 +192,6 @@ namespace SiproDAO.Dao
         public static List<AsignacionRaci> GetAsignacionPorTarea(int objetoId, int objetoTipo, String lineaBase)
         {
             List<AsignacionRaci> resultado = null;
-
             try
             {
                 using (DbConnection db = new OracleContext().getConnection())
@@ -228,7 +210,5 @@ namespace SiproDAO.Dao
 
             return resultado;
         }
-
-
     }
 }

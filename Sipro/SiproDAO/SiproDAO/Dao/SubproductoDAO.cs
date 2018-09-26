@@ -67,35 +67,33 @@ namespace SiproDAO.Dao
 			session.close();
 		}
 		return ret;
-	}
-
-	public static Subproducto getSubproductoPorId(int id, String usuario) {
-		Session session = CHibernateSession.getSessionFactory().openSession();
-		Subproducto ret = null;
-		try {
-			List<Subproducto> listRet = null;
-			String Str_query = String.join(" ","Select sp FROM Subproducto sp",
-					"where id=:id");
-			String Str_usuario = "";
-			if(usuario != null){
-				Str_usuario = String.join(" ", "AND id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )");
-			}
-			
-			Str_query = String.join(" ", Str_query, Str_usuario);
-			Query<Subproducto> criteria = session.createQuery(Str_query, Subproducto.class);
-			criteria.setParameter("id", id);
-			if(usuario != null){
-				criteria.setParameter("usuario", usuario);
-			}
-			listRet=criteria.getResultList();
-			 ret =!listRet.isEmpty() ? listRet.get(0) : null;
-		} catch (Throwable e) {
-			CLogger.write("2", SubproductoDAO.class, e);
-		} finally {
-			session.close();
-		}
-		return ret;
 	}*/
+
+        public static Subproducto getSubproductoPorId(int id, String usuario)
+        {
+            Subproducto ret = null;
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    String Str_query = String.Join(" ", "SELECT * FROM subproducto sp WHERE id=:id");
+                    String Str_usuario = "";
+                    if (usuario != null)
+                    {
+                        Str_usuario = String.Join(" ", "AND id in (SELECT u.subproductoid FROM subproducto_usuario u where u.usuario=:usuario)");
+                    }
+
+                    Str_query = String.Join(" ", Str_query, Str_usuario);
+
+                    ret = db.QueryFirstOrDefault<Subproducto>(Str_query, new { id = id, usuario = usuario });
+                }
+            }
+            catch (Exception e)
+            {
+                CLogger.write("2", "SubproductoDAO.class", e);
+            }
+            return ret;
+        }
 
         public static bool guardarSubproducto(Subproducto subproducto, bool calcular_valores_agregados)
         {
