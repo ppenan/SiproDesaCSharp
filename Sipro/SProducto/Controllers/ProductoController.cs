@@ -599,7 +599,7 @@ namespace SProducto.Controllers
 
                 return Ok(new
                 {
-                    success = producto != null ? true : false,
+                    //success = producto != null ? true : false,                    
                     id = producto.id,
                     prestamoId = prestamoId,
                     ejercicio = producto.ejercicio,
@@ -609,7 +609,8 @@ namespace SProducto.Controllers
                     unidadEjecutoraNombre = producto.unidadEjecutoras != null ? producto.unidadEjecutoras.nombre : null,
                     fechaInicio = producto.fechaInicio.Value.ToString("dd/MM/yyyy H:mm:ss"),
                     congelado = congelado,
-                    nombre = producto != null ? producto.nombre : "Indefinido"
+                    nombre = producto != null ? producto.nombre : "Indefinido",
+                    success = true
                 });
             }
             catch (Exception e)

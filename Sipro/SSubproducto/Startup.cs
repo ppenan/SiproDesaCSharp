@@ -1,24 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using Dapper;
 using Identity;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using SiproModelCore.Models;
 using Utilities;
 
+//using System.Collections.Generic;
+//using System.Linq;
+//using Microsoft.Extensions.Logging;
+//using Microsoft.Extensions.Options;
 
 namespace SSubproducto
 {
@@ -54,8 +53,8 @@ namespace SSubproducto
             /*var mapper7 = (SqlMapper.ITypeMap)Activator
                .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
                .MakeGenericType(typeof(Objeto)));
-            SqlMapper.SetTypeMap(typeof(Objeto), mapper7);*/
-            var mapper8 = (SqlMapper.ITypeMap)Activator
+            SqlMapper.SetTypeMap(typeof(Objeto), mapper7);
+            */var mapper8 = (SqlMapper.ITypeMap)Activator
                .CreateInstance(typeof(ColumnAttributeTypeMapper<>)
                .MakeGenericType(typeof(PagoPlanificado)));
             SqlMapper.SetTypeMap(typeof(PagoPlanificado), mapper8);
