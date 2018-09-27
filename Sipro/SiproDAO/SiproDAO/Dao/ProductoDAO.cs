@@ -757,5 +757,23 @@ namespace SiproDAO.Dao
             }
             return ret;
         }
+
+        public static Producto getProducto(int id)
+        {
+            Producto ret = null;
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    ret = db.QueryFirstOrDefault<Producto>("SELECT * FROM PRODUCTO WHERE id=:id", new { id = id });
+                }
+            }
+            catch (Exception e)
+            {
+                CLogger.write("27", "ProductoDAO.class", e);
+            }
+            return ret;
+        }
+
     }
 }

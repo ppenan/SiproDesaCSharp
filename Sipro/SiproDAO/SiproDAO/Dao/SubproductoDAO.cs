@@ -439,7 +439,7 @@ namespace SiproDAO.Dao
         /// <param name="filtroBusqueda">Filtro de búsqueda</param>
         /// <param name="usuario">Usuario que realiza la consulta</param>
         /// <returns>Cantidad total de sub productos</returns>
-        public static long GetTotalSubProductos(int? subProductoId, string filtroBusqueda, string usuario)
+        public static long GetTotalSubProductos(int? productoId, String filtroBusqueda, String usuario)
         {
 
             long resultado = 0L;
@@ -449,23 +449,28 @@ namespace SiproDAO.Dao
                 using (DbConnection db = new OracleContext().getConnection())
                 {
 
-                    String query = "SELECT count(p.id) FROM Subproducto p WHERE p.estado = 1 "
-                        + (subProductoId != null && subProductoId > 0 ? "AND p.producto.id = :subProductoId " : "");
+                    //String query = "SELECT count(p.id) FROM Subproducto p WHERE p.estado = 1 "
+                    //    + (productoId != null && productoId > 0 ? "AND p.productoid = :prodId ");
+                    String query = "SELECT COUNT(*) FROM subproducto p WHERE p.estado=1 AND p.productoid = :prodId ";
                     String query_a = "";
 
                     if (filtroBusqueda != null && filtroBusqueda.Trim().Length > 0)
                     {
-                        query_a = String.Join("", query_a, " p.nombre LIKE '%", filtroBusqueda, "%' ");
-                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " p.usuarioCreo LIKE '%", filtroBusqueda, "%' ");
-                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtroBusqueda, "%' ");
+                        query_a = String.Join("", query_a, " p.nombre LIKE '%" + filtroBusqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " p.usuario_creo LIKE '%" + filtroBusqueda + "%' ");
+
+                        //query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " str(date_format(p.fechaCreacion,'%d/%m/%YYYY')) LIKE '%", filtroBusqueda, "%' ");
+                        DateTime fecha_creacion;
+                        if (DateTime.TryParse(filtroBusqueda, out fecha_creacion))
+                        {
+                            query_a = String.Join(" ", query_a, (query_a.Length > 0 ? " OR " : ""), " TO_DATE(TO_CHAR(p.fecha_creacion,'DD/MM/YY'),'DD/MM/YY') LIKE TO_DATE('" + fecha_creacion.ToString("dd/MM/yyyy") + "','DD/MM/YY') ");
+                        }
                     }
-
-
                     query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
                     if (usuario != null)
-                        query = String.Join("", query, " AND p.id in (SELECT u.id.subproductoid from SubproductoUsuario u where u.id.usuario=:usuario )");
+                        query = String.Join("", query, " AND p.id in (SELECT u.subproductoid from subproducto_usuario u where u.usuario=:usuario )");
 
-                    resultado = db.ExecuteScalar<long>(query, new { subProductoId, usuario });
+                    resultado = db.ExecuteScalar<long>(query, new {prodId = productoId, usuario = usuario });
                 }
             }
             catch (Exception e)
@@ -473,7 +478,6 @@ namespace SiproDAO.Dao
                 CLogger.write("7", "SubproductoDAO.class", e);
             }
             return resultado;
-
         }
 
         /// <summary>
@@ -803,5 +807,45 @@ namespace SiproDAO.Dao
 
             return ret;
         }
+
+        public static List<Subproducto> getSubProductosPaginaPorProducto(int pagina, int numeroSubProductos, int productoId, String filtro_busqueda, 
+            String columna_ordenada, String orden_direccion, String usuario)
+        {
+
+            List<Subproducto> ret = new List<Subproducto>();
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    String query = "SELECT * FROM (SELECT a.*, rownum r__ FROM (SELECT * FROM subproducto c WHERE c.estado = 1 AND c.productoid = :prodId ";
+                    String query_a = "";
+
+                    if (filtro_busqueda != null && filtro_busqueda.Length > 0)
+                    {
+                        query_a = String.Join("", query_a, " c.nombre LIKE '%" + filtro_busqueda + "%' ");
+                        query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " c.usuario_creo LIKE '%" + filtro_busqueda + "%' ");
+
+                        DateTime fecha_creacion;
+                        if (DateTime.TryParse(filtro_busqueda, out fecha_creacion))
+                        {
+                            query_a = String.Join(" ", query_a, (query_a.Length > 0 ? " OR " : ""), " TO_DATE(TO_CHAR(c.fecha_creacion,'DD/MM/YY'),'DD/MM/YY') LIKE TO_DATE('" + fecha_creacion.ToString("dd/MM/yyyy") + "','DD/MM/YY') ");
+                        }
+                    }
+
+                    query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
+                    query = String.Join("", query, " AND  c.id IN (SELECT u.subproductoid FROM subproducto_usuario u WHERE u.usuario=:usuario) ");
+                    query = columna_ordenada != null && columna_ordenada.Trim().Length > 0 ? String.Join(" ", query, "ORDER BY", columna_ordenada, orden_direccion) : query;
+                    query = String.Join(" ", query, ") a WHERE rownum < ((" + pagina + " * " + numeroSubProductos + ") + 1) ) WHERE r__ >= (((" + pagina + " - 1) * " + numeroSubProductos + ") + 1)");
+
+                    ret = db.Query<Subproducto>(query, new { prodId = productoId, usuario = usuario }).AsList<Subproducto>();
+                }
+            }
+            catch (Exception e)
+            {
+                CLogger.write("888", "SubproductoDAO.class", e);
+            }
+            return ret;
+        }
+         
     }
 }

@@ -144,5 +144,25 @@ namespace SiproDAO.Dao
             }
             return ret;
         }
+
+
+        public static SubproductoTipo getSubproductoTipoPorId(int id)
+        {
+            SubproductoTipo ret = null;
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    ret = db.QueryFirstOrDefault<SubproductoTipo>("SELECT * FROM subproducto_tipo WHERE id=:id", new { id = id });
+                }
+            }
+            catch (Exception e)
+            {
+                CLogger.write("6", "SubproductoTipoDAO.class", e);
+            }
+            return ret;
+        }
+
+
     }
 }

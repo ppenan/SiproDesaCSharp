@@ -1,17 +1,17 @@
-﻿using FluentValidation.Results;
+﻿using System;
+using System.Collections.Generic;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using SiproDAO.Dao;
 using SiproModelCore.Models;
-using System;
-using System.Collections.Generic;
 using Utilities;
-using Microsoft.AspNetCore.Cors;
 
 namespace SSubproducto.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [Produces("application/json")]
     [Route("/api/[controller]/[action]")]
     [EnableCors("AllowAllHeaders")]
@@ -523,11 +523,12 @@ namespace SSubproducto.Controllers
         {
             try
             {
-                int? subProductoId = value.subproductoid != null ? (int)value.subproductoid : default(int);
                 String filtroBusqueda = value.filtro_busqueda;
-                long total = SubproductoDAO.GetTotalSubProductos(subProductoId, filtroBusqueda, User.Identity.Name);
+                int productoId = value.productoid != null ? (int)value.productoid : default(int);
+                //int? productoId = value.productoid != null ? (int)value.productoid : default(int);
+                long total = SubproductoDAO.GetTotalSubProductos(productoId, filtroBusqueda, User.Identity.Name);
 
-                return Ok(new { success = true, total });
+                return Ok(new { success = true, totalsubproductos = total });
             }
             catch (Exception e)
             {
@@ -759,6 +760,106 @@ namespace SSubproducto.Controllers
                 return BadRequest(500);
             }
         }
+
+        //Visualiza los subproductos del Producto
+        [HttpPost]
+        [Authorize("Subproductos - Visualizar")]
+        public IActionResult SubProductosPaginaPorProducto([FromBody]dynamic value)
+        {
+            try
+            {
+                int pagina = value.pagina != null ? (int)value.pagina : 1;
+                int productoId = value.productoid != null ? (int)value.productoid : default(int);
+                int numeroSubProductos = value.numerosubproductos != null ? (int)value.numerosubproductos : 20;
+                String filtro_busqueda = value.filtro_busqueda;
+                String columna_ordenada = value.columna_ordenada;
+                String orden_direccion = value.orden_direccion;
+
+                List<Subproducto> subproductos = SubproductoDAO.getSubProductosPaginaPorProducto(pagina, numeroSubProductos,
+                        productoId, filtro_busqueda, columna_ordenada, orden_direccion, User.Identity.Name);
+                List<Stsubproducto> stsubproductos = new List<Stsubproducto>();
+                foreach (Subproducto subproducto in subproductos)
+                {
+                    Stsubproducto temp = new Stsubproducto();
+                    temp.descripcion = subproducto.descripcion;
+                    temp.estado = subproducto.estado;
+                    temp.fechaActualizacion = subproducto.fechaActualizacion != null ? subproducto.fechaActualizacion.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.fechaCreacion = subproducto.fechaCreacion.ToString("dd/MM/yyyy H:mm:ss");
+                    temp.id = subproducto.id;
+                    temp.nombre = subproducto.nombre;
+                    temp.usuarioActualizo = subproducto.usuarioActualizo;
+                    temp.usuarioCreo = subproducto.usuarioCreo;
+
+                    subproducto.subproductoTipos = SubproductoTipoDAO.getSubproductoTipoPorId(subproducto.subproductoTipoid);
+                    temp.subproductoTipoid = subproducto.subproductoTipoid;
+                    temp.subProductoTipo = subproducto.subproductoTipos.nombre;
+
+                    temp.snip = subproducto.snip;
+                    temp.programa = subproducto.programa;
+                    temp.subprograma = subproducto.subprograma;
+                    temp.proyecto = subproducto.proyecto;
+                    temp.actividad = subproducto.actividad;
+                    temp.renglon = subproducto.renglon;
+                    temp.ubicacionGeografica = subproducto.ubicacionGeografica;
+                    temp.duracion = subproducto.duracion;
+                    temp.duracionDimension = subproducto.duracionDimension;
+                    temp.fechaInicio = subproducto.fechaInicio != null ? subproducto.fechaInicio.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.fechaFin = subproducto.fechaFin != null ? subproducto.fechaFin.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.obra = subproducto.obra;
+
+                    subproducto.unidadEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutora(subproducto.ejercicio ?? default(int), subproducto.entidad ?? default(int), subproducto.ueunidadEjecutora ?? default(int));
+                    if (subproducto.unidadEjecutoras != null)
+                    {
+                        temp.ueunidadEjecutora = subproducto.ueunidadEjecutora ?? default(int);
+                        temp.ejercicio = subproducto.ejercicio ?? default(int);
+                        subproducto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subproducto.entidad ?? default(int), subproducto.ejercicio ?? default(int));
+                        temp.entidadentidad = subproducto.entidad ?? default(int);
+                        temp.nombreUnidadEjecutora = subproducto.unidadEjecutoras.nombre;
+                        temp.entidadnombre = subproducto.unidadEjecutoras.entidads != null ? subproducto.unidadEjecutoras.entidads.nombre : "SIN ENTIDAD";
+                    }
+                    else
+                    {
+                        Producto producto = ProductoDAO.getProducto(subproducto.productoid);
+                        producto.unidadEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutora(producto.ejercicio, producto.entidad ?? default(int), producto.ueunidadEjecutora);
+                        if (producto.unidadEjecutoras != null)
+                        {
+                            temp.ueunidadEjecutora = producto.ueunidadEjecutora;
+                            temp.ejercicio = producto.ejercicio;
+
+                            producto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(producto.entidad ?? default(int), producto.ejercicio);
+                            temp.entidadentidad = producto.entidad ?? default(int);
+                            subproducto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(producto.entidad ?? default(int), producto.ejercicio);
+                            temp.nombreUnidadEjecutora = producto.unidadEjecutoras.nombre;
+                            temp.entidadnombre = subproducto.unidadEjecutoras.entidads != null ? subproducto.unidadEjecutoras.entidads.nombre : "SIN ENTIDAD";
+                        }
+                    }
+
+                    temp.latitud = subproducto.latitud;
+                    temp.longitud = subproducto.longitud;
+                    temp.costo = subproducto.costo ?? default(decimal);
+
+                    subproducto.acumulacionCostos = AcumulacionCostoDAO.getAcumulacionCostoById(Convert.ToInt32(subproducto.acumulacionCostoid));
+                    temp.acumulacionCostoid = Convert.ToInt32(subproducto.acumulacionCostoid);
+                    temp.acumulacionCostoNombre = subproducto.acumulacionCostos.nombre;
+
+                    temp.tieneHijos = ObjetoDAO.tieneHijos(temp.id, 2);
+                    temp.fechaInicioReal = subproducto.fechaInicioReal != null ? subproducto.fechaInicioReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.fechaFinReal = subproducto.fechaFinReal != null ? subproducto.fechaFinReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.inversionNueva = subproducto.inversionNueva;
+
+                    stsubproductos.Add(temp);
+                }
+
+                return Ok(new { success = true, subproductos = stsubproductos });
+            }
+            catch (Exception e)
+            {
+                CLogger.write("7", "SubproductoController.class", e);
+                return BadRequest(500);
+            }
+        } /* */
+
+
     }
 }
 
