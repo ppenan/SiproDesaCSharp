@@ -39,7 +39,7 @@ namespace SiproModelCore.Models
         public virtual Int32 subproductoTipoid { get; set; }
 	    [Column("UEUNIDAD_EJECUTORA")]
 	    [ForeignKey("UnidadEjecutora")]
-        public virtual Int32 ueunidadEjecutora { get; set; }
+        public virtual Int32? ueunidadEjecutora { get; set; }
 	    public virtual string latitud { get; set; }
 	    public virtual string longitud { get; set; }
 	    public virtual decimal? costo { get; set; }
@@ -50,7 +50,7 @@ namespace SiproModelCore.Models
 	    [Column("UBICACION_GEOGRAFICA")]
 	    public virtual Int32? ubicacionGeografica { get; set; }
 	    [Column("FECHA_INICIO")]
-	    public virtual DateTime fechaInicio { get; set; }
+	    public virtual DateTime? fechaInicio { get; set; }
 	    [Column("FECHA_FIN")]
 	    public virtual DateTime? fechaFin { get; set; }
 	    public virtual Int32 duracion { get; set; }
@@ -60,7 +60,7 @@ namespace SiproModelCore.Models
 	    public virtual string treepath { get; set; }
 	    public virtual Int32? nivel { get; set; }
 	    [ForeignKey("UnidadEjecutora")]
-        public virtual Int32 ejercicio { get; set; }
+        public virtual Int32? ejercicio { get; set; }
 	    [ForeignKey("UnidadEjecutora")]
         public virtual Int32? entidad { get; set; }
 	    [Column("FECHA_INICIO_REAL")]
