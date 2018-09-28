@@ -148,8 +148,7 @@ namespace Utilities
                 TipoBooleano tipoBooleano = new TipoBooleano();
                 tipoBooleano.id = (int)campo["id"];
                 tipoBooleano.label = (string)campo["nombre"];
-                tipoBooleano.valor = campo["valor"] != null ? (string)campo["valor"] : "";
-
+                tipoBooleano.valor = campo["valor"] != null && (bool)campo["valor"] == true ? "true" : "false";
                 return tipoBooleano;
             }
             catch (Exception e)

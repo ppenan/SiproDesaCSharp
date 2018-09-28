@@ -168,6 +168,9 @@ export class ActividadComponent implements OnInit {
           this.mostrarcargando=false;
         }
       }
+    },error =>{
+      this.utils.mensaje('danger','Error al cargar actividades');
+      this.mostrarcargando = false;
     })
   }
 
@@ -199,6 +202,9 @@ export class ActividadComponent implements OnInit {
           ]);
           this.busquedaGlobal = null;
       }
+      this.mostrarcargando = false;
+    },error =>{
+      this.utils.mensaje('danger','Error al cargar actividades');
       this.mostrarcargando = false;
     })
   }
@@ -361,11 +367,15 @@ export class ActividadComponent implements OnInit {
 
             this.utils.mensaje('success', 'Actividad ' + (this.esNuevo ? 'creada' : 'guardada') + ' con Éxito');
             this.mostrarguardado = false;
+            this.esNuevo = false;
         }
         else{
           this.utils.mensaje('warning', 'Ocurrió un error al guardar la actividad');
           this.mostrarguardado = false;
         }
+      },error =>{
+        this.utils.mensaje('danger','Error al guardar la actividad');
+        this.mostrarguardado = false;
       })
     }
   }

@@ -53,19 +53,21 @@ namespace SiproDAO.Dao
                 {
                     int existe = db.ExecuteScalar<int>(
                         "SELECT COUNT (*) FROM actividad_propiedad_valor WHERE actividadid = :actividadid AND actividad_propiedadid = :actividadPropiedadId",
-                        new { actividadId = actividadPropiedadValor.actividadid, actividadPropiedadId = actividadPropiedadValor.actividadPropiedadid }
+                        new { actividadid = actividadPropiedadValor.actividadid, actividadPropiedadId = actividadPropiedadValor.actividadPropiedadid }
                         );
 
                     if (existe > 0)
                     {
-                        int guardado = db.Execute("UPDATE actividad_propiedad_valor SET valor_entero = :valorentero, valor_string = :valorString, valor_decimal = :valorDecimal, valor_tiempo = :valorTiempo, usuario_creo = :usuarioCreo, usuario_actualizo = :usuarioActualizo, fecha_creacion = :fechaCreacion, fecha_actualizacion = :fechaActualizacion, estado = :estado WHERE id = :id", actividadPropiedadValor);
+                        int guardado = db.Execute("UPDATE actividad_propiedad_valor SET valor_entero = :valorEntero, valor_string = :valorString, valor_decimal = :valorDecimal, " +
+                            "valor_tiempo = :valorTiempo, usuario_creo = :usuarioCreo, usuario_actualizo = :usuarioActualizo, fecha_creacion = :fechaCreacion, fecha_actualizacion = :fechaActualizacion, " +
+                            "estado = :estado WHERE actividadid = :actividadid AND actividad_propiedadid = :actividadPropiedadId", actividadPropiedadValor);
 
                         resultado = (guardado > 0) ? true : false;
                     }
                     else
                     {
                         int guardado = db.Execute(
-                            "INSERT INTO actividad_propiedad_valor VALUES (:actividadid, :actividadPropiedadid, :valorEntero, :valorString, :valorDecimal, :valorTiempo, :usuarioCreo, :usuarioActualizo :fechaCreacion, :fechaActualizacion, :estado)", actividadPropiedadValor);
+                            "INSERT INTO actividad_propiedad_valor VALUES (:actividadid, :actividadPropiedadid, :valorEntero, :valorString, :valorDecimal, :valorTiempo, :usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion, :estado)", actividadPropiedadValor);
 
                         resultado = (guardado > 0) ? true : false;
                     }

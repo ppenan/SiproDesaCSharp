@@ -24,8 +24,8 @@ export class Actividad{
     predecesorTipo: number;
     duracion: number;
     duracionDimension: string;
-    costo: number;
-    acumulacionCostoid: number;
+    costo: number = null;
+    acumulacionCostoid: number = 3;
     acumulacionCostoNombre: string;
     presupuestoModificado: number;
     presupuestoPagado: number;
@@ -35,12 +35,12 @@ export class Actividad{
     estado: number;
     proyectoBase: number;
     tieneHijos: boolean = false;
-    fechaInicioReal: Date;
-    fechaFinReal: Date;
+    fechaInicioReal: Date = null;
+    fechaFinReal: Date = null;
     congelado: number;
     fechaElegibilidad: Date;
     fechaCierre: Date;
-    inversionNueva: number;
+    inversionNueva: number = 0;
     objetoId: number = null;
     objetoTipo: number = null;
 

@@ -138,7 +138,7 @@ namespace SiproDAO.Dao
                         }
                         else
                         {
-                            guardado = db.Execute("INSERT INTO actividad_usuario(:actividadid, :usuario, :usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion)", au);
+                            guardado = db.Execute("INSERT INTO actividad_usuario VALUES (:actividadid, :usuario, :usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion)", au);
                         }
 
                         if (guardado > 0 && !Actividad.usuarioCreo.Equals("admin"))
@@ -159,7 +159,7 @@ namespace SiproDAO.Dao
                             }
                             else
                             {
-                                guardado = db.Execute("INSERT INTO actividad_usuario(:actividadid, :usuario, :usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion)", au_admin);
+                                guardado = db.Execute("INSERT INTO actividad_usuario VALUES (:actividadid, :usuario, :usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion)", au_admin);
                             }
                         }
 
@@ -318,12 +318,14 @@ namespace SiproDAO.Dao
                         query_a = String.Join(" ", query_a, "a.nombre LIKE '%" + filtro_busqueda + "%' ");
                         query_a = String.Join("", query_a, (query_a.Length > 0 ? " OR " : ""), " a.usuario_creo LIKE '%" + filtro_busqueda + "%' ");
 
-                        if (DateTime.TryParse(filtro_busqueda, out DateTime fecha_creacion))
+                        DateTime fecha_creacion;
+                        if (DateTime.TryParse(filtro_busqueda, out fecha_creacion))
                         {
                             query_a = String.Join(" ", query_a, (query_a.Length > 0 ? " OR " : ""), " TO_DATE(TO_CHAR(a.fecha_creacion,'DD/MM/YY'),'DD/MM/YY') LIKE TO_DATE('" + fecha_creacion.ToString("dd/MM/yyyy") + "','DD/MM/YY') ");
                         }
                     }
 
+                    query = String.Join(" ", query, (query_a.Length > 0 ? String.Join("", "AND (", query_a, ")") : ""));
                     query = String.Join(" ", query, "AND a.id in (SELECT u.actividadid FROM actividad_usuario u WHERE u.usuario= :usuario)");
                     resultado = db.ExecuteScalar<long>(query, new { objetoId, objetoTipo, usuario });
                 }

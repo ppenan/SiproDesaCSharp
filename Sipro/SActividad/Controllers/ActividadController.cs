@@ -292,13 +292,15 @@ namespace SActividad.Controllers
                     actividad.longitud = values.longitud;
                     actividad.costo = values.costo;
                     actividad.latitud = values.latitud;
-                    actividad.acumulacionCosto = values.acumulacionCosto;
+                    actividad.acumulacionCosto = values.acumulacionCostoid;
                     actividad.renglon = values.renglon;
                     actividad.ubicacionGeografica = values.ubicacionGeografica;
                     actividad.inversionNueva = values.inversionNueva;
                     actividad.estado = 1;
                     actividad.fechaCreacion = DateTime.Now;
                     actividad.usuarioCreo = User.Identity.Name;
+                    actividad.fechaInicio = fechaInicio;
+                    actividad.fechaFin = fechaFin;
 
                     switch (values.objetoTipo)
                     {
@@ -333,12 +335,8 @@ namespace SActividad.Controllers
                         acumulacionCosto.id = actividad.acumulacionCosto;
                     }
 
-                    Actividad actividadTemp = new Actividad();
-                    Double fechaFinTimestamp = (fechaFinal.Ticks * 1.0 - fechaFinal.Ticks) / 86400000;
-                    Double fechaInicioTimestamp = (fechaInicio.Ticks * 1.0 - fechaInicio.Ticks) / 86400000;
-
-                    actividad.duracion = (int)(fechaFinTimestamp - fechaInicioTimestamp);
-                    actividad.duracionDimension = "d";
+                    actividad.duracion = Utils.getWorkingDays(actividad.fechaInicio, actividad.fechaFin);
+                    actividad.duracionDimension = "d";                    
 
                     // calcula la fecha de inicio real y el porcentaje de avance
                     if (actividad.porcentajeAvance > 0 && actividad.porcentajeAvance < 100)
@@ -369,7 +367,7 @@ namespace SActividad.Controllers
 
                         if (!asignaciones_param.Equals(""))
                         {
-                            String[] asignaciones = asignaciones_param.Split("\\|");
+                            String[] asignaciones = asignaciones_param.Split("|");
 
                             if (asignaciones.Length > 0)
                             {
@@ -456,7 +454,7 @@ namespace SActividad.Controllers
                                     valor.valorDecimal = Convert.ToDecimal(data["valor"].ToString());
                                     break;
                                 case 4:
-                                    valor.valorEntero = data["valor"].ToString() == "true" ? 1 : 0;
+                                    valor.valorEntero = (bool)data["valor"] == true ? 1 : 0;
                                     break;
                                 case 5:
                                     valor.valorTiempo = Convert.ToDateTime(data["valor_f"].ToString()); break;
@@ -573,23 +571,21 @@ namespace SActividad.Controllers
                         acumulacionCosto.id = actividad.acumulacionCosto;
                     }
 
-                    Actividad actividadTemp = new Actividad();
-
                     actividad.duracion = Utils.getWorkingDays(fechaInicio, fechaFin);
                     actividad.duracionDimension = "d";
 
                     // calcula la fecha de inicio real y el porcentaje de avance
                     if (actividad.porcentajeAvance > 0 && actividad.porcentajeAvance < 100 && actividad.fechaInicioReal == null)
                     {
-                        actividad.fechaInicioReal = new DateTime();
+                        actividad.fechaInicioReal = DateTime.Now;
                     }
                     else if (actividad.porcentajeAvance == 100 && actividad.fechaFinReal == null)
                     {
-                        actividad.fechaFinReal = new DateTime();
+                        actividad.fechaFinReal = DateTime.Now;
 
                         if (actividad.fechaInicioReal == null)
                         {
-                            actividad.fechaInicioReal = new DateTime();
+                            actividad.fechaInicioReal = DateTime.Now;
                         }
                     }
 
@@ -724,13 +720,13 @@ namespace SActividad.Controllers
                                     valor.valorDecimal = Convert.ToDecimal(data["valor"].ToString());
                                     break;
                                 case 4:
-                                    valor.valorEntero = data["valor"].ToString() == "true" ? 1 : 0;
+                                    valor.valorEntero = (bool)data["valor"] == true ? 1 : 0;
                                     break;
                                 case 5:
                                     valor.valorTiempo = Convert.ToDateTime(data["valor_f"].ToString()); break;
                             }
 
-                            resultado = resultado && ActividadPropiedadValorDAO.GuardarActividadPropiedadValor(valor);
+                            resultado = resultado & ActividadPropiedadValorDAO.GuardarActividadPropiedadValor(valor);
                         }
                     }
 
@@ -829,7 +825,7 @@ namespace SActividad.Controllers
                 int objetoTipo = value.tipo != null ? (int)value.tipo : 0;
                 int numeroActividades = value.numeroActividades != null ? (int)value.numeroActividades : 20;
 
-                String filtroBusqueda = value.filtroBusqueda;
+                String filtroBusqueda = value.filtro_busqueda;
                 String columnaOrdenada = value.columna_ordenada;
                 String ordenDireccion = value.orden_direccion;
 
