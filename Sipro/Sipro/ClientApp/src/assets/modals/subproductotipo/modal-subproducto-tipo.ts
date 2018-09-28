@@ -50,9 +50,9 @@ export class DialogSubProductoTipo {
       filtro_busqueda: this.busquedaGlobal
     };
     this.esColapsado = false;
-    this.http.post('http://localhost:60082/api/SubproductoTipo/NumeroSubProductoTipos',data,{withCredentials: true}).subscribe(response => {
+    this.http.post('http://localhost:60085/api/SubproductoTipo/TotalElementos',data,{withCredentials: true}).subscribe(response => {
       if (response['success'] == true) {   
-        this.totalElementos = response["totalsubproductotipos"];
+        this.totalElementos = response["total"];
         this.paginaActual = 1;
         this.cargarTabla(this.paginaActual);
       } else {
@@ -67,9 +67,9 @@ export class DialogSubProductoTipo {
       numerosubproductotipos: this.elementosPorPagina,
       filtro_busqueda: this.busquedaGlobal,
     }
-    this.http.post('http://localhost:60085/api/SubproductoTipo/SubProductotiposPagina', filtro, { withCredentials: true }).subscribe(response => {
+    this.http.post('http://localhost:60085/api/SubproductoTipo/SubProductotipoPagina', filtro, { withCredentials: true }).subscribe(response => {
       if (response['success'] == true) {
-        var data = response["subproductotipos"];        
+        var data = response["subproductoTipos"];        
         this.source = new LocalDataSource(data);
         this.esColapsado = true;
 

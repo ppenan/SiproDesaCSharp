@@ -105,7 +105,7 @@ namespace SSubproducto.Controllers
                     temp.ubicacionGeografica = subproducto.ubicacionGeografica;
                     temp.duracion = subproducto.duracion;
                     temp.duracionDimension = subproducto.duracionDimension;
-                    temp.fechaInicio = subproducto.fechaInicio != null ? subproducto.fechaInicio.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    temp.fechaInicio = subproducto.fechaInicio.ToString("dd/MM/yyyy H:mm:ss");
                     temp.fechaFin = subproducto.fechaFin != null ? subproducto.fechaFin.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     temp.snip = subproducto.snip;
                     temp.estado = subproducto.estado;
@@ -130,21 +130,18 @@ namespace SSubproducto.Controllers
                         temp.subProductoTipo = subproducto.subproductoTipos.nombre;
                     }
 
-                    //subproducto.unidadEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutora(subproducto.ejercicio, subproducto.entidad ?? default(int), subproducto.ueunidadEjecutora);
-                    subproducto.unidadEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutora(subproducto.ejercicio ?? default(int), subproducto.entidad ?? default(int), subproducto.ueunidadEjecutora ?? default(int));
-
+                    subproducto.unidadEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutora(subproducto.ejercicio, subproducto.entidad ?? default(int), subproducto.ueunidadEjecutora);
                     subproducto.productos = ProductoDAO.getProductoPorId(subproducto.productoid);
                     subproducto.productos.unidadEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutora(subproducto.productos.ejercicio, subproducto.productos.entidad ?? default(int), subproducto.productos.ueunidadEjecutora);
 
                     if (subproducto.unidadEjecutoras != null)
                     {
-                        temp.ueunidadEjecutora = subproducto.ueunidadEjecutora ?? default(int);
+                        temp.ueunidadEjecutora = subproducto.ueunidadEjecutora;
                         temp.nombreUnidadEjecutora = subproducto.unidadEjecutoras.nombre;
                         temp.entidadentidad = subproducto.entidad ?? default(int);
-                        temp.ejercicio = subproducto.ejercicio ?? default(int);
-                                   
-                        //subproducto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subproducto.entidad ?? default(int), subproducto.ejercicio);
-                        subproducto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subproducto.entidad ?? default(int), subproducto.ejercicio ?? default(int));
+                        temp.ejercicio = subproducto.ejercicio;
+
+                        subproducto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subproducto.entidad ?? default(int), subproducto.ejercicio);
                         temp.entidadnombre = subproducto.unidadEjecutoras.entidads.nombre;
                     }
                     else if (subproducto.productos.unidadEjecutoras != null)
@@ -608,19 +605,19 @@ namespace SSubproducto.Controllers
                     temp.acumulacionCostoNombre = subproducto.acumulacionCostos.nombre;
                     temp.productoid = subproducto.productoid;
 
-                    //subproducto.unidadEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutora(subproducto.ejercicio, subproducto.entidad ?? default(int), subproducto.ueunidadEjecutora);
-                    subproducto.unidadEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutora(subproducto.ejercicio ?? default(int), subproducto.entidad ?? default(int), subproducto.ueunidadEjecutora ?? default(int));
+                    subproducto.unidadEjecutoras = UnidadEjecutoraDAO.getUnidadEjecutora(subproducto.ejercicio, subproducto.entidad ?? default(int), subproducto.ueunidadEjecutora);
+
                     if (subproducto.unidadEjecutoras != null)
                     {
-                        //subproducto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subproducto.entidad ?? default(int), subproducto.ejercicio);
-                        subproducto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subproducto.entidad ?? default(int), subproducto.ejercicio ?? default(int));
+                        subproducto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subproducto.entidad ?? default(int), subproducto.ejercicio);
+
                         temp.entidadnombre = subproducto.unidadEjecutoras.entidads.nombre;
                         temp.nombreUnidadEjecutora = subproducto.unidadEjecutoras.nombre;
                         temp.entidadentidad = subproducto.unidadEjecutoras.entidadentidad;
                     }
 
-                    //temp.ejercicio = subproducto.ejercicio;
-                    temp.ejercicio = subproducto.ejercicio ?? default(int);
+                    temp.ejercicio = subproducto.ejercicio;
+
                     subproducto.subproductoTipos = SubproductoTipoDAO.getSubproductoTipo(subproducto.subproductoTipoid);
 
                     if (subproducto.subproductoTipos != null)
@@ -718,8 +715,7 @@ namespace SSubproducto.Controllers
                 switch (objSubproducto.acumulacionCostoid)
                 {
                     case 1:
-                        //cal = objSubproducto.fechaInicio;
-                        cal = objSubproducto.fechaInicio ?? default(DateTime);
+                        cal = objSubproducto.fechaInicio;
                         int ejercicioInicial = cal.Year;
                         if (ejercicio.Equals(ejercicioInicial))
                         {
@@ -794,9 +790,9 @@ namespace SSubproducto.Controllers
                     temp.usuarioActualizo = subproducto.usuarioActualizo;
                     temp.usuarioCreo = subproducto.usuarioCreo;
 
-                    subproducto.subproductoTipos = SubproductoTipoDAO.getSubproductoTipoPorId(subproducto.subproductoTipoid);
+                    subproducto.subproductoTipos = SubproductoTipoDAO.getSubProductoTipoPorId(subproducto.subproductoTipoid);
                     temp.subproductoTipoid = subproducto.subproductoTipoid;
-                    temp.subProductoTipo = subproducto.subproductoTipos.nombre;
+                    temp.subproductotiponombre = subproducto.subproductoTipos.nombre;
 
                     temp.snip = subproducto.snip;
                     temp.programa = subproducto.programa;
@@ -816,9 +812,11 @@ namespace SSubproducto.Controllers
                     {
                         temp.ueunidadEjecutora = subproducto.ueunidadEjecutora ?? default(int);
                         temp.ejercicio = subproducto.ejercicio ?? default(int);
+
                         subproducto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subproducto.entidad ?? default(int), subproducto.ejercicio ?? default(int));
-                        temp.entidadentidad = subproducto.entidad ?? default(int);
-                        temp.nombreUnidadEjecutora = subproducto.unidadEjecutoras.nombre;
+                        temp.entidad = subproducto.entidad ?? default(int);
+                        subproducto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(subproducto.entidad ?? default(int), subproducto.ejercicio ?? default(int));
+                        temp.unidadejecutoranombre = subproducto.unidadEjecutoras.nombre;
                         temp.entidadnombre = subproducto.unidadEjecutoras.entidads != null ? subproducto.unidadEjecutoras.entidads.nombre : "SIN ENTIDAD";
                     }
                     else
@@ -831,9 +829,9 @@ namespace SSubproducto.Controllers
                             temp.ejercicio = producto.ejercicio;
 
                             producto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(producto.entidad ?? default(int), producto.ejercicio);
-                            temp.entidadentidad = producto.entidad ?? default(int);
+                            temp.entidad = producto.entidad ?? default(int);
                             subproducto.unidadEjecutoras.entidads = EntidadDAO.getEntidad(producto.entidad ?? default(int), producto.ejercicio);
-                            temp.nombreUnidadEjecutora = producto.unidadEjecutoras.nombre;
+                            temp.unidadejecutoranombre = producto.unidadEjecutoras.nombre;
                             temp.entidadnombre = subproducto.unidadEjecutoras.entidads != null ? subproducto.unidadEjecutoras.entidads.nombre : "SIN ENTIDAD";
                         }
                     }

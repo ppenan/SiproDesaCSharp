@@ -170,7 +170,7 @@
                           </div>
                           <div fxLayout="column">
                             <mat-form-field>
-                              <input class="search-info" name="subproductotiponombre" [(ngModel)]="subproductotiponombre" matInput placeholder="Tipo de Subproducto"
+                              <input class="search-info" name="subproductotipo" [(ngModel)]="subproductotipo" matInput placeholder="Tipo de Subproducto"
                                      [readonly]="true" (click)="congelado > 0 ? '' : buscarSubproductoTipo()"
                                      [required]="true">
                               <mat-icon class="search-info" matSuffix (click)="congelado > 0 ? '' : buscarSubproductoTipo()">search</mat-icon>
@@ -287,7 +287,7 @@
                                   <div fxLayout="row" fxLayoutGap="20px">
                                     <div fxFlex="50%">
                                       <label fxLayoutAlign="end" class="label-form" for="usuarioCreo">Usuario que creó</label>
-                                      <<p fxLayoutAlign="end">{{ subproducto.usuarioCreo }}</p>
+                                      <p fxLayoutAlign="end">{{ subproducto.usuarioCreo }}</p>
                                     </div>
 
                                     <div fxFlex="50%">

@@ -515,7 +515,7 @@ export class SubproductoComponent implements OnInit {
       idProyecto : this.subproducto.id,
       idProductoTipo : this.subproducto.subproductoTipoid,
       t: new Date().getTime() 
-    }
+    } // SubProductoPropiedadPorTipoSubProducto
     this.http.get('http://localhost:60084/api/SubproductoPropiedad/SubProductoPropiedadPorTipo/'+this.subproducto.id+'/'+this.subproducto.subproductoTipoid,  { withCredentials: true }).subscribe(response => {
       if (response['success'] == true) {
         this.camposdinamicos = response['subproductopropiedades'];

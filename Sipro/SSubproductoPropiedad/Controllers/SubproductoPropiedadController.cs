@@ -255,7 +255,7 @@ namespace SSubproductoPropiedad.Controllers
 
         [HttpGet("{idSubproductoTipo}")]
         [Authorize("Subproducto Propiedades - Visualizar")]
-        public IActionResult SubProductoPropiedadPorTipoSubProducto(int idSubproductoTipo)
+        public IActionResult SubProductoPropiedadPorTipo(int idSubproductoTipo)
         {
             try
             {
