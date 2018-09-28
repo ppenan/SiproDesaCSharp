@@ -580,8 +580,8 @@ namespace SiproDAO.Dao
                         foreach (Nodo nodo_hijo in nodo.children)
                         {
                             costo += nodo_hijo.costo;
-                            fecha_minima = (nodo_hijo.fecha_inicio.TimeOfDay < fecha_minima.TimeOfDay) ? nodo_hijo.fecha_inicio : fecha_minima;
-                            fecha_maxima = (nodo_hijo.fecha_fin.TimeOfDay > fecha_maxima.TimeOfDay) ? nodo_hijo.fecha_fin : fecha_maxima;
+                            fecha_minima = (nodo_hijo.fecha_inicio < fecha_minima) ? nodo_hijo.fecha_inicio : fecha_minima;
+                            fecha_maxima = (nodo_hijo.fecha_fin > fecha_maxima) ? nodo_hijo.fecha_fin : fecha_maxima;
                             fecha_minima_real = nodo_hijo.fecha_inicio_real != null ? fecha_minima_real != null ? ((nodo_hijo.fecha_inicio_real.TimeOfDay < fecha_minima_real.TimeOfDay) ? nodo_hijo.fecha_inicio_real : fecha_minima_real) : nodo_hijo.fecha_inicio_real : fecha_minima_real != null ? fecha_minima_real : fecha_minima_real;
                             fecha_maxima_real = nodo_hijo.fecha_fin_real != null ? fecha_maxima_real != null ? ((nodo_hijo.fecha_fin_real.TimeOfDay > fecha_maxima_real.TimeOfDay) ? nodo_hijo.fecha_fin_real : fecha_maxima_real) : nodo_hijo.fecha_fin_real : fecha_maxima_real != default(DateTime) ? fecha_maxima_real : default(DateTime);
                         }

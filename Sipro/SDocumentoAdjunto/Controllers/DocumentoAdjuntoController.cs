@@ -186,7 +186,7 @@ namespace SDocumentoAdjunto.Controllers
                 {".docx", "application/vnd.ms-word"},
                 {".pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation" },
                 {".xls", "application/vnd.ms-excel"},
-                {".xlsx", "application/vnd.openxmlformats officedocument.spreadsheetml.sheet"},
+                {".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
                 {".png", "image/png"},
                 {".jpg", "image/jpeg"},
                 {".jpeg", "image/jpeg"},

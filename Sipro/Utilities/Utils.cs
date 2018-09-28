@@ -42,7 +42,7 @@ namespace Utilities
 
         public static int getWorkingDays(DateTime fecha_inicio, DateTime fecha_fin)
         {
-            TimeSpan interval = fecha_fin - fecha_inicio;
+            TimeSpan interval = setDateCeroHoras(fecha_fin) - setDateCeroHoras(fecha_inicio);
 
             int totalWeek = interval.Days / 7;
             int totalWorkingDays = 5 * totalWeek;
@@ -55,7 +55,7 @@ namespace Utilities
                     totalWorkingDays++;
             }
 
-            return totalWorkingDays + 1;
+            return totalWorkingDays;
         }
 
         public static DateTime setDateCeroHoras(DateTime fecha)

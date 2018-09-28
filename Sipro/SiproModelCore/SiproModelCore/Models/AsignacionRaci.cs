@@ -15,9 +15,6 @@ namespace SiproModelCore.Models
 	{
 		[Key]
 	    public virtual Int64 id { get; set; }
-	    [Column("MATRIZ_RACIID")]
-	    [ForeignKey("MatrizRaci")]
-        public virtual Int64 matrizRaciid { get; set; }
 	    [ForeignKey("Colaborador")]
         public virtual Int32 colaboradorid { get; set; }
 	    [Column("ROL_RACI")]

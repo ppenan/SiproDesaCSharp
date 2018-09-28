@@ -17,7 +17,7 @@ namespace SiproDAO.Dao
             {
                 using (DbConnection db = lineaBase != null ? new OracleContext().getConnectionHistory() : new OracleContext().getConnection())
                 {
-                    String query = String.Join(" ", "SELECT a.* FROM .asignacion_raci a",
+                    String query = String.Join(" ", "SELECT a.* FROM asignacion_raci a",
                         "WHERE a.estado=1 AND a.objeto_id=:objId AND a.objeto_tipo=:objTipo",
                         lineaBase != null ? "AND a.linea_base '%" + lineaBase + "%'" : "");
 
@@ -142,7 +142,8 @@ namespace SiproDAO.Dao
 
                     if (existe > 0)
                     {
-                        int guardado = db.Execute("UPDATE asignacion_raci SET matriz_raciid ) = :MatrizRaciid, colaboradorid = :colaboradorid, rol_raci = :rolRaci, objeto_id = :rolId, objeto_tipo = :objetoTipo, usuario_creo = :usuarioCreo, usuario_actualizo = :usuarioActualizo, fecha_creacion = :fechaCreacion, fecha_actualizacion = :fechaActualizacion, estado = :estado", asignacion);
+                        int guardado = db.Execute("UPDATE asignacion_raci SET colaboradorid =:colaboradorid, rol_raci = :rolRaci, objeto_id = :rolId, objeto_tipo = :objetoTipo, " +
+                            "usuario_creo = :usuarioCreo, usuario_actualizo = :usuarioActualizo, fecha_creacion = :fechaCreacion, fecha_actualizacion = :fechaActualizacion, estado = :estado", asignacion);
                         resultado = (guardado > 0) ? true : false;
 
                     }
@@ -151,7 +152,8 @@ namespace SiproDAO.Dao
                         int sequenceId = db.ExecuteScalar<int>("SELECT seq_asignacion_raci.nextval FROM DUAL");
                         asignacion.id = sequenceId;
 
-                        int guardado = db.Execute("INSERT INTO asignacion_raci VALUES (:id, :MatrizRaciid, :colaboradorid, :rolRaci, :objetoId, :objetoTipo, :ususuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion, :estado, :matrizRacis, :colaborars, :asignacionracis)", asignacion);
+                        int guardado = db.Execute("INSERT INTO asignacion_raci VALUES (:id, :colaboradorid, :rolRaci, :objetoId, :objetoTipo, " +
+                            ":usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion, :estado)", asignacion);
 
                         resultado = (guardado > 0) ? true : false;
                     }
@@ -173,10 +175,7 @@ namespace SiproDAO.Dao
             {
                 using (DbConnection db = new OracleContext().getConnection())
                 {
-                    int eliminado = db.Execute(
-                        "DELETE FROM asignacion_raci WHERE id = :id",
-                        new { asignacion.id }
-                        );
+                    int eliminado = db.Execute("DELETE FROM asignacion_raci WHERE id = :id", new { id = asignacion.id });
 
                     resultado = (eliminado > 0) ? true : false;
                 }
@@ -199,8 +198,8 @@ namespace SiproDAO.Dao
                     String query = String.Join(" ", "SELECT * FROM asignacion_raci",
                                 "WHERE objeto_id = :objId",
                                 "AND objeto_tipo = :objTipo",
-                                "AND estado = 1", new { objId = objetoId, objTipo = objetoTipo });
-                    resultado = db.Query<AsignacionRaci>(query).AsList<AsignacionRaci>();
+                                "AND estado = 1");
+                    resultado = db.Query<AsignacionRaci>(query, new { objId = objetoId, objTipo = objetoTipo }).AsList<AsignacionRaci>();
                 }
             }
             catch (Exception ex)

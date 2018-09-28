@@ -1,31 +1,31 @@
 export class Actividad{
     id: number;
     nombre: string;
-    descripcion: string;
+    descripcion: string = null;
     usuarioCreo: string;
     usuarioActualizo: string;
     fechaCreacion: string;
     fechaActualizacion: string;
     fechaInicio: string;
     fechaFin: string;
-    actividadtipoid: number;
+    actividadTipoid: number;
     actividadtiponombre: string;
-    porcentajeavance: number;
-    programa: number;
-    subprograma: number;
-    proyecto: number;
-    actividad: number;
-    obra: number;
-    renglon: number;
-    ubicacionGeografica: number;
-    longitud: number;
-    latitud: number;
+    porcentajeAvance: number;
+    programa: number = null;
+    subprograma: number = null;
+    proyecto: number = null;
+    actividad: number = null;
+    obra: number = null;
+    renglon: number = null;
+    ubicacionGeografica: number = null;
+    longitud: number = null;
+    latitud: number = null;
     predecesorId: number;
     predecesorTipo: number;
     duracion: number;
     duracionDimension: string;
     costo: number;
-    acumulacionCostoId: number;
+    acumulacionCostoid: number;
     acumulacionCostoNombre: string;
     presupuestoModificado: number;
     presupuestoPagado: number;
@@ -34,11 +34,16 @@ export class Actividad{
     avanceFinanciero: number;
     estado: number;
     proyectoBase: number;
-    tieneHijos: boolean;
+    tieneHijos: boolean = false;
     fechaInicioReal: Date;
     fechaFinReal: Date;
     congelado: number;
     fechaElegibilidad: Date;
     fechaCierre: Date;
-    inversionNueva: number
+    inversionNueva: number;
+    objetoId: number = null;
+    objetoTipo: number = null;
+
+    camposDinamicos: string;
+    asignacionroles: string;
 }

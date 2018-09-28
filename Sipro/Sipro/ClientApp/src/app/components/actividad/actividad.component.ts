@@ -40,6 +40,12 @@ export class ActividadComponent implements OnInit {
   diameter = 45;
   strokewidth = 3;
 
+  colorGuardar = 'primary';
+  modeGuardar = 'indeterminate';
+  valueGuardar = 50;
+  diameterGuardar = 20;
+  strokewidthGuardar = 3;
+
   isLoggedIn : boolean;
   isMasterPage : boolean;
   esTreeview: boolean;
@@ -71,6 +77,7 @@ export class ActividadComponent implements OnInit {
   responsables = [];
   sourceResponsables: LocalDataSource;
   modalResponsalbes: DialogOverviewResponsables;
+  mostrarguardado: boolean;
 
   dimensiones = [
     {value:1,nombre:'Dias',sigla:'d'}
@@ -107,6 +114,7 @@ export class ActividadComponent implements OnInit {
 
     this.modalAdjuntarDocumento = new DialogOverviewDownloadDocument(dialog);
     this.modalResponsalbes = new DialogOverviewResponsables(dialog);
+    this.sourceResponsables = new LocalDataSource();
   }
 
   private _filterAcumulacionCosto(value: string): AcumulacionCosto[] {
@@ -115,7 +123,7 @@ export class ActividadComponent implements OnInit {
   }
 
   acumulacionCostoSeleccionado(value){
-    this.actividad.acumulacionCostoId = value.id;
+    this.actividad.acumulacionCostoid = value.id;
   }
 
   ngOnInit() {
@@ -210,9 +218,10 @@ export class ActividadComponent implements OnInit {
       this.esColapsado = true;
       this.esNuevo = false;
       this.tabActive = 0;
-      this.dimensionSelected = 0;
+      this.dimensionSelected = 1;
+      this.actividad.duracionDimension = this.dimensiones[this.dimensionSelected-1].sigla;   
 
-      if(this.actividad.acumulacionCostoId==2)
+      if(this.actividad.acumulacionCostoid==2)
         this.bloquearCosto = true;
       else
         this.bloquearCosto = false;
@@ -222,6 +231,7 @@ export class ActividadComponent implements OnInit {
       this.obtenerCamposDinamicos();
       this.obtenerAsignacionesRaci();
       this.getAsignado();
+      this.getDocumentosAdjuntos(this.actividad.id, 5);
     }
   }
 
@@ -306,13 +316,66 @@ export class ActividadComponent implements OnInit {
   }
 
   guardar(){
+    if(this.actividad != null){
+      this.mostrarguardado = true;
+      for(var i=0; i < this.camposdinamicos.length; i++){
+        if(this.camposdinamicos[i].tipo === 'fecha'){
+          this.camposdinamicos[i].valor_f = this.camposdinamicos[i].valor != null ? moment(this.camposdinamicos[i].valor).format('DD/MM/YYYY') : "";        
+        }
+      }
 
+      this.actividad.camposDinamicos = JSON.stringify(this.camposdinamicos);
+
+      let asignaciones="";
+			for (let x in this.sourceResponsables['data']){
+				asignaciones = asignaciones.concat(asignaciones.length > 0 ? "|" : "", this.sourceResponsables['data'][x].id + "~" + this.sourceResponsables['data'][x].r); 
+      }
+      
+      this.actividad.asignacionroles = asignaciones;
+      this.actividad.objetoId = this.objetoId;
+      this.actividad.objetoTipo = this.objetoTipo;
+
+      var objetoHttp;
+
+      if(this.actividad.id > 0){
+        objetoHttp = this.http.put("http://localhost:60001/api/Actividad/Actividad/" + this.actividad.id, this.actividad, { withCredentials: true });
+      }
+      else{
+        this.actividad.id=0;
+        objetoHttp = this.http.post("http://localhost:60001/api/Actividad/Actividad", this.actividad, { withCredentials: true });
+      }
+
+      objetoHttp.subscribe(response => {
+        if(response['success'] == true){
+          this.actividad.id = response['id'];
+          this.actividad.usuarioCreo = response['usuarioCreo'];
+          this.actividad.fechaCreacion = response['fechaCreacion'];
+          this.actividad.usuarioActualizo = response['usuarioActualizo'];
+          this.actividad.fechaActualizacion = response['fechaActualizacion'];
+
+          if(this.esTreeview){
+
+          }
+          else
+            this.obtenerTotalActividades();
+
+            this.utils.mensaje('success', 'Actividad ' + (this.esNuevo ? 'creada' : 'guardada') + ' con Éxito');
+            this.mostrarguardado = false;
+        }
+        else{
+          this.utils.mensaje('warning', 'Ocurrió un error al guardar la actividad');
+          this.mostrarguardado = false;
+        }
+      })
+    }
   }
 
   IrATabla(){
     this.esColapsado = false;
     this.actividad = new Actividad();
     this.sourceArchivosAdjuntos = new LocalDataSource();
+    this.sourceResponsables = new LocalDataSource();
+    this.responsables = [];
   }
 
   buscarActividadTipo(){
@@ -322,7 +385,7 @@ export class ActividadComponent implements OnInit {
       data: { titulo: 'Actividad Tipo' }
     }).afterClosed().subscribe(result => {
       if(result != null){
-        this.actividad.actividadtipoid = result.id;
+        this.actividad.actividadTipoid = result.id;
         this.actividad.actividadtiponombre = result.nombre;
 
         this.obtenerCamposDinamicos();
@@ -334,7 +397,7 @@ export class ActividadComponent implements OnInit {
     var parametros ={
       t: new Date().getTime() 
     }
-    this.http.get('http://localhost:60002/api/ActividadPropiedad/ActividadPropiedadPorTipo/'+this.actividad.id+'/'+this.actividad.actividadtipoid,  { withCredentials: true }).subscribe(response => {
+    this.http.get('http://localhost:60002/api/ActividadPropiedad/ActividadPropiedadPorTipo/'+this.actividad.id+'/'+this.actividad.actividadTipoid,  { withCredentials: true }).subscribe(response => {
       if (response['success'] == true) {
         this.camposdinamicos = response['actividadpropiedades'];
         for(var i=0; i<this.camposdinamicos.length; i++){
@@ -508,15 +571,15 @@ export class ActividadComponent implements OnInit {
   }
 
   obtenerAsignacionesRaci(){
-    this.http.get('http://localhost:60039/api/MatrizRaci/AsignacionPorObjeto/'+ this.objetoId + '/'+ this.objetoTipo, { withCredentials: true }).subscribe(response => {
+    this.http.get('http://localhost:60039/api/MatrizRaci/AsignacionPorObjeto/'+ this.actividad.id + '/'+ 5, { withCredentials: true }).subscribe(response => {
       if(response['success'] == true){
         let asignaciones = response['asignaciones'];
         for(let i = 0; i<asignaciones.length; i++){
           let responsable = [];
 					responsable['id'] = asignaciones[i].colaboradorId;
 					responsable['nombre'] = asignaciones[i].colaboradorNombre;
-					responsable['nombrerol'] = this.obtenerNombreRol(asignaciones[i].rolId);
-					responsable['rol'] = asignaciones[i].rolId;
+					responsable['rol'] = this.obtenerNombreRol(asignaciones[i].rolId);
+					responsable['r'] = asignaciones[i].rolId;
 				  this.responsables.push(responsable);
         }
       }
@@ -525,11 +588,11 @@ export class ActividadComponent implements OnInit {
     })
   }
 
-  obtenerNombreRol = function(valor){
+  obtenerNombreRol(valor: string){
     switch (valor){
       case 'r': return "Responsable";
       case 'a': return "Cuentadante";
-      case 'c': return "Consutor";
+      case 'c': return "Consultor";
       case 'i': return "Quien informa";
     }
     return "";
@@ -537,8 +600,10 @@ export class ActividadComponent implements OnInit {
 
   buscarActividadResponsable(){
     let idRoles = [];
-    for (let x in this.sourceResponsables['data']){
-      idRoles.push(this.sourceResponsables['data'][x].r);
+    if(this.sourceResponsables['data']!= undefined && this.sourceResponsables['data'].length > 0){
+      for (let x in this.sourceResponsables['data']){
+        idRoles.push(this.sourceResponsables['data'][x].r);
+      }
     }
 
     this.modalResponsalbes.dialog.open(DialogResponsables, {

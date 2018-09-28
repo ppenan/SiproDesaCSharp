@@ -28,16 +28,16 @@ namespace SActividad.Controllers
             public string fechaActualizacion;
             public string fechaInicio;
             public string fechaFin;
-            public int actividadtipoid;
+            public int actividadTipoid;
             public string actividadtiponombre;
-            public int porcentajeavance;
-            public Int32 programa;
-            public Int32 subprograma;
-            public Int32 proyecto;
-            public Int32 actividad;
-            public Int32 obra;
-            public Int32 renglon;
-            public Int32 ubicacionGeografica;
+            public int porcentajeAvance;
+            public int? programa;
+            public int? subprograma;
+            public int? proyecto;
+            public int? actividad;
+            public int? obra;
+            public int? renglon;
+            public int? ubicacionGeografica;
             public string longitud;
             public string latitud;
             public Int64 predecesorId;
@@ -45,7 +45,7 @@ namespace SActividad.Controllers
             public int duracion;
             public string duracionDimension;
             public decimal? costo;
-            public Int64 acumulacionCostoId;
+            public Int64 acumulacionCostoid;
             public string acumulacionCostoNombre;
             public decimal presupuestoModificado;
             public decimal presupuestoPagado;
@@ -130,10 +130,10 @@ namespace SActividad.Controllers
                     temp.usuarioCreo = actividad.usuarioCreo;
 
                     actividad.actividadTipos = ActividadTipoDAO.ActividadTipoPorId(actividad.actividadTipoid);
-                    temp.actividadtipoid = actividad.actividadTipos.id;
+                    temp.actividadTipoid = actividad.actividadTipos.id;
                     temp.actividadtiponombre = actividad.actividadTipos.nombre;
 
-                    temp.porcentajeavance = actividad.porcentajeAvance;
+                    temp.porcentajeAvance = actividad.porcentajeAvance;
                     temp.programa = actividad.programa ?? default(int);
                     temp.subprograma = actividad.subprograma ?? default(int);
                     temp.proyecto = actividad.proyecto ?? default(int);
@@ -146,7 +146,7 @@ namespace SActividad.Controllers
                     temp.costo = actividad.costo;
 
                     actividad.acumulacionCostos = AcumulacionCostoDAO.getAcumulacionCostoById(actividad.acumulacionCosto);
-                    temp.acumulacionCostoId = actividad.acumulacionCostos.id;
+                    temp.acumulacionCostoid = actividad.acumulacionCostos.id;
                     temp.acumulacionCostoNombre = actividad.acumulacionCostos.nombre;
 
                     temp.proyectoBase = actividad.proyectoBase ?? 0;
@@ -210,10 +210,10 @@ namespace SActividad.Controllers
                     temp.usuarioCreo = actividad.usuarioCreo;
 
                     actividad.actividadTipos = ActividadTipoDAO.ActividadTipoPorId(actividad.actividadTipoid);
-                    temp.actividadtipoid = actividad.actividadTipoid;
+                    temp.actividadTipoid = actividad.actividadTipoid;
                     temp.actividadtiponombre = actividad.actividadTipos.nombre;
 
-                    temp.porcentajeavance = actividad.porcentajeAvance;
+                    temp.porcentajeAvance = actividad.porcentajeAvance;
                     temp.programa = actividad.programa ?? default(int);
                     temp.subprograma = actividad.subprograma ?? default(int);
                     temp.proyecto = actividad.proyecto ?? default(int);
@@ -226,7 +226,7 @@ namespace SActividad.Controllers
                     temp.costo = actividad.costo;
 
                     actividad.acumulacionCostos = AcumulacionCostoDAO.getAcumulacionCostoById(actividad.acumulacionCosto);
-                    temp.acumulacionCostoId = actividad.acumulacionCosto;
+                    temp.acumulacionCostoid = actividad.acumulacionCosto;
                     temp.acumulacionCostoNombre = actividad.acumulacionCostos.nombre;
 
                     temp.fechaInicio = Utils.ConvierteAFormatoFecha(actividad.fechaInicio);
@@ -255,7 +255,7 @@ namespace SActividad.Controllers
 
         [HttpPost]
         [Authorize("Actividades - Crear")]
-        public IActionResult GuardarActividad([FromBody]dynamic values)
+        public IActionResult Actividad([FromBody]dynamic values)
         {
             try
             {
@@ -274,9 +274,9 @@ namespace SActividad.Controllers
 
                     actividad.nombre = values.nombre;
                     actividad.descripcion = values.descripcion;
-                    actividad.actividadTipoid = values.actividadTipoId;
+                    actividad.actividadTipoid = values.actividadTipoid;
 
-                    DateTime fechaInicio = values.fechainicio;
+                    DateTime fechaInicio = values.fechaInicio;
                     DateTime.TryParse((string)values.fechaFin, out DateTime fechaFin);
                     DateTime fechaFinal = fechaFin;
 
@@ -289,8 +289,6 @@ namespace SActividad.Controllers
                     actividad.objetoId = values.objetoId;
                     actividad.objetoTipo = values.objetoTipo;
                     actividad.porcentajeAvance = values.porcentajeAvance;
-                    //int duracion = values.duracion;
-                    actividad.duracionDimension = values.duracionDimension;
                     actividad.longitud = values.longitud;
                     actividad.costo = values.costo;
                     actividad.latitud = values.latitud;
@@ -298,6 +296,9 @@ namespace SActividad.Controllers
                     actividad.renglon = values.renglon;
                     actividad.ubicacionGeografica = values.ubicacionGeografica;
                     actividad.inversionNueva = values.inversionNueva;
+                    actividad.estado = 1;
+                    actividad.fechaCreacion = DateTime.Now;
+                    actividad.usuarioCreo = User.Identity.Name;
 
                     switch (values.objetoTipo)
                     {
@@ -355,6 +356,15 @@ namespace SActividad.Controllers
                     if (resultado)
                     {
                         List<AsignacionRaci> asignaciones_temp = AsignacionRaciDAO.GetAsignacionPorTarea(actividad.id, 5, null);
+
+                        if (asignaciones_temp != null)
+                        {
+                            foreach (AsignacionRaci asign in asignaciones_temp)
+                            {
+                                AsignacionRaciDAO.EliminarTotalAsignacion(asign);
+                            }
+                        }
+
                         String asignaciones_param = values.asignacionroles;
 
                         if (!asignaciones_param.Equals(""))
@@ -503,9 +513,9 @@ namespace SActividad.Controllers
 
                     actividad.nombre = values.nombre;
                     actividad.descripcion = values.descripcion;
-                    actividad.actividadTipoid = values.actividadTipoId;
+                    actividad.actividadTipoid = values.actividadTipoid;
 
-                    DateTime fechaInicio = values.fechainicio;
+                    DateTime fechaInicio = values.fechaInicio;
                     DateTime.TryParse((string)values.fechaFin, out DateTime fechaFin);
                     DateTime fechaFinal = fechaFin;
 
@@ -523,10 +533,12 @@ namespace SActividad.Controllers
                     actividad.longitud = values.longitud;
                     actividad.costo = values.costo;
                     actividad.latitud = values.latitud;
-                    actividad.acumulacionCosto = values.acumulacionCosto;
+                    actividad.acumulacionCosto = values.acumulacionCostoid;
                     actividad.renglon = values.renglon;
                     actividad.ubicacionGeografica = values.ubicacionGeografica;
                     actividad.inversionNueva = values.inversionNueva;
+                    actividad.fechaActualizacion = DateTime.Now;
+                    actividad.usuarioActualizo = User.Identity.Name;
 
                     switch (values.objetoTipo)
                     {
@@ -562,10 +574,8 @@ namespace SActividad.Controllers
                     }
 
                     Actividad actividadTemp = new Actividad();
-                    Double fechaFinTimestamp = (fechaFinal.Ticks * 1.0 - fechaFinal.Ticks) / 86400000;
-                    Double fechaInicioTimestamp = (fechaInicio.Ticks * 1.0 - fechaInicio.Ticks) / 86400000;
 
-                    actividad.duracion = (int)(fechaFinTimestamp - fechaInicioTimestamp);
+                    actividad.duracion = Utils.getWorkingDays(fechaInicio, fechaFin);
                     actividad.duracionDimension = "d";
 
                     // calcula la fecha de inicio real y el porcentaje de avance
@@ -597,11 +607,19 @@ namespace SActividad.Controllers
                             }
                         }
 
+                        if (asignaciones_temp != null)
+                        {
+                            foreach (AsignacionRaci asign in asignaciones_temp)
+                            {
+                                AsignacionRaciDAO.EliminarTotalAsignacion(asign);
+                            }
+                        }
+
                         String asignaciones_param = values.asignacionroles;
 
                         if (!asignaciones_param.Equals(""))
                         {
-                            String[] asignaciones = asignaciones_param.Split("\\|");
+                            String[] asignaciones = asignaciones_param.Split("|");
 
                             if (asignaciones.Length > 0)
                             {
@@ -614,7 +632,7 @@ namespace SActividad.Controllers
 
                                     asigna_temp.colaboradorid = colaborador.id;
                                     asigna_temp.estado = 1;
-                                    asigna_temp.fechaCreacion = new DateTime();
+                                    asigna_temp.fechaCreacion = DateTime.Now;
                                     asigna_temp.objetoId = actividad.id;
                                     asigna_temp.objetoTipo = 5;
                                     asigna_temp.rolRaci = datosaasignacion[1];
@@ -856,24 +874,24 @@ namespace SActividad.Controllers
                     temp.usuarioCreo = actividad.usuarioCreo;
 
                     actividad.actividadTipos = ActividadTipoDAO.ActividadTipoPorId(actividad.actividadTipoid);
-                    temp.actividadtipoid = actividad.actividadTipoid;
+                    temp.actividadTipoid = actividad.actividadTipoid;
                     temp.actividadtiponombre = actividad.actividadTipos.nombre;
 
-                    temp.porcentajeavance = actividad.porcentajeAvance;
-                    temp.programa = actividad.programa ?? default(int);
-                    temp.subprograma = actividad.subprograma ?? default(int);
+                    temp.porcentajeAvance = actividad.porcentajeAvance;
+                    temp.programa = actividad.programa ?? null;
+                    temp.subprograma = actividad.subprograma ?? null;
 
-                    temp.proyecto = actividad.proyecto ?? default(int);
-                    temp.actividad = actividad.actividad ?? default(int);
-                    temp.obra = actividad.obra ?? default(int);
-                    temp.ubicacionGeografica = actividad.ubicacionGeografica ?? default(int);
-                    temp.renglon = actividad.renglon ?? default(int);
+                    temp.proyecto = actividad.proyecto ?? null;
+                    temp.actividad = actividad.actividad ?? null;
+                    temp.obra = actividad.obra ?? null;
+                    temp.ubicacionGeografica = actividad.ubicacionGeografica ?? null;
+                    temp.renglon = actividad.renglon ?? null;
                     temp.longitud = actividad.longitud;
                     temp.latitud = actividad.latitud;
                     temp.costo = actividad.costo;
 
                     actividad.acumulacionCostos = AcumulacionCostoDAO.getAcumulacionCostoById(actividad.acumulacionCosto);
-                    temp.acumulacionCostoId = actividad.acumulacionCosto;
+                    temp.acumulacionCostoid = actividad.acumulacionCosto;
                     temp.acumulacionCostoNombre = actividad.acumulacionCostos.nombre;
 
                     temp.duracion = actividad.duracion;
@@ -940,10 +958,10 @@ namespace SActividad.Controllers
                 temp.usuarioCreo = actividad.usuarioCreo;
 
                 actividad.actividadTipos = ActividadTipoDAO.ActividadTipoPorId(actividad.actividadTipoid);
-                temp.actividadtipoid = actividad.actividadTipoid;
+                temp.actividadTipoid = actividad.actividadTipoid;
                 temp.actividadtiponombre = actividad.actividadTipos.nombre;
 
-                temp.porcentajeavance = actividad.porcentajeAvance;
+                temp.porcentajeAvance = actividad.porcentajeAvance;
                 temp.programa = actividad.programa ?? 0;
                 temp.subprograma = actividad.subprograma ?? 0;
                 temp.proyecto = actividad.proyecto ?? 0;
@@ -961,7 +979,7 @@ namespace SActividad.Controllers
                 temp.costo = actividad.costo;
 
                 actividad.acumulacionCostos = AcumulacionCostoDAO.getAcumulacionCostoById(actividad.acumulacionCosto);
-                temp.acumulacionCostoId = actividad.acumulacionCosto;
+                temp.acumulacionCostoid = actividad.acumulacionCosto;
                 temp.acumulacionCostoNombre = actividad.acumulacionCostos.nombre;
 
                 temp.proyectoBase = actividad.proyectoBase ?? 0;

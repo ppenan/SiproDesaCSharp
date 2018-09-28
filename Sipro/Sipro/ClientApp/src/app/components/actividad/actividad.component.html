@@ -69,10 +69,22 @@
                 </button>
               </div>
               <div fxFlex fxLayoutAlign="end" fxLayoutGap="2px">
-                <button mat-raised-button id="applying-disabled" class="applying-btn" [disabled]="!myForm.valid" (click)="guardar()" matTooltip="Guardar"
+                <div style="height: 75%; padding-top: 5px;" >
+                    <div style="float: left;">
+                        <mat-progress-spinner *ngIf="mostrarguardado"
+                            class="progress-spinner"
+                            [color]="colorGuardar"
+                            [mode]="modeGuardar"
+                            [value]="valueGuardar"
+                            [diameter]="diameterGuardar" 
+                            [strokeWidth]="strokewidthGuardar"
+                        ></mat-progress-spinner>
+                    </div>
+                </div>
+                <button mat-raised-button id="applying-disabled" class="applying-btn" [disabled]="!myForm.valid || mostrarguardado" (click)="guardar()" matTooltip="Guardar"
                   matTooltipPosition="above">
                   <mat-icon>save</mat-icon>Guardar</button>
-                <button mat-raised-button class="primary-btn" (click)="IrATabla()" matTooltip="Ir a Tabla" matTooltipPosition="above">
+                <button mat-raised-button id="primary-disabled" class="primary-btn"  [disabled]="mostrarguardado" (click)="IrATabla()" matTooltip="Ir a Tabla" matTooltipPosition="above">
                   <mat-icon>list</mat-icon>Ir a Tabla</button>
               </div>
             </div>
@@ -182,14 +194,14 @@
                             </mat-form-field>
                           </div>
                           <mat-form-field>
-                            <input min="0" max="100" style="text-align: right;" matInput type="number" placeholder="Avance %" [required]="true" name="porcentajeavance"
-                              [(ngModel)]="actividad.porcentajeavance">
+                            <input min="0" max="100" style="text-align: right;" matInput type="number" placeholder="Avance %" [required]="true" name="porcentajeAvance"
+                              [(ngModel)]="actividad.porcentajeAvance">
                           </mat-form-field>
                           <div fxLayout="column">
                             <mat-form-field>
                               <input type="text" currencyMask [options]="{ prefix: 'Q ', thousands: ',', decimal: '.', precision: 2 }" name="costo" [(ngModel)]="actividad.costo"
-                                (ngModelChange)="validarAsignado()" matInput placeholder="Monto Planificado" [required]="actividad.acumulacionCostoId > 0"
-                                [readonly]="actividad.tieneHijos || congelado == 1 || bloquearCosto">
+                                (ngModelChange)="validarAsignado()" matInput placeholder="Monto Planificado" [required]="actividad.acumulacionCostoid > 0"
+                                [readonly]="congelado == 1 || bloquearCosto">
                             </mat-form-field>
                           </div>
                           <div fxLayout="column">
@@ -305,12 +317,25 @@
                   y las fechas deben tener formato de dd/mm/aaaa</div>
                 <br>
                 <div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="2px">
-                  <button mat-raised-button id="applying-disabled" class="applying-btn" [disabled]="!myForm.valid" (click)="guardar()" matTooltip="Guardar"
+                  <div style="height: 75%; padding-top: 5px;" >
+                      <div style="float: left;">
+                          <mat-progress-spinner *ngIf="mostrarguardado"
+                              class="progress-spinner"
+                              [color]="colorGuardar"
+                              [mode]="modeGuardar"
+                              [value]="valueGuardar"
+                              [diameter]="diameterGuardar" 
+                              [strokeWidth]="strokewidthGuardar"
+                          ></mat-progress-spinner>
+                      </div>
+                  </div>
+                  <button mat-raised-button id="applying-disabled" class="applying-btn" [disabled]="!myForm.valid || mostrarguardado" (click)="guardar()" matTooltip="Guardar"
                     matTooltipPosition="above">
                     <mat-icon>save</mat-icon>Guardar</button>
-                  <button mat-raised-button class="primary-btn" (click)="IrATabla()" matTooltip="Ir a Tabla" matTooltipPosition="above">
+                  <button mat-raised-button id="primary-disabled" class="primary-btn" [disabled]="mostrarguardado" (click)="IrATabla()" matTooltip="Ir a Tabla" matTooltipPosition="above">
                     <mat-icon>list</mat-icon>Ir a Tabla</button>
                 </div>
+                <br>
               </div>
             </div>
           </form>
