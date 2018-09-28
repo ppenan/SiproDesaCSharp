@@ -146,7 +146,7 @@ namespace SiproDAO.Dao
         }
 
 
-        public static SubproductoTipo getSubproductoTipoPorId(int id)
+        public static SubproductoTipo getSubProductoTipoPorId(int id)
         {
             SubproductoTipo ret = null;
             try
