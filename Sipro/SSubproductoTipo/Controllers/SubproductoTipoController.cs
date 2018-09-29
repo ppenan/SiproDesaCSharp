@@ -162,8 +162,8 @@ namespace SSubproductoTipo.Controllers
                                 subprodtipoPropiedad.fechaCreacion = DateTime.Now;
                                 subprodtipoPropiedad.usuarioCreo = User.Identity.Name;
 
-                                guardado = guardado & SubprodTipoPropiedadDAO.guardarSubproductoTipoPropiedad(subprodtipoPropiedad);
-                            }
+                                guardado = guardado & SubprodTipoPropiedadDAO.guardarSubproductoTipoPropiedad(subprodtipoPropiedad);                                
+                            } 
                         }
 
                         return Ok(new

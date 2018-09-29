@@ -196,7 +196,7 @@ namespace SiproDAO.Dao
                         "where pt.id=:subproductoTipoId ",
                         "and p.estado = 1");
 
-                    ret = db.Query<SubproductoPropiedad>(query, new { subproductoId = idTipoPropiedad }).AsList<SubproductoPropiedad>();
+                    ret = db.Query<SubproductoPropiedad>(query, new { subproductoTipoId = idTipoPropiedad }).AsList<SubproductoPropiedad>();
                 }
             }
             catch (Exception e)

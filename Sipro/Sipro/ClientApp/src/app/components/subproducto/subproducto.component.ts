@@ -421,7 +421,6 @@ export class SubproductoComponent implements OnInit {
       height: '585px',
       data: { titulo: 'Subproducto Tipo' }
     }).afterClosed().subscribe(result => {
-      console.log(result);
       if(result != null){
         this.subproducto.subproductoTipoid = result.id;
         this.subproducto.subProductoTipo = result.nombre;
@@ -511,15 +510,6 @@ export class SubproductoComponent implements OnInit {
   } 
 
   obtenerCamposDinamicos(){
-    var parametros ={
-      idProyecto : this.subproducto.id,
-      idProductoTipo : this.subproducto.subproductoTipoid,
-      t: new Date().getTime() 
-    }
-    console.log(this.subproducto.id);
-    console.log(this.subproducto.subproductoTipoid); 
-    console.log(this.obtenerCamposDinamicos());
-    console.log(this.subproducto);
     this.http.get('http://localhost:60084/api/SubproductoPropiedad/SubproductoPropiedadPorTipo/'+this.subproducto.id+'/'+this.subproducto.subproductoTipoid,  { withCredentials: true }).subscribe(response => {
       if (response['success'] == true) {
         this.camposdinamicos = response['subproductopropiedades'];

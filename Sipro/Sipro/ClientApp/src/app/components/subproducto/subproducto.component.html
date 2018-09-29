@@ -151,7 +151,7 @@
                           </div>
                           <div fxLayout="column">
                             <mat-form-field>
-                              <input style="text-align: right;" type="number" name="snip" [(ngModel)]="subproductosnip" matInput placeholder="SNIP"
+                              <input style="text-align: right;" type="number" name="snip" [(ngModel)]="subproducto.snip" matInput placeholder="SNIP"
                                      [readonly]="congelado > 0">
                             </mat-form-field>
                           </div>
@@ -170,7 +170,7 @@
                           </div>
                           <div fxLayout="column">
                             <mat-form-field>
-                              <input class="search-info" name="subproductotipo" [(ngModel)]="subproductotipo" matInput placeholder="Tipo de Subproducto"
+                              <input class="search-info" name="subproductotipo" [(ngModel)]="subproducto.subProductoTipo" matInput placeholder="Tipo de Subproducto"
                                      [readonly]="true" (click)="congelado > 0 ? '' : buscarSubproductoTipo()"
                                      [required]="true">
                               <mat-icon class="search-info" matSuffix (click)="congelado > 0 ? '' : buscarSubproductoTipo()">search</mat-icon>
