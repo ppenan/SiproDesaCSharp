@@ -9,14 +9,14 @@ namespace SiproDAO.Dao
 {
     public class SubproductoTipoDAO
     {
-        public static SubproductoTipo getSubproductoTipo(int codigo)
+        public static SubproductoTipo getSubproductoTipo(int id)
         {
             SubproductoTipo ret = null;
             try
             {
                 using (DbConnection db = new OracleContext().getConnection())
                 {
-                    ret = db.QueryFirstOrDefault<SubproductoTipo>("SELECT * FROM suproducto_tipo WHERE id=:id", new { id = codigo });
+                    ret = db.QueryFirstOrDefault<SubproductoTipo>("SELECT * FROM subproducto_tipo WHERE id=:id", new { id = id });
                 }
             }
             catch (Exception e)
