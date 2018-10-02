@@ -46,7 +46,7 @@ namespace SiproDAO.Dao
                     {
                         int sequenceId = db.ExecuteScalar<int>("SELECT seq_subproducto_tipo.nextval FROM DUAL");
                         subproductoTipo.id = sequenceId;
-                        int guardado = db.Execute("INSERT INTO subproducto_tipo(:id, :nombre, :descripcion, :usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion, " +
+                        int guardado = db.Execute("INSERT INTO subproducto_tipo VALUES(:id, :nombre, :descripcion, :usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion, " +
                             ":estado)", subproductoTipo);
 
                         ret = guardado > 0 ? true : false;

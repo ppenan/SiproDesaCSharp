@@ -422,7 +422,7 @@ namespace SiproDAO.Dao
             {
                 using (DbConnection db = new OracleContext().getConnection())
                 {
-                    ret = db.QueryFirstOrDefault<Subproducto>("SELECT * FROM SUBPRODUCTO WHERE id=:id", new { id = id });
+                    ret = db.QueryFirstOrDefault<Subproducto>("SELECT * FROM SUBPRODUCTO WHERE id=:id AND estado=1", new { id = id });
                 }
             }
             catch (Exception e)

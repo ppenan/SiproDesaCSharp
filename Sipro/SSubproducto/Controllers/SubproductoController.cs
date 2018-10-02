@@ -699,7 +699,6 @@ namespace SSubproducto.Controllers
         {
             try
             {
-
                 DateTime cal = new DateTime();
                 int ejercicio = cal.Year;
                 int id = value.id;
@@ -714,7 +713,6 @@ namespace SSubproducto.Controllers
                 int obra = value.obra;
                 int renglon = value.renglon;
                 int geografico = value.geografico;
-
                 decimal asignado = ObjetoDAO.getAsignadoPorLineaPresupuestaria(ejercicio, entidad, programa, subprograma, proyecto, actividad, obra, renglon, geografico);
 
                 decimal planificado = decimal.Zero;
