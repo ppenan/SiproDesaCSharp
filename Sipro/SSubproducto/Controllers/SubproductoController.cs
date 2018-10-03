@@ -186,20 +186,15 @@ namespace SSubproducto.Controllers
 
                 if (results.IsValid)
                 {
-                    Subproducto subproducto = new Subproducto();
-
+                    Subproducto subproducto = new Subproducto();                    
                     subproducto.nombre = value.nombre;
                     subproducto.descripcion = value.descripcion;
-
                     subproducto.productoid = (int)value.producto;                    
                     ///subproducto.su.subproductoPadreId = (int)value.subproductoPadre; no tiene subproductopadre
-
                     subproducto.subproductoTipoid = (int)value.tiposubproductoid;
                     subproducto.ueunidadEjecutora = value.unidadEjecutora != null ? (int)value.unidadEjecutora : default(int);
-
                     subproducto.entidad = value.entidad != null ? (int)value.entidad : default(int);
                     subproducto.ejercicio = value.ejercicio != null ? (int)value.ejercicio : default(int);
-
                     subproducto.snip = value.snip;
                     subproducto.programa = value.programa;
                     subproducto.subprograma = value.subprograma;
@@ -217,28 +212,40 @@ namespace SSubproducto.Controllers
                     subproducto.duracion = value.duaracion;
                     subproducto.duracionDimension = value.duracionDimension;
                     subproducto.inversionNueva = value.inversionNueva;
+                    //Se agregan estas lineas
+                    subproducto.fechaCreacion = DateTime.Now;
+                    subproducto.usuarioCreo = User.Identity.Name;
+                    subproducto.estado = 1;
+                    // Se agregan estas lineas
+                    DateTime fechaInicioReal;
+                    DateTime.TryParse((string)value.fechaInicioReal, out fechaInicioReal);
+                    subproducto.fechaInicioReal = fechaInicioReal;
 
-                    Producto producto = ProductoDAO.getProductoPorId(subproducto.productoid);
+                    DateTime fechaFinReal;
+                    DateTime.TryParse((string)value.fechaFinReal, out fechaFinReal);
+                    subproducto.fechaFinReal = fechaFinReal;
 
-                    Subproducto subproductoPadre = new Subproducto();
+                    // Se comenta Producto producto = ProductoDAO.getProductoPorId(subproducto.productoid);
+
+                    // Se comenta Subproducto subproductoPadre = new Subproducto();
                     ///subproductoPadre.setId(subproductoPadreId);  // esta data no viene
+                    // Se comenta SubproductoTipo subproductoTipo = new SubproductoTipo();
+                    // Se comenta subproductoTipo.id = subproducto.subproductoTipoid;
 
-                    SubproductoTipo subproductoTipo = new SubproductoTipo();
-                    subproductoTipo.id = subproducto.subproductoTipoid;
-
-                    if ((value.ejercicio != null) && (value.entidad != null) && (value.unidadEjecutora != null))
-                    {
-                        UnidadEjecutoraDAO.getUnidadEjecutora(value.ejercicio, value.entidad, value.ueunidadEjecutora);
-                    }
+                    // Se comenta if ((value.ejercicio != null) && (value.entidad != null) && (value.unidadEjecutora != null))
+                    // Se comenta {
+                    // Se comenta    UnidadEjecutoraDAO.getUnidadEjecutora(value.ejercicio, value.entidad, value.ueunidadEjecutora);
+                    // Se comenta }
 
                     /*UnidadEjecutora unidadEjecutora = (subproducto.ejercicio != null && subproducto.entidad != null && subproducto.ueunidadEjecutora != null) ? UnidadEjecutoraDAO.getUnidadEjecutora(subproducto.ejercicio, subproducto.entidad, subproducto.ueunidadEjecutora) : null;
                      */
-                    resultado = SubproductoDAO.guardarSubproducto(subproducto, false);
+                    //resultado = SubproductoDAO.guardarSubproducto(subproducto, false);
+                    resultado = SubproductoDAO.guardarSubproducto(subproducto, true);
 
                     if (resultado)
                     {
                         String pagosPlanificados = value.pagosPlanificados;
-                        if (!subproducto.acumulacionCostoid.Equals(2) || pagosPlanificados != null && pagosPlanificados.Replace("[", "").Replace("]", "").Length > 0)
+                        if (!subproducto.acumulacionCostoid.Equals(4) || pagosPlanificados != null && pagosPlanificados.Replace("[", "").Replace("]", "").Length > 0)
                         {
                             List<PagoPlanificado> pagosActuales = PagoPlanificadoDAO.getPagosPlanificadosPorObjeto(subproducto.id, 4);
                             foreach (PagoPlanificado pagoTemp in pagosActuales)
@@ -247,92 +254,107 @@ namespace SSubproducto.Controllers
                             }
                         }
 
-                        if (subproducto.acumulacionCostoid.Equals(2) && pagosPlanificados != null && pagosPlanificados.Replace("[", "").Replace("]", "").Length > 0)
+                        if (subproducto.acumulacionCostoid.Equals(4) && pagosPlanificados != null && pagosPlanificados.Replace("[", "").Replace("]", "").Length > 0)
                         {
                             JArray pagosArreglo = JArray.Parse((string)value.pagosPlanificados);
-
                             for (int i = 0; i < pagosArreglo.Count; i++)
                             {
                                 JObject objeto = (JObject)pagosArreglo[i];
                                 DateTime fechaPago = objeto["fechaPago"] != null ? Convert.ToDateTime(objeto["fechaPago"].ToString()) : default(DateTime);
-
                                 decimal monto = objeto["pago"] != null ? Convert.ToDecimal(objeto["pago"]) : default(decimal);
 
                                 PagoPlanificado pagoPlanificado = new PagoPlanificado();
-
                                 pagoPlanificado.fechaPago = fechaPago;
                                 pagoPlanificado.pago = monto;
                                 pagoPlanificado.objetoId = subproducto.id;
                                 pagoPlanificado.objetoTipo = 4;
                                 pagoPlanificado.usuarioCreo = User.Identity.Name;
+                                // se agrega linea
+                                pagoPlanificado.fechaCreacion = DateTime.Now;
                                 pagoPlanificado.estado = 1;
-
                                 resultado = resultado && PagoPlanificadoDAO.Guardar(pagoPlanificado);
                             }
                         }
+                    }
 
+                    if (resultado)
+                    {
+                        // Se agrega este bloque probarlo
+                        List<SubproductoPropiedad> subproductoPropiedades = SubproductoPropiedadDAO.getSubproductoPropiedadesPorTipo(subproducto.subproductoTipoid);
 
-                        if (resultado)
+                        foreach (SubproductoPropiedad subProductoPropiedad in subproductoPropiedades)
                         {
-                            JArray datos = JArray.Parse((string)value.datadinamica);
+                            SubcomponentePropiedadValor subProdPropVal = SubcomponentePropiedadValorDAO.getValorPorSubComponenteYPropiedad(subProductoPropiedad.id, subproducto.id);
+                            if (subProdPropVal != null)
+                                resultado = resultado && SubcomponentePropiedadValorDAO.eliminarTotalSubComponentePropiedadValor(subProdPropVal);
+                        } 
+                         // Hasta aqui
 
-                            for (int i = 0; i < datos.Count; i++)
+                        JArray datos = JArray.Parse((string)value.datadinamica);
+                        for (int i = 0; i < datos.Count; i++)
+                        {
+                            JObject data = (JObject)datos[i];
+                            if (data["valor"] != null && data["valor"].ToString().Length > 0 && data["valor"].ToString().CompareTo("null") != 0)
                             {
-                                JObject data = (JObject)datos[i];
+                                SubproductoPropiedad subProductoPropiedad = SubproductoPropiedadDAO.getSubproductoPropiedadPorId(Convert.ToInt32(data["id"]));
+                                SubproductoPropiedadValor valor = new SubproductoPropiedadValor();
+                                valor.subproductoid = subproducto.id;
+                                valor.subproductos = subproducto;
+                                valor.subproductoPropiedads = subProductoPropiedad;
+                                //
+                                valor.subproductoPropiedadid = subProductoPropiedad.id;
+                                valor.usuarioCreo = User.Identity.Name;
+                                valor.fechaCreacion = DateTime.Now;
+                                valor.estado = 1;
 
-                                if (data["valor"] != null && data["valor"].ToString().Length > 0 && data["valor"].ToString().CompareTo("null") != 0)
+                                switch (subProductoPropiedad.datoTipoid)
                                 {
-                                    SubproductoPropiedad producotPropiedad = SubproductoPropiedadDAO.getSubproductoPropiedadPorId(Convert.ToInt32(data["id"]));
-
-                                    SubproductoPropiedadValor valor = new SubproductoPropiedadValor();
-                                    valor.subproductoid = subproducto.id;
-                                    valor.subproductos = subproducto;
-                                    valor.subproductoPropiedads = producotPropiedad;
-                                    valor.usuarioCreo = User.Identity.Name;
-                                    valor.fechaCreacion = DateTime.Now;
-                                    valor.estado = 1;
-
-                                    switch (producotPropiedad.datoTipoid)
-                                    {
-                                        case 1:
-                                            valor.valorString = data["valor"].ToString();
-                                            break;
-                                        case 2:
-                                            valor.valorEntero = Convert.ToInt32(data["valor"].ToString());
-                                            break;
-                                        case 3:
-                                            valor.valorDecimal = Convert.ToDecimal(data["valor"].ToString());
-                                            break;
-                                        case 4:
-                                            break;
-                                        case 5:
-                                            valor.valorTiempo = Convert.ToDateTime(data["valor_f"].ToString());
-                                            break;
-                                    }
-                                    resultado = (resultado && SubproductoPropiedadValorDAO.guardarSubproductoPropiedadValor(valor));
+                                    case 1:
+                                        valor.valorString = data["valor"].ToString();
+                                        break;
+                                    case 2:
+                                        valor.valorEntero = Convert.ToInt32(data["valor"].ToString());
+                                        break;
+                                    case 3:
+                                        valor.valorDecimal = Convert.ToDecimal(data["valor"].ToString());
+                                        break;
+                                    case 4:
+                                        valor.valorEntero = data["valor"].ToString() == "true" ? 1 : 0;
+                                        break;
+                                    case 5:
+                                        valor.valorTiempo = Convert.ToDateTime(data["valor_f"].ToString());
+                                        break;
                                 }
+                                resultado = (resultado && SubproductoPropiedadValorDAO.guardarSubproductoPropiedadValor(valor));
                             }
                         }
-
-                        return Ok(new
-                        {
-                            success = resultado,
-                            subproducto.id,
-                            subproducto.usuarioCreo,
-                            subproducto.fechaCreacion,
-                            subproducto.usuarioActualizo,
-                            subproducto.fechaActualizacion
-                        });
                     }
-                    else
+
+                    return Ok(new
+                    {
+                        /*success = resultado,
+                        subproducto.id,
+                        subproducto.usuarioCreo,
+                        subproducto.fechaCreacion,
+                        subproducto.usuarioActualizo,
+                        subproducto.fechaActualizacion*/
+                        success = resultado,
+                        id = subproducto.id,
+                        usuarioCreo = subproducto.usuarioCreo,
+                        usuarioActualizo = subproducto.usuarioActualizo,
+                        fechaCreacion = subproducto.fechaCreacion.ToString("dd/MM/yyyy H:mm:ss"),
+                        fechaActualizacion = subproducto.fechaActualizacion != null ? subproducto.fechaActualizacion.Value.ToString("dd/MM/yyyy H:mm:ss") : null
+                    });
+                }
+                else
                     {
                         return Ok(new { success = false });
                     }
-                }
-                else
-                {
-                    return Ok(new { success = false });
-                }
+                //borrar }
+                // borrar else
+                // borrar {
+                // borrar    return Ok(new { success = false });
+                // borrar}
             }
             catch (Exception e)
             {

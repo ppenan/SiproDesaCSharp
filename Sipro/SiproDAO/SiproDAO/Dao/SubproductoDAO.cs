@@ -116,7 +116,11 @@ namespace SiproDAO.Dao
                             ":ejercicio, :entidad, :fechaInicioReal, :fechaFinFeal, :inversionNueva)", subproducto);
 
                         if (guardado > 0)
+                        { 
+                            Producto producto = ProductoDAO.getProducto(subproducto.productoid);
+                            subproducto.productos = producto;
                             subproducto.treepath = subproducto.productos.treepath + "" + (10000000 + subproducto.id);
+                        }
                     }
 
                     guardado = db.Execute("UPDATE subproducto SET nombre=:nombre, descripcion=:descripcion, usuario_creo=:usuarioCreo, usuario_actualizo=:usuario_actualizo, " +
@@ -173,12 +177,14 @@ namespace SiproDAO.Dao
                             }
                         }
 
-                        if (calcular_valores_agregados)
+                        //if (calcular_valores_agregados)
+                        if (guardado > 0 && calcular_valores_agregados)
                         {
                             ProyectoDAO.calcularCostoyFechas(Convert.ToInt32(subproducto.treepath.Substring(0, 8)) - 10000000);
                         }
 
-                        ret = true;
+                        //ret = true;
+                        ret = guardado > 0 ? true : false;
                     }
                 }
             }

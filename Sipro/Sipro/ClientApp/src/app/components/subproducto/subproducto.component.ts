@@ -226,7 +226,7 @@ export class SubproductoComponent implements OnInit {
       this.entidad = this.subproducto.entidadentidad;
       this.entidadnombre = this.subproducto.entidadnombre;
 
-      if(this.subproducto.acumulacionCostoid==2)
+      if(this.subproducto.acumulacionCostoid==4)
         this.bloquearCosto = true;
       else
         this.bloquearCosto = false;
@@ -350,14 +350,14 @@ export class SubproductoComponent implements OnInit {
       var objetoHttp;
 
       if(this.subproducto.id > 0){
-        objetoHttp = this.http.put("http://localhost:60083/api/Subproducto/SubProducto/" + this.subproducto.id, this.subproducto, { withCredentials: true });
+        objetoHttp = this.http.put("http://localhost:60083/api/Subproducto/Subproducto/" + this.subproducto.id, this.subproducto, { withCredentials: true });
       }
       else{        
         this.subproducto.id=0;
         this.subproducto.ejercicio = this.ejercicio;
         this.subproducto.entidadentidad = this.entidad;
         this.subproducto.ueunidadEjecutora = this.unidadEjecutora;
-        objetoHttp = this.http.post("http://localhost:60083/api/Subproducto/SubProducto", this.subproducto, { withCredentials: true });
+        objetoHttp = this.http.post("http://localhost:60083/api/Subproducto/Subproducto", this.subproducto, { withCredentials: true });
       }
 
       objetoHttp.subscribe(response => {
