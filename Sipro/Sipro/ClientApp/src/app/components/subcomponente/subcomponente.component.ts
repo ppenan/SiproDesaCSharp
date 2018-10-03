@@ -422,8 +422,7 @@ export class SubcomponenteComponent implements OnInit {
     }).afterClosed().subscribe(result => {
       if(result != null){
         this.subcomponente.subcomponenteTipoid = result.id;
-        this.subcomponente.subcomponentetiponombre = result.nombre;
-
+        this.subcomponente.subcomponentetiponombre = result.nombre;        
         this.obtenerCamposDinamicos();
       }
     })

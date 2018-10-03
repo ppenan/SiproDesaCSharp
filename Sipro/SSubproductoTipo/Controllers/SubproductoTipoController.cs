@@ -144,29 +144,34 @@ namespace SSubproductoTipo.Controllers
                     subproductoTipo.descripcion = value.descripcion;
                     subproductoTipo.fechaActualizacion = DateTime.Now;
                     subproductoTipo.usuarioActualizo = User.Identity.Name;
-
-                    bool guardado = SubproductoTipoDAO.guardarSubproductoTipo(subproductoTipo);
+                    bool guardado = false;
+                    guardado = SubproductoTipoDAO.guardarSubproductoTipo(subproductoTipo);
 
                     if (guardado)
                     {
-                        string propiedades = value.propiedades != null ? (string)value.propiedades : default(string);
-                        String[] idsPropiedades = propiedades != null && propiedades.Length > 0 ? propiedades.Split(",") : null;
-
-                        if (idsPropiedades != null && idsPropiedades.Length > 0)
+                        //string propiedades = value.propiedades != null ? (string)value.propiedades : default(string);
+                        //String[] idsPropiedades = propiedades != null && propiedades.Length > 0 ? propiedades.Split(",") : null;
+                        List<SubprodtipoPropiedad> propiedades_temp = SubprodTipoPropiedadDAO.getTipoPropiedades(subproductoTipo.id);
+                        //if (idsPropiedades != null && idsPropiedades.Length > 0)
+                        if (propiedades_temp != null)
                         {
-                            foreach (String idPropiedad in idsPropiedades)
-                            {
+                            //foreach (String idPropiedad in idsPropiedades)
+                            foreach (SubprodtipoPropiedad subprodtipoPropiedad in propiedades_temp)                            
+                            /*{
                                 SubprodtipoPropiedad subprodtipoPropiedad = new SubprodtipoPropiedad();
                                 subprodtipoPropiedad.subproductoTipoid = subproductoTipo.id;
                                 subprodtipoPropiedad.subproductoPropiedadid = Convert.ToInt32(idPropiedad);
                                 subprodtipoPropiedad.fechaCreacion = DateTime.Now;
                                 subprodtipoPropiedad.usuarioCreo = User.Identity.Name;
 
-                                guardado = guardado & SubprodTipoPropiedadDAO.guardarSubproductoTipoPropiedad(subprodtipoPropiedad);
+                                guardado = guardado & SubprodTipoPropiedadDAO.guardarSubproductoTipoPropiedad(subprodtipoPropiedad);                                
+                            } */
+                            {
+                                guardado = guardado & SubprodTipoPropiedadDAO.eliminarSubproductoTipoPropiedad(subprodtipoPropiedad);
                             }
                         }
 
-                        return Ok(new
+                        /*return Ok(new
                         {
                             success = guardado,
                             id = subproductoTipo.id,
@@ -174,7 +179,38 @@ namespace SSubproductoTipo.Controllers
                             usuarioActualizo = subproductoTipo.usuarioActualizo,
                             fechaCreacion = subproductoTipo.fechaCreacion.ToString("dd/MM/yyyy H:mm:ss"),
                             fechaActualizacion = subproductoTipo.fechaActualizacion != null ? subproductoTipo.fechaActualizacion.Value.ToString("dd/MM/yyyy H:mm:ss") : null
-                        });
+                        });*/
+
+                        if (guardado)
+                        {
+                            string propiedades = value.propiedades != null ? (string)value.propiedades : default(string);
+                            String[] idsPropiedades = propiedades != null && propiedades.Length > 0 ? propiedades.Split(",") : null;
+                            
+                            if (idsPropiedades != null && idsPropiedades.Length > 0)
+                            {
+                                foreach (String idPropiedad in idsPropiedades)
+                                {
+                                    SubprodtipoPropiedad subprodtipoPropiedad = new SubprodtipoPropiedad();
+                                    subprodtipoPropiedad.subproductoTipoid = subproductoTipo.id;
+                                    subprodtipoPropiedad.subproductoPropiedadid = Convert.ToInt32(idPropiedad);
+                                    subprodtipoPropiedad.fechaCreacion = DateTime.Now;
+                                    subprodtipoPropiedad.usuarioCreo = User.Identity.Name;
+                                    
+                                    guardado = guardado & SubprodTipoPropiedadDAO.guardarSubproductoTipoPropiedad(subprodtipoPropiedad);                                
+                                }
+                            }
+                            return Ok(new
+                            {
+                                success = guardado,
+                                id = subproductoTipo.id,
+                                usuarioCreo = subproductoTipo.usuarioCreo,
+                                usuarioActualizo = subproductoTipo.usuarioActualizo,
+                                fechaCreacion = subproductoTipo.fechaCreacion.ToString("dd/MM/yyyy H:mm:ss"),
+                                fechaActualizacion = subproductoTipo.fechaActualizacion != null ? subproductoTipo.fechaActualizacion.Value.ToString("dd/MM/yyyy H:mm:ss") : null
+                            });
+                        }
+                        else
+                        return Ok(new { success = false });
                     }
                     else
                         return Ok(new { success = false });

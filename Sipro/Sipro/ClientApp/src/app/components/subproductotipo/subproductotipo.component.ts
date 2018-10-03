@@ -115,8 +115,8 @@ export class SubproductotipoComponent implements OnInit {
     if(this.subproductotipo.id > 0){
       this.esColapsado = true;
       this.esNuevo = false;
-
-      this.http.get('http://localhost:60084/api/SubproductoPropiedad/SubProductoPropiedadPorTipoSubProducto/' + this.subproductotipo.id, { withCredentials : true }).subscribe(response =>{
+      // hacer modificacion para llamar: SubproductoPropiedad/SubProductoPropiedadPorTipo 
+      this.http.get('http://localhost:60084/api/SubproductoPropiedad/SubProductoPropiedadPorTipo/' + this.subproductotipo.id, { withCredentials : true }).subscribe(response =>{
         if(response['success'] == true){
           this.propiedades = response['subproductopropiedades'];
           this.sourcePropiedades = new LocalDataSource(this.propiedades);

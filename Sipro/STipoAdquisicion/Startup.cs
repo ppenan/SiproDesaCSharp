@@ -122,7 +122,6 @@ namespace SSubproductoTipo
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseAuthentication();
             app.UseCors("AllowAllHeaders");
             app.UseMvc();

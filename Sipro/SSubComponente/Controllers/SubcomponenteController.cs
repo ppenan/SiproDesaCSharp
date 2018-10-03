@@ -896,7 +896,6 @@ namespace SSubComponente.Controllers
                 Subcomponente objSubComponente = SubComponenteDAO.getSubComponente((int)value.id);
                 Proyecto objProyecto = ProyectoDAO.getProyectobyTreePath(objSubComponente.treepath);
                 int entidad = objProyecto.entidad ?? default(int);
-
                 int programa = value.programa != null ? (int)value.programa : default(int);
                 int subprograma = value.subprograma != null ? (int)value.subprograma : default(int);
                 int proyecto = value.proyecto != null ? (int)value.proyecto : default(int);

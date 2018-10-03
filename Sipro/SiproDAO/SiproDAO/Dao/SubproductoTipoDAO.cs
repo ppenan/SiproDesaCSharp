@@ -9,14 +9,14 @@ namespace SiproDAO.Dao
 {
     public class SubproductoTipoDAO
     {
-        public static SubproductoTipo getSubproductoTipo(int codigo)
+        public static SubproductoTipo getSubproductoTipo(int id)
         {
             SubproductoTipo ret = null;
             try
             {
                 using (DbConnection db = new OracleContext().getConnection())
                 {
-                    ret = db.QueryFirstOrDefault<SubproductoTipo>("SELECT * FROM suproducto_tipo WHERE id=:id", new { id = codigo });
+                    ret = db.QueryFirstOrDefault<SubproductoTipo>("SELECT * FROM subproducto_tipo WHERE id=:id", new { id = id });
                 }
             }
             catch (Exception e)
@@ -46,7 +46,7 @@ namespace SiproDAO.Dao
                     {
                         int sequenceId = db.ExecuteScalar<int>("SELECT seq_subproducto_tipo.nextval FROM DUAL");
                         subproductoTipo.id = sequenceId;
-                        int guardado = db.Execute("INSERT INTO subproducto_tipo(:id, :nombre, :descripcion, :usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion, " +
+                        int guardado = db.Execute("INSERT INTO subproducto_tipo VALUES(:id, :nombre, :descripcion, :usuarioCreo, :usuarioActualizo, :fechaCreacion, :fechaActualizacion, " +
                             ":estado)", subproductoTipo);
 
                         ret = guardado > 0 ? true : false;
@@ -144,5 +144,25 @@ namespace SiproDAO.Dao
             }
             return ret;
         }
+
+
+        public static SubproductoTipo getSubProductoTipoPorId(int id)
+        {
+            SubproductoTipo ret = null;
+            try
+            {
+                using (DbConnection db = new OracleContext().getConnection())
+                {
+                    ret = db.QueryFirstOrDefault<SubproductoTipo>("SELECT * FROM subproducto_tipo WHERE id=:id", new { id = id });
+                }
+            }
+            catch (Exception e)
+            {
+                CLogger.write("6", "SubproductoTipoDAO.class", e);
+            }
+            return ret;
+        }
+
+
     }
 }
