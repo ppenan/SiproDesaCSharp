@@ -15,10 +15,6 @@
     <ProjectReference Include="..\SiproModelCore\SiproModelCore\SiproModelCore.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="SiproDAO">
-      <HintPath>..\SiproDAO\SiproDAO\bin\Debug\netcoreapp2.0\SiproDAO.dll</HintPath>
-      <Private>true</Private>
-    </Reference>
     <Reference Include="System">
       <HintPath>System</HintPath>
     </Reference>

@@ -63,7 +63,6 @@ namespace SProyecto.Controllers
             public String fechaFinReal;
             public int congelado;
             public int coordinador;
-            public int porcentajeAvance;
             public bool permisoEditarCongelar;
             public int lineaBaseId;
             public int duracion;
@@ -94,7 +93,7 @@ namespace SProyecto.Controllers
         {
             public int id;
             public String nombre;
-            public String entidad;
+            public int? entidad;
             public int ejercicio;
             public decimal prestamo;
             public decimal donacion;
@@ -202,6 +201,7 @@ namespace SProyecto.Controllers
                     dato.coordinador = proyecto.coordinador ?? default(int);
                     dato.fechaElegibilidad = proyecto.fechaElegibilidad != null ? proyecto.fechaElegibilidad.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     dato.fechaCierre = proyecto.fechaCierre != null ? proyecto.fechaCierre.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    dato.duracion = proyecto.duracion;
                     datos_.Add(dato);
                 }
 
@@ -293,6 +293,7 @@ namespace SProyecto.Controllers
                     dato.coordinador = proyecto.coordinador ?? default(int);
                     dato.fechaElegibilidad = proyecto.fechaElegibilidad != null ? proyecto.fechaElegibilidad.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     dato.fechaCierre = proyecto.fechaCierre != null ? proyecto.fechaCierre.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    dato.duracion = proyecto.duracion;
                     datos_.Add(dato);
                 }
 
@@ -398,6 +399,7 @@ namespace SProyecto.Controllers
                     dato.coordinador = proyecto.coordinador ?? default(int);
                     dato.fechaElegibilidad = proyecto.fechaElegibilidad != null ? proyecto.fechaElegibilidad.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     dato.fechaCierre = proyecto.fechaCierre != null ? proyecto.fechaCierre.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    dato.duracion = proyecto.duracion;
                     datos_.Add(dato);
                 }
 
@@ -502,6 +504,7 @@ namespace SProyecto.Controllers
                     dato.coordinador = proyecto.coordinador ?? default(int);
                     dato.fechaElegibilidad = proyecto.fechaElegibilidad != null ? proyecto.fechaElegibilidad.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     dato.fechaCierre = proyecto.fechaCierre != null ? proyecto.fechaCierre.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    dato.duracion = proyecto.duracion;
                     datos_.Add(dato);
                 }
 
@@ -1301,6 +1304,7 @@ namespace SProyecto.Controllers
                     dato.congelado = proyecto.congelado ?? default(int);
                     dato.coordinador = proyecto.coordinador ?? default(int);
                     dato.fechaElegibilidad = proyecto.fechaElegibilidad != null ? proyecto.fechaElegibilidad.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
+                    dato.duracion = proyecto.duracion;
                 }
 
                 return Ok(new { success = true, proyecto = dato });
@@ -1419,6 +1423,7 @@ namespace SProyecto.Controllers
                     stunidad.prestamo = componente.fuentePrestamo ?? default(decimal);
                     stunidad.id = componente.unidadEjecutoras != null ? componente.unidadEjecutoras.unidadEjecutora : default(int);
                     stunidad.nombre = componente.unidadEjecutoras != null ? componente.unidadEjecutoras.nombre : null;
+                    stunidad.entidad = componente.entidad;
                     stunidades.Add(stunidad);
                     temp.unidadesEjecutoras = stunidades;
                     if (unidadesEjecutroas.Count == 0)

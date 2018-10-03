@@ -56,7 +56,6 @@ namespace SComponente.Controllers
             public decimal fuenteNacional;
             public bool tieneHijos;
             public int esDeSigade;
-            public int prestamoId;
             public String fechaInicioReal;
             public String fechaFinReal;
             public int inversionNueva;
@@ -65,15 +64,6 @@ namespace SComponente.Controllers
             public string treepath;
             public int nivel;
             public int componenteSigadeid;
-        }
-
-        private class Stdatadinamico
-        {
-            public String id;
-            public String tipo;
-            public String label;
-            public String valor;
-            public String valor_f;
         }
 
         [HttpPost]
@@ -186,7 +176,10 @@ namespace SComponente.Controllers
                     temp.fechaFinReal = componente.fechaFinReal != null ? componente.fechaFinReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     temp.inversionNueva = componente.inversionNueva;
                     temp.proyectoid = componente.proyectoid;
-
+                    temp.orden = componente.orden ?? default(int);
+                    temp.treepath = componente.treepath;
+                    temp.nivel = componente.nivel ?? default(int);
+                    temp.componenteSigadeid = componente.componenteSigadeid;
                     stcomponentes.Add(temp);
                 }
 
@@ -281,7 +274,10 @@ namespace SComponente.Controllers
                     temp.fechaFinReal = componente.fechaFinReal != null ? componente.fechaFinReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                     temp.inversionNueva = componente.inversionNueva;
                     temp.proyectoid = componente.proyectoid;
-
+                    temp.orden = componente.orden ?? default(int);
+                    temp.treepath = componente.treepath;
+                    temp.nivel = componente.nivel ?? default(int);
+                    temp.componenteSigadeid = componente.componenteSigadeid;
                     stcomponentes.Add(temp);
                 }
                 return Ok(new { success = true, componentes = stcomponentes });
@@ -418,6 +414,10 @@ namespace SComponente.Controllers
                 temp.fechaFinReal = componente.fechaFinReal != null ? componente.fechaFinReal.Value.ToString("dd/MM/yyyy H:mm:ss") : null;
                 temp.inversionNueva = componente.inversionNueva;
                 temp.proyectoid = componente.proyectoid;
+                temp.orden = componente.orden ?? default(int);
+                temp.treepath = componente.treepath;
+                temp.nivel = componente.nivel ?? default(int);
+                temp.componenteSigadeid = componente.componenteSigadeid;
 
                 return Ok(new { success = true, componente = temp });
             }

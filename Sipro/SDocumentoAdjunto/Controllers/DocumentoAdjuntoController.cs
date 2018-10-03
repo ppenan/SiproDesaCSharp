@@ -23,8 +23,8 @@ namespace SDocumentoAdjunto.Controllers
             public int id;
             public String nombre;
             public String extension;
-            public int idTipoObjto;
-            public int idObjeto;
+            public long idTipoObjto;
+            public long idObjeto;
         };
 
         // POST api/DocumentoAdjunto/Documento
@@ -89,6 +89,8 @@ namespace SDocumentoAdjunto.Controllers
                                 dato.id = doc.id;
                                 dato.nombre = doc.nombre;
                                 dato.extension = doc.extension;
+                                dato.idTipoObjto = doc.idTipoObjeto;
+                                dato.idObjeto = doc.idObjeto;
                                 datos_.Add(dato);
                             }
 
@@ -130,6 +132,8 @@ namespace SDocumentoAdjunto.Controllers
                     dato.id = documento.id;
                     dato.nombre = documento.nombre;
                     dato.extension = documento.extension;
+                    dato.idTipoObjto = documento.idTipoObjeto;
+                    dato.idObjeto = documento.idObjeto;
                     datos_.Add(dato);
                 }
 

@@ -91,10 +91,14 @@ namespace SiproDAO.Dao
             {
                 case 1:
                     Componente componente = ComponenteDAO.getComponente(objetoId);
-                    cooperanteCodigo = componente.proyectos.prestamos.cooperantes.codigo;
+                    Proyecto proyecto = ProyectoDAO.getProyecto(componente.proyectoid);
+                    Prestamo prestamo = PrestamoDAO.getPrestamoById(proyecto.prestamoid ?? default(int));
+                    cooperanteCodigo = prestamo.cooperantecodigo ?? default(int);
                     break;
                 case 2:
                     Subcomponente subcomponente = SubComponenteDAO.getSubComponente(objetoId);
+                    proyecto = ProyectoDAO.getProyectobyTreePath(subcomponente.treepath);
+                    prestamo = PrestamoDAO.getPrestamoById(proyecto.prestamoid ?? default(int));
                     cooperanteCodigo = subcomponente.componentes.proyectos.prestamos.cooperantes.codigo;
                     break;
                 case 3:

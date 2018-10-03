@@ -41,11 +41,11 @@
                         </div>
                         <div fxLayout="column">
                           <mat-form-field>
-                            <input name="tipo" [formControl]="myControl" [(ngModel)]="adquisicion.tipo" matInput placeholder="Tipo"
+                            <input name="tipo" [formControl]="myControlTipo" [(ngModel)]="adquisicion.tipoNombre" matInput placeholder="Tipo"
                               [required]="true" [matAutocomplete]="auto">
                             <mat-autocomplete #auto="matAutocomplete">
-                              <mat-option *ngFor="let value of filteredTipos | async" [value]="value.tipoNombre" (onSelectionChange)="tipoSeleccionado(value)">
-                                <span>{{value.tipoNombre}}</span>
+                              <mat-option *ngFor="let value of filteredTipos | async" [value]="value.nombre" (onSelectionChange)="tipoAdquisicionSeleccionado(value)">
+                                <span>{{value.nombre}}</span>
                               </mat-option>
                             </mat-autocomplete>
                           </mat-form-field>

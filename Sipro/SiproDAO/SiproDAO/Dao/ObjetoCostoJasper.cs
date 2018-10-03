@@ -60,7 +60,6 @@ namespace SiproDAO.Dao
         public decimal asignado = decimal.Zero;
         public decimal modificaciones = decimal.Zero;
 
-        int avance_fisico = 0;
         int inversion_nueva;
 
         public ObjetoCostoJasper(String nombre, int objeto_id, int objeto_tipo, int nivel, DateTime fecha_inicial,

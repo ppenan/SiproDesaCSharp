@@ -20,6 +20,14 @@ export interface Categoria{
   estado: number;
 }
 
+export interface TipoAdquisicion{
+  id: number;
+  cooperantecodigo: number;
+  nombre: string;
+  estado: number;
+  convenioCdirecta: boolean;
+}
+
 
 @Component({
   selector: 'app-adquisicion',
@@ -31,13 +39,15 @@ export class AdquisicionComponent implements OnInit {
   isMasterPage : boolean;
   adquisicion: Adquisicion;
   categorias = [];
+  tipoadquisiciones = [];
 
-  @Input() public objeto_tipo: number;
-  @Input() public obj_componentIn: object;
+  @Input() public obj_componentIn: any;
   @Output() child_adquisiciones = new EventEmitter<Adquisicion>();
 
   filteredCategoria: Observable<Categoria[]>;
   myControlCategoria = new FormControl();
+  filteredTipos: Observable<TipoAdquisicion[]>;
+  myControlTipo = new FormControl();
 
   constructor(private route: ActivatedRoute, private auth: AuthService, private utils: UtilsService, private http: HttpClient) { 
     this.isMasterPage = this.auth.isLoggedIn();
@@ -49,6 +59,12 @@ export class AdquisicionComponent implements OnInit {
         startWith(''),
         map(value => value ? this._filterCategoria(value) : this.categorias.slice())
       );
+
+    this.filteredTipos = this.myControlTipo.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => value ? this._filterTipoAdquisicion(value): this.tipoadquisiciones.slice())
+      );
   }
 
   private _filterCategoria(value: string): Categoria[] {
@@ -56,12 +72,22 @@ export class AdquisicionComponent implements OnInit {
     return this.categorias.filter(c => c.nombre.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  acumulacionCostoSeleccionado(value){
+  categoriaSeleccionado(value){
     this.adquisicion.categoriaAdquisicion = value.id;
+  }
+
+  private _filterTipoAdquisicion(value: string): TipoAdquisicion[] {
+    const filterValue = value.toLowerCase();
+    return this.tipoadquisiciones.filter(c => c.nombre.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  tipoAdquisicionSeleccionado(value){
+    this.adquisicion.tipoAdquisicion = value.id;
   }
 
   ngOnInit() {
     this.obtenerCategoriasAdquisicion();
+    this.obtenerTipoAdquisicion();
   }
 
   obtenerCategoriasAdquisicion(){
@@ -70,6 +96,14 @@ export class AdquisicionComponent implements OnInit {
         this.categorias = response["categoriasAdquisicion"];        
       }
     })
+  }
+
+  obtenerTipoAdquisicion(){
+    this.http.get('http://localhost:60087/api/TipoAdquisicion/TipoAdquisicionPorObjeto/'+ this.obj_componentIn['objeto_id'] + '/'+ this.obj_componentIn['objeto_tipo'], { withCredentials: true}).subscribe(response => {
+      if(response['success'] == true){
+        this.tipoadquisiciones = response['tipoAdquisiciones'];
+      }
+    });
   }
 
   settingsNog = {

@@ -21,10 +21,8 @@ namespace SColaborador.Controllers
             public int id;
             public String pnombre;
             public String snombre;
-            public String otrosNombres;
             public String papellido;
             public String sapellido;
-            public String otrosApellidos;
             public int ueunidadEjecutora;
             public String unidadejecutoranombre;
             public int entidad;

@@ -74,7 +74,7 @@ namespace SPrestamo.Controllers
             public String fechaCierreOrigianlUe;
             public String fechaCierreActualUe;
             public decimal mesesProrrogaUe;
-            public int plazoEjecucionUe;
+            public decimal? plazoEjecucionUe;
             public decimal montoAsignadoUe;
             public decimal desembolsoAFechaUe;
             public decimal montoPorDesembolsarUe;
@@ -258,6 +258,8 @@ namespace SPrestamo.Controllers
                         temp.objetivo = prestamo.objetivo;
                         temp.objetivoEspecifico = prestamo.objetivoEspecifico;
                         temp.porcentajeAvance = prestamo.porcentajeAvance;
+                        temp.plazoEjecucionUe = prestamo.plazoEjecucionUe;
+
                         lstprestamo.Add(temp);
                     }
 
@@ -645,6 +647,7 @@ namespace SPrestamo.Controllers
                     temp.objetivo = prestamo.objetivo;
                     temp.objetivoEspecifico = prestamo.objetivoEspecifico;
                     temp.porcentajeAvance = prestamo.porcentajeAvance;
+                    temp.plazoEjecucionUe = prestamo.plazoEjecucionUe;
                     lstprestamo.Add(temp);
                 }
 
@@ -1124,6 +1127,7 @@ namespace SPrestamo.Controllers
                     temp.objetivo = prestamo.objetivo != null ? prestamo.objetivo : default(string);
                     temp.objetivoEspecifico = prestamo.objetivoEspecifico != null ? prestamo.objetivoEspecifico : default(string);
                     temp.porcentajeAvance = prestamo.porcentajeAvance;
+                    temp.plazoEjecucionUe = prestamo.plazoEjecucionUe;
                 }
 
                 return Ok(new { success = true, prestamo = temp });
@@ -1258,6 +1262,7 @@ namespace SPrestamo.Controllers
                         Double f1 = (((DateTime.Now.Ticks * 1.0) - tiempo1) - proyecto.fechaInicio.Value.Ticks) / 86400000;
                         Double f2 = (proyecto.fechaFin.Value.Ticks * 1.0 - proyecto.fechaInicio.Value.Ticks) / 86400000;
                         temp.plazoEjecucionPEP = (f1 * 1.0 / f2 * 100);
+                        temp.plazoEjecucionUe = prestamo.plazoEjecucionUe;
 
                         return Ok(new { success = true, prestamo = temp });
                     }
@@ -1376,6 +1381,7 @@ namespace SPrestamo.Controllers
                     temp.objetivo = prestamo.objetivo;
                     temp.objetivoEspecifico = prestamo.objetivoEspecifico;
                     temp.porcentajeAvance = prestamo.porcentajeAvance;
+                    temp.plazoEjecucionUe = prestamo.plazoEjecucionUe;
                 }
 
                 return Ok(new { success = true, prestamo = temp });

@@ -42,4 +42,6 @@ export class Producto{
     inversionNueva: number = null;
 
     camposDinamicos: string;
+    objeto_id: number;
+    objeto_tipo: number;
 }

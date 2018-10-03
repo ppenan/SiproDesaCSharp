@@ -19,13 +19,7 @@ namespace SEjecucionEstado.Controllers
         {
             public int id;
             public String nombre;
-            public String descripcion;
-            public int programatipoid;
-            public String programatipo;
-            public String fechaCreacion;
-            public String usuarioCreo;
-            public String fechaactualizacion;
-            public String usuarioactualizo;
+            public String descripcion;            
         };
 
         // POST api/EjecucionEstado/EjecucionEstadoPagina
@@ -45,7 +39,8 @@ namespace SEjecucionEstado.Controllers
                 {
                     stprograma temp = new stprograma();
                     temp.id = Convert.ToInt32(tipoMoneda.id);
-                    temp.nombre = tipoMoneda.nombre;;
+                    temp.nombre = tipoMoneda.nombre;
+                    temp.descripcion = tipoMoneda.descripcion;
                     sttipomoneda.Add(temp);
                 }
 

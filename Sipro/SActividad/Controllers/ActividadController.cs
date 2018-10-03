@@ -47,11 +47,6 @@ namespace SActividad.Controllers
             public decimal? costo;
             public Int64 acumulacionCostoid;
             public string acumulacionCostoNombre;
-            public decimal presupuestoModificado;
-            public decimal presupuestoPagado;
-            public decimal presupuestoVigente;
-            public decimal presupuestoDevengado;
-            public int avanceFinanciero;
             public int estado;
             public Int64 proyectoBase;
             public bool tieneHijos;
@@ -62,24 +57,6 @@ namespace SActividad.Controllers
             public string fechaCierre;
             public int inversionNueva;
         }
-
-        private class Stdatadinamico
-        {
-            public string id;
-            public string tipo;
-            public string label;
-            public string valor;
-            public string valor_f;
-        }
-
-        private class Stasignacionroles
-        {
-            public int id;
-            public string nombre;
-            public string rol;
-            public string nombrerol;
-        }
-
 
         [HttpPost]
         [Authorize("Actividades - Visualizar")]

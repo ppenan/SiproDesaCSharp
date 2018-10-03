@@ -126,6 +126,8 @@ export class ProductoComponent implements OnInit {
     this.modalProductoTipo = new DialogOverviewProductoTipo(dialog);
     this.unidadejecutoranombre = "";
     this.modalDelete = new DialogOverviewDelete(dialog);
+    this.producto.objeto_id = this.objetoId;
+    this.producto.objeto_tipo = this.objetoTipo;
   }
 
   private _filterAcumulacionCosto(value: string): AcumulacionCosto[] {

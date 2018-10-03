@@ -9,14 +9,6 @@ namespace SiproDAO.Dao
 {
     public class ProductoPropiedadDAO
     {
-        private class Stdatadinamico
-        {
-            public String id;
-            public String tipo;
-            public String label;
-            public String valor;
-        }
-
         public static ProductoPropiedad getProductoPropiedad(int id)
         {
             ProductoPropiedad ret = null;
