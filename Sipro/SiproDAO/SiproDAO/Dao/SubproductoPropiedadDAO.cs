@@ -61,7 +61,7 @@ namespace SiproDAO.Dao
             return ret;
         }
 
-	public static bool eliminarSubproductoPropiedad(SubproductoPropiedad subproductoPropiedad) {
+	    public static bool eliminarSubproductoPropiedad(SubproductoPropiedad subproductoPropiedad) {
             bool ret = false;
             try
             {
@@ -184,7 +184,7 @@ namespace SiproDAO.Dao
         }*/
 
         public static List<SubproductoPropiedad> getSubproductoPropiedadesPorTipo(int idTipoPropiedad)
-        {
+        {// se cambia parametro: idTipoPropiedad
             List<SubproductoPropiedad> ret = new List<SubproductoPropiedad>();
             try
             {

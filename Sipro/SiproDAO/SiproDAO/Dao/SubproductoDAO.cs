@@ -101,7 +101,6 @@ namespace SiproDAO.Dao
         {
             bool ret = false;
             int guardado = 0;
-
             try
             {
                 using (DbConnection db = new OracleContext().getConnection())
@@ -141,8 +140,8 @@ namespace SiproDAO.Dao
                         su.usuarioCreo = subproducto.usuarioCreo;
                         su.fechaCreacion = subproducto.fechaCreacion;
 
-                        int existe = db.ExecuteScalar<int>("SELECT COUNT(*) FROM SUBPRODUCTO_USUARIO WHERE subproductoid=:id AND usuario=:usuario", su);
-
+                        //int existe = db.ExecuteScalar<int>("SELECT COUNT(*) FROM SUBPRODUCTO_USUARIO WHERE subproductoid=:id AND usuario=:usuario", su);
+                        int existe = db.ExecuteScalar<int>("SELECT COUNT(*) FROM SUBPRODUCTO_USUARIO WHERE subproductoid=:id AND usuario=:usuario", new { id = su.subproductoid, usuario = su.usuario });
                         if (existe > 0)
                         {
                             guardado = db.Execute("UPDATE SUBPRODUCTO_USUARIO SET usuario_creo=:usuarioCreo, usuario_actualizo=:usuarioActualizo, fecha_creacion=:fechaCreacion, " +
@@ -163,8 +162,8 @@ namespace SiproDAO.Dao
                             su_admin.usuarioCreo = subproducto.usuarioCreo;
                             su_admin.fechaCreacion = subproducto.fechaCreacion;
 
-                            existe = db.ExecuteScalar<int>("SELECT COUNT(*) FROM SUBPRODUCTO_USUARIO WHERE subproductoid=:id AND usuario=:usuario", su_admin);
-
+                            //existe = db.ExecuteScalar<int>("SELECT COUNT(*) FROM SUBPRODUCTO_USUARIO WHERE subproductoid=:id AND usuario=:usuario", su_admin);
+                            existe = db.ExecuteScalar<int>("SELECT COUNT(*) FROM SUBPRODUCTO_USUARIO WHERE subproductoid=:id AND usuario=:usuario", new {  id = su_admin.subproductoid, usuario = su.usuario});
                             if (existe > 0)
                             {
                                 guardado = db.Execute("UPDATE SUBPRODUCTO_USUARIO SET usuario_creo=:usuarioCreo, usuario_actualizo=:usuarioActualizo, fecha_creacion=:fechaCreacion, " +

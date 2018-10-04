@@ -189,27 +189,30 @@ namespace SSubproducto.Controllers
                     Subproducto subproducto = new Subproducto();                    
                     subproducto.nombre = value.nombre;
                     subproducto.descripcion = value.descripcion;
-                    subproducto.productoid = (int)value.producto;                    
+                    subproducto.productoid = (int)value.productoid;                    
                     ///subproducto.su.subproductoPadreId = (int)value.subproductoPadre; no tiene subproductopadre
                     subproducto.subproductoTipoid = (int)value.tiposubproductoid;
                     subproducto.ueunidadEjecutora = value.unidadEjecutora != null ? (int)value.unidadEjecutora : default(int);
                     subproducto.entidad = value.entidad != null ? (int)value.entidad : default(int);
                     subproducto.ejercicio = value.ejercicio != null ? (int)value.ejercicio : default(int);
-                    subproducto.snip = value.snip;
-                    subproducto.programa = value.programa;
-                    subproducto.subprograma = value.subprograma;
-                    subproducto.proyecto = value.proyecto;
-                    subproducto.obra = value.obra;
-                    subproducto.renglon = value.renglon;
-                    subproducto.ubicacionGeografica = value.ubicacionGeografica;
-                    subproducto.actividad = value.actividad;
+                    subproducto.snip = value.snip ?? null; //
+                    subproducto.programa = value.programa ?? null; //
+                    subproducto.subprograma = value.subprograma ?? null; //
+                    subproducto.proyecto = value.proyecto ?? null; //
+                    subproducto.obra = value.obra ?? null; //
+                    subproducto.renglon = value.renglon ?? null; //
+                    subproducto.ubicacionGeografica = value.ubicacionGeografica ?? null; //
+                    subproducto.actividad = value.actividad ?? null; //
                     subproducto.latitud = value.latitud;
                     subproducto.longitud = value.longitud;
                     subproducto.costo = value.costo;
                     subproducto.acumulacionCostoid = value.acumulacionCostoId;
                     subproducto.fechaInicio = value.fechaInicio;
-                    subproducto.fechaFin = Convert.ToDateTime(value.fechaFin);
-                    subproducto.duracion = value.duaracion;
+                    //subproducto.fechaFin = Convert.ToDateTime(value.fechaFin);
+                    DateTime fechaFin;
+                    DateTime.TryParse((string)value.fechaFin, out fechaFin);
+                    subproducto.fechaFin = fechaFin;
+                    subproducto.duracion = value.duracion;
                     subproducto.duracionDimension = value.duracionDimension;
                     subproducto.inversionNueva = value.inversionNueva;
                     //Se agregan estas lineas
@@ -883,7 +886,7 @@ namespace SSubproducto.Controllers
             }
             catch (Exception e)
             {
-                CLogger.write("7", "SubproductoController.class", e);
+                CLogger.write("11", "SubproductoController.class", e);
                 return BadRequest(500);
             }
         } /* */
